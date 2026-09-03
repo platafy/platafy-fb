@@ -772,9 +772,18 @@
                 </div>
               </div>
             </div>
+
+            <!-- LOG DE POSTAGEM -->
+            <div class="log-panel">
+              <div class="log-head">
+                <span>Log de Postagem</span>
+                <button class="btn-inline" id="btnClearPostLog" type="button">Limpar</button>
+              </div>
+              <div class="log-body" id="postLogBody"></div>
+            </div>
           </div>
 
-          <!-- COLUNA DA DIREITA: LISTA DE GRUPOS -> GRUPOS PROCESSADOS -> FUNCIONALIDADES -> TESTES MANUAIS -> LOG DE POSTAGEM -->
+          <!-- COLUNA DA DIREITA: LISTA DE GRUPOS -> GRUPOS PROCESSADOS -> FUNCIONALIDADES -> TESTES MANUAIS -->
           <div class="view-split-main">
             
             <!-- CARD 1: LISTA DE GRUPOS ENCONTRADOS -->
@@ -816,7 +825,7 @@
             </div>
 
             <!-- CARD 2: GRUPOS PROCESSADOS (PROGRESSO) -->
-            <div class="panel progress-panel" id="progressContainer" style="margin-top:16px;">
+            <div class="panel progress-panel" id="progressContainer">
               <div class="progress-bar-wrap">
                 <div class="progress-bar" id="progressBar" style="width:0%"></div>
               </div>
@@ -825,7 +834,7 @@
             </div>
 
             <!-- CARD 3: FUNCIONALIDADES -->
-            <div class="panel" style="margin-top:16px;">
+            <div class="panel">
               <div class="panel-head">
                 <h2 style="display:inline-flex;align-items:center;gap:8px;margin:0;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#2563eb" style="flex-shrink:0"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
@@ -873,7 +882,7 @@
             </div>
 
             <!-- CARD 4: TESTES MANUAIS -->
-            <div class="panel" style="margin-top:16px;">
+            <div class="panel">
               <div class="panel-head">
                 <h2 style="margin:0;">Testes Manuais</h2>
               </div>
@@ -899,15 +908,6 @@
                   <span>Clicar em publicar.</span>
                 </button>
               </div>
-            </div>
-
-            <!-- CARD 5: LOG DE POSTAGEM -->
-            <div class="log-panel" style="margin-top:16px;">
-              <div class="log-head">
-                <span>Log de Postagem</span>
-                <button class="btn-inline" id="btnClearPostLog" type="button">Limpar</button>
-              </div>
-              <div class="log-body" id="postLogBody"></div>
             </div>
 
           </div>
