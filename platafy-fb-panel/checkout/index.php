@@ -9,6 +9,7 @@ $selectedPlan = $_GET['plan'] ?? 'mensal';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $planKey = trim($_POST['plan'] ?? '');
     
@@ -18,24 +19,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cleanPhone = '55' . $cleanPhone;
     }
     
-    // Gerar um email sintético para Mercado Pago se o cliente digitou apenas o Zap
-    $email = 'zap_' . $cleanPhone . '@platafy.com';
-    
     $plans = json_decode(PLANS, true);
     
-    if (empty($name) || empty($phone)) {
-        $error = 'Por favor, preencha seu nome e número de WhatsApp.';
+    if (empty($name) || empty($email) || empty($phone)) {
+        $error = 'Por favor, preencha todos os campos: Nome, E-mail e WhatsApp.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Por favor, insira um e-mail válido.';
     } elseif (!isset($plans[$planKey])) {
         $error = 'Por favor, selecione um plano válido.';
     } else {
         try {
-            // Criar licença pendente com telefone gravado
+            // Criar licença pendente com Nome, E-mail e WhatsApp gravados
             $license = createLicense($name, $email, $planKey, null, $phone);
             
             // Criar checkout do Mercado Pago
             $plan = $plans[$planKey];
             
-            // Tentar criar preferência direta de pagamento no MP
             $mpPreferenceData = [
                 'items' => [
                     [
@@ -71,8 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: ' . $mpRes['sandbox_init_point']);
                 exit;
             } else {
-                // Fallback para link genérico ou mensagem de erro
-                $error = 'Erro ao conectar ao Mercado Pago: ' . ($mpRes['message'] ?? 'Verifique as chaves nas Configurações.');
+                $error = 'Erro ao conectar ao Mercado Pago: ' . ($mpRes['message'] ?? 'Verifique as chaves de API.');
             }
         } catch (Exception $e) {
             $error = 'Erro no servidor: ' . $e->getMessage();
@@ -109,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
             color: var(--text);
-            padding: 30px 15px;
+            padding: 35px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -184,8 +182,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .plan-card.selected {
             border-color: var(--neon);
-            background: rgba(255, 170, 0, 0.07);
-            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
+            background: rgba(255, 170, 0, 0.08);
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.25);
         }
         
         .plan-card.selected::before {
@@ -267,13 +265,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 800;
             color: var(--neon);
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
             letter-spacing: 1.5px;
             text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
         }
         
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         
         .form-group label {
@@ -283,13 +281,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 7px;
+            margin-bottom: 6px;
         }
         
         .form-group input, .form-group select {
             width: 100%;
-            padding: 14px 16px;
-            background: rgba(5, 7, 18, 0.7);
+            padding: 13px 15px;
+            background: rgba(5, 7, 18, 0.75);
             border: 1px solid rgba(255, 170, 0, 0.2);
             border-radius: 12px;
             color: var(--text);
@@ -301,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .form-group input:focus, .form-group select:focus {
             border-color: var(--neon);
-            box-shadow: 0 0 15px rgba(255, 170, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.25);
         }
         
         .form-group select {
@@ -336,7 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .secure-badge {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 18px;
             color: var(--muted);
             font-size: 12px;
             display: flex;
@@ -411,7 +409,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
         
-        <!-- COLUNA DA DIREITA: FORMULÁRIO -->
+        <!-- COLUNA DA DIREITA: FORMULÁRIO COMPLETO -->
         <div class="form-card">
             <div class="form-title">FINALIZAR ASSINATURA</div>
             
@@ -421,13 +419,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <form method="POST" id="checkout-form">
                 <div class="form-group">
-                    <label>Seu Nome</label>
-                    <input type="text" name="name" placeholder="Digite seu nome completo" required autofocus>
+                    <label>Seu Nome Completo</label>
+                    <input type="text" name="name" placeholder="Digite seu nome completo" required autofocus value="<?= htmlspecialchars($_POST['name'] ?? '') ?>">
+                </div>
+
+                <div class="form-group">
+                    <label>Seu E-mail</label>
+                    <input type="email" name="email" placeholder="seuemail@gmail.com" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                 </div>
                 
                 <div class="form-group">
                     <label>Seu WhatsApp</label>
-                    <input type="tel" name="phone" id="phone" placeholder="(11) 99999-9999" required maxlength="15">
+                    <input type="tel" name="phone" id="phone" placeholder="(11) 99999-9999" required maxlength="15" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>">
                 </div>
                 
                 <div class="form-group">
