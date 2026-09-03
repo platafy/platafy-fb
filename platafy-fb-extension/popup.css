@@ -2790,3 +2790,50 @@ input::placeholder, textarea::placeholder {
   font-size: 10px !important;
   color: var(--text-soft) !important;
 }
+
+/* ============================================================
+   CORREÇÃO DEFINITIVA DO BOTÃO VOLTAR (.back-btn) EM MODO CLARO E ESCURO
+   ============================================================ */
+.back-btn {
+  width: 40px !important;
+  height: 40px !important;
+  flex-shrink: 0 !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #4d5b9a 0%, #3b477a 100%) !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(77, 91, 154, 0.35) !important;
+  transition: all 0.2s ease !important;
+}
+
+.back-btn:hover {
+  transform: translateX(-3px) !important;
+  background: linear-gradient(135deg, #3b477a 0%, #2c3660 100%) !important;
+  box-shadow: 0 6px 16px rgba(77, 91, 154, 0.5) !important;
+}
+
+.back-btn svg, .back-btn i {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  width: 18px !important;
+  height: 18px !important;
+  display: block !important;
+}
+
+/* NO MODO CLARO ([data-theme="light"]) */
+[data-theme="light"] .back-btn {
+  background: linear-gradient(135deg, #3b477a 0%, #4d5b9a 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #3b477a !important;
+  box-shadow: 0 4px 12px rgba(59, 71, 122, 0.3) !important;
+}
+
+[data-theme="light"] .back-btn svg, 
+[data-theme="light"] .back-btn i {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
