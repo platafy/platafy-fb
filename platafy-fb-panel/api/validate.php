@@ -60,13 +60,11 @@ try {
         exit;
     }
 
-    // Verificar device_id (hwid) — se já vinculada a outro dispositivo
-    if (!empty($license['hwid']) && !empty($deviceId) && $license['hwid'] !== $deviceId) {
-        echo json_encode([
-            'valid'   => false,
-            'message' => 'Esta licença já está vinculada a outro dispositivo. Desative a licença no dispositivo antigo ou solicite a liberação ao suporte.'
-        ]);
-        exit;
+    // Verificar device_id (hwid) — se hwid diferente, atualizar para permitir reconexão sem travar o cliente
+    if (!empty($deviceId) && (empty($license['hwid']) || $license['hwid'] !== $deviceId)) {
+        $stmtUpdateHwid = $pdo->prepare("UPDATE licenses SET hwid = ? WHERE id = ?");
+        $stmtUpdateHwid->execute([$deviceId, $license['id']]);
+        $license['hwid'] = $deviceId;
     }
 
     // Ativar / atualizar licença
