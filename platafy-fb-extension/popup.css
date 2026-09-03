@@ -1953,3 +1953,87 @@ small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 11
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* FIX COMPLETO DE CONTRASTE E CORES DE TEMA (DARK / LIGHT) */
+
+.app-header {
+  background: var(--header-grad) !important;
+  color: #ffffff !important;
+}
+
+.panel, .panel-toolbar, .panel-header {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-soft) !important;
+  color: var(--text-main) !important;
+}
+
+.module-card, .feature-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-soft) !important;
+  box-shadow: var(--shadow-card) !important;
+  transition: all 0.25s ease !important;
+}
+
+.module-card:hover, .feature-card:hover {
+  background: var(--surface-alt) !important;
+  border-color: var(--secondary) !important;
+  box-shadow: var(--shadow-hover) !important;
+  transform: translateY(-2px) !important;
+}
+
+.module-card strong, .feature-card strong {
+  color: var(--text-main) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.module-card span, .feature-card span {
+  color: var(--text-soft) !important;
+}
+
+.module-icon, .feature-icon {
+  background: linear-gradient(135deg, var(--primary) 0%, #3b477a 100%) !important;
+  border: 1px solid var(--line-soft) !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 8px !important;
+}
+
+.module-icon svg, .feature-icon svg {
+  fill: var(--secondary) !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.module-card:hover .module-icon svg {
+  fill: #ffffff !important;
+}
+
+/* TOOLBAR & CONTROLS */
+.zoom-controls, .zoom-chip, .zoom-btn {
+  background: var(--bg-soft) !important;
+  border-color: var(--line-soft) !important;
+  color: var(--text-main) !important;
+}
+
+.zoom-btn:hover {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+.btn-tool, .btn-action, .tool-filter-btn {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-soft) !important;
+  color: var(--text-main) !important;
+}
+
+.btn-tool:hover, .tool-filter-btn.is-active {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--secondary) !important;
+}
