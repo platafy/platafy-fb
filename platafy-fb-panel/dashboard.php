@@ -40,6 +40,10 @@ $siteLogo = getSetting('site_logo', '');
                 <span id="site-logo-text">PLATAFY</span>
             <?php endif; ?>
         </div>
+    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Menu Mobile">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+    
         <div class="navbar-links">
             <a href="#" class="nav-link active" data-view="dashboard">Dashboard</a>
             <a href="#" class="nav-link" data-view="licenses">Licenças</a>
@@ -682,5 +686,23 @@ $siteLogo = getSetting('site_logo', '');
 
 
     <script src="/assets/js/dashboard.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('mobile-menu-toggle');
+            const navLinks = document.querySelector('.navbar-links');
+            if (toggleBtn && navLinks) {
+                toggleBtn.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+                document.querySelectorAll('.navbar-links .nav-link').forEach(link => {
+                    link.addEventListener('click', function() {
+                        navLinks.classList.remove('active');
+                    });
+                });
+            }
+        });
+    </script>
+
 </body>
 </html>
