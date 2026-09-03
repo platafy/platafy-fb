@@ -2900,3 +2900,80 @@ input::placeholder, textarea::placeholder {
   color: #ffffff !important;
   border-color: #16a34a !important;
 }
+
+/* ============================================================
+   CORREÇÃO DE ESTILIZAÇÃO DARK E LIGHT DA TABELA DE GRUPOS E BADGE
+   ============================================================ */
+
+/* COUNT BADGE ((49 grupos)) - MODO ESCURO E CLARO */
+.count-badge {
+  background: rgba(37, 99, 235, 0.2) !important;
+  border: 1px solid rgba(59, 130, 246, 0.4) !important;
+  color: #60a5fa !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 3px 12px !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+[data-theme="light"] .count-badge {
+  background: #dbeafe !important;
+  border: 1px solid #93c5fd !important;
+  color: #1e40af !important;
+}
+
+/* TABELA DE RESULTADOS (QTD, NOME, MEMBROS, LINK, ACAO) - MODO ESCURO */
+.results-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+.results-table thead th {
+  background: #1e293b !important;
+  border-bottom: 2px solid #334155 !important;
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  padding: 10px 14px !important;
+}
+
+.results-table tbody td {
+  border-bottom: 1px solid #1e293b !important;
+  color: #f1f5f9 !important;
+  font-size: 12px !important;
+  padding: 10px 14px !important;
+}
+
+.results-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.results-table a {
+  color: #60a5fa !important;
+  text-decoration: none !important;
+  word-break: break-all !important;
+}
+
+.results-table a:hover {
+  text-decoration: underline !important;
+}
+
+/* TABELA DE RESULTADOS - MODO CLARO ([data-theme="light"]) */
+[data-theme="light"] .results-table thead th {
+  background: #f1f5f9 !important;
+  border-bottom: 2px solid #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .results-table tbody td {
+  border-bottom: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .results-table a {
+  color: #2563eb !important;
+}
