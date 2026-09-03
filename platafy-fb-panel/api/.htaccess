@@ -1,0 +1,17 @@
+# Apache Rewrite Rules para a API da extensão Platafy FB
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /api/
+
+    # Reescrever /api/validate -> /api/validate.php
+    RewriteRule ^validate$ validate.php [L,QSA]
+
+    # Reescrever /api/release -> /api/release.php
+    RewriteRule ^release$ release.php [L,QSA]
+
+    # Caso genérico para outros arquivos PHP sem extensão
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*)$ $1.php [L,QSA]
+</IfModule>

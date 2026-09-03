@@ -1,0 +1,85 @@
+version: "3.7"
+
+services:
+
+## --------------------------- PAINEL PLATAFY FB --------------------------- ##
+
+  platafy_panel_app:
+    image: platafy_panel_app:latest
+    restart: unless-stopped
+
+    networks:
+      - platafynet
+
+    environment:
+      - DB_HOST=platafy_panel_db
+      - DB_NAME=platafy_fb
+      - DB_USER=platafy_user
+      - DB_PASS=SuaSenhaSeguraAqui123!
+      - SITE_URL=https://fb.platafy.com
+
+    volumes:
+      - panel_uploads:/var/www/html/uploads
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=platafynet"
+      - "traefik.http.routers.platafy_panel.rule=Host(`fb.platafy.com`)"
+      - "traefik.http.routers.platafy_panel.entrypoints=websecure"
+      - "traefik.http.routers.platafy_panel.tls.certresolver=letsencryptresolver"
+      - "traefik.http.routers.platafy_panel.service=platafy_panel"
+      - "traefik.http.services.platafy_panel.loadbalancer.server.port=80"
+      - "traefik.http.services.platafy_panel.loadbalancer.passHostHeader=true"
+
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=platafynet"
+        - "traefik.http.routers.platafy_panel.rule=Host(`fb.platafy.com`)"
+        - "traefik.http.routers.platafy_panel.entrypoints=websecure"
+        - "traefik.http.routers.platafy_panel.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.platafy_panel.service=platafy_panel"
+        - "traefik.http.services.platafy_panel.loadbalancer.server.port=80"
+        - "traefik.http.services.platafy_panel.loadbalancer.passHostHeader=true"
+
+## --------------------------- BANCO DE DADOS MYSQL --------------------------- ##
+
+  platafy_panel_db:
+    image: mysql:8.0
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+
+    networks:
+      - platafynet
+
+    environment:
+      - MYSQL_DATABASE=platafy_fb
+      - MYSQL_USER=platafy_user
+      - MYSQL_PASSWORD=SuaSenhaSeguraAqui123!
+      - MYSQL_ROOT_PASSWORD=SenhaRootMuitoSegura123!
+
+    volumes:
+      - panel_db_data:/var/lib/mysql
+
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+## --------------------------- VOLUMES E REDES --------------------------- ##
+
+volumes:
+  panel_uploads:
+    name: panel_uploads
+  panel_db_data:
+    name: panel_db_data
+
+networks:
+  platafynet:
+    external: true
+    name: platafynet

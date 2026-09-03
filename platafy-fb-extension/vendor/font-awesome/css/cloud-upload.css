@@ -1,0 +1,194 @@
+@font-face {
+  font-family: "Font Awesome 7 Free";
+  src: url("../fonts/fa-solid-900.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+}
+
+.fa,
+.fa-solid {
+  display: inline-block;
+  font-family: "Font Awesome 7 Free";
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-key::before {
+  content: "\f084";
+}
+
+.fa-plus::before {
+  content: "\2b";
+}
+
+.fa-trash::before {
+  content: "\f1f8";
+}
+
+.fa-circle-info::before {
+  content: "\f05a";
+}
+
+.fa-cog::before,
+.fa-gear::before {
+  content: "\f013";
+}
+
+.fa-arrow-left::before,
+.fa-arrow-left-long::before {
+  content: "\f177";
+}
+
+.fa-cloud-upload::before,
+.fa-cloud-arrow-up::before {
+  content: "\f0ee";
+}
+
+.fa-arrows-rotate::before,
+.fa-refresh::before {
+  content: "\f021";
+}
+
+.fa-toolbox::before {
+  content: "\f552";
+}
+
+.fa-heart::before {
+  content: "\f004";
+}
+
+.fa-bolt::before {
+  content: "\f0e7";
+}
+
+.fa-paper-plane::before {
+  content: "\f1d8";
+}
+
+.fa-address-book::before {
+  content: "\f2b9";
+}
+
+.fa-filter::before {
+  content: "\f0b0";
+}
+
+.fa-robot::before {
+  content: "\f544";
+}
+
+.fa-calendar-days::before {
+  content: "\f073";
+}
+
+.fa-table-columns::before {
+  content: "\f0db";
+}
+
+.fa-note-sticky::before {
+  content: "\f249";
+}
+
+.fa-link::before {
+  content: "\f0c1";
+}
+
+.fa-users-viewfinder::before {
+  content: "\e595";
+}
+
+.fa-user-check::before {
+  content: "\f4fc";
+}
+
+.fa-list::before {
+  content: "\f03a";
+}
+
+.fa-user-plus::before {
+  content: "\f234";
+}
+
+.fa-magnifying-glass-location::before {
+  content: "\f689";
+}
+
+.fa-people-group::before {
+  content: "\e533";
+}
+
+.fa-file-csv::before {
+  content: "\f6dd";
+}
+
+.fa-map-location-dot::before {
+  content: "\f5a0";
+}
+
+.fa-at::before {
+  content: "\40";
+}
+
+.fa-square-poll-vertical::before {
+  content: "\f681";
+}
+
+.fa-temperature-high::before {
+  content: "\f769";
+}
+
+.fa-fire-flame-curved::before {
+  content: "\f7e4";
+}
+
+.fa-comments::before {
+  content: "\f086";
+}
+
+.fa-file-import::before {
+  content: "\f56f";
+}
+
+.fa-download::before {
+  content: "\f019";
+}
+
+.fa-upload::before {
+  content: "\f093";
+}
+
+.fa-file-arrow-up::before {
+  content: "\f574";
+}
+
+@font-face {
+  font-family: "FontAwesomeBrandsLocal";
+  src: url("../fonts/fontawesome-webfont.woff2") format("woff2");
+  font-style: normal;
+  font-weight: normal;
+  font-display: block;
+}
+
+.fa-brands {
+  display: inline-block;
+  font-family: "FontAwesomeBrandsLocal";
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-facebook::before {
+  content: "\f09a";
+}
+
+.fa-whatsapp::before {
+  content: "\f232";
+}

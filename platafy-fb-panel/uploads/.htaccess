@@ -1,0 +1,11 @@
+# Security: Disable PHP execution in uploads directory
+<Files *.php>
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Allow image files only
+<FilesMatch "\.(png|jpe?g|webp|svg)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

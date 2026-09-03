@@ -1,0 +1,19 @@
+# PLATAFY WAGroup - Configurações Apache / cPanel
+
+# Bloquear listagem de diretórios
+Options -Indexes
+
+# UTF-8 Padrão
+AddDefaultCharset UTF-8
+
+# Proteção de arquivos sensíveis
+<FilesMatch "^(config\.php|schema\.sql|\.env|\.git)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Ativar Mod_Rewrite para URLs limpas (opcional)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>

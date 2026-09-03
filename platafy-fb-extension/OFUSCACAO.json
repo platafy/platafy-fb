@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-07-20T22:12:28.069Z",
+  "sourceFolder": "PLATAFY FB",
+  "outputFolder": "PLATAFY FB1",
+  "protectedFiles": [
+    "background.js",
+    "content.js",
+    "popup.js"
+  ]
+}
