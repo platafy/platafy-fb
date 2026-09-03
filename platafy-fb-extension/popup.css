@@ -2486,31 +2486,41 @@ input::placeholder, textarea::placeholder {
 }
 
 /* RESPONSIVIDADE EXPANDIDA PARA EXTRAÇÃO E DEMAIS TELAS (EXTRAIR GRUPOS, EXTRAIR COMENTÁRIOS, ENTRAR EM GRUPOS) */
-.view-split-container {
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 16px !important;
+
+/* Telas estreitas: empilha verticalmente */
+@media (max-width: 819px) {
+  .view-split-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+  }
+
+  .view-split-controls,
+  .view-split-main {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
 
-.view-split-controls {
-  width: 100% !important;
-  max-width: 100% !important;
-  flex: 1 1 100% !important;
-}
-
-.view-split-main {
-  width: 100% !important;
-  max-width: 100% !important;
-  flex: 1 1 100% !important;
-}
-
-@media (min-width: 850px) {
-  /* Quando houver painel principal preenchido (ex: tabela ao lado) */
-  .view-split-container:has(.view-split-main:not(:empty)) {
+/* Telas largas: grid de 2 colunas */
+@media (min-width: 820px) {
+  .view-split-container {
     display: grid !important;
     grid-template-columns: minmax(340px, 440px) 1fr !important;
+    gap: 18px !important;
     align-items: start !important;
+    width: 100% !important;
+  }
+
+  .view-split-controls {
+    width: 100% !important;
+    max-width: 440px !important;
+  }
+
+  .view-split-main {
+    width: 100% !important;
+    min-width: 0 !important;
   }
 }
 
