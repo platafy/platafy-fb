@@ -2037,3 +2037,151 @@ small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 11
   color: #ffffff !important;
   border-color: var(--secondary) !important;
 }
+
+/* ============================================================
+   CORREÇÃO DEFINITIVA DE BOTÕES
+   ============================================================ */
+
+/* 1. CABEÇALHO (HEADER) NO MODO CLARO E ESCURO */
+.app-header {
+  background: var(--header-grad) !important;
+  color: #ffffff !important;
+}
+
+.app-header .brand-name {
+  color: #ffffff !important;
+}
+
+.app-header .brand-meta, .app-header .brand-meta em, .app-header .brand-meta span {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* 2. BARRA DE TOOLBAR / ZOOM NO MODO CLARO E ESCURO */
+.panel-toolbar {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-soft) !important;
+}
+
+.zoom-chip, .zoom-value {
+  color: var(--text-main) !important;
+  font-weight: 700 !important;
+}
+
+.zoom-controls {
+  background: transparent !important;
+}
+
+.zoom-btn, .toolbar-action-btn, .toolbar-volume-btn {
+  background: var(--bg-soft) !important;
+  border: 1px solid var(--line-strong) !important;
+  color: var(--text-main) !important;
+  font-weight: 600 !important;
+}
+
+.zoom-btn:hover, .toolbar-action-btn:hover, .toolbar-volume-btn:hover {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--secondary) !important;
+}
+
+/* 3. BOTÕES PRINCIPAIS E DA CENTRAL DA FERRAMENTA */
+
+/* BOTÃO PRIMARY (Relatórios e Histórico, Gerenciar Acesso) */
+.btn-primary, button.btn-primary {
+  background: linear-gradient(135deg, #4d5b9a 0%, #3b477a 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 170, 0, 0.3) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(77, 91, 154, 0.3) !important;
+}
+
+.btn-primary:hover, button.btn-primary:hover {
+  background: linear-gradient(135deg, #5d6caa 0%, #4d5b9a 100%) !important;
+  border-color: var(--secondary) !important;
+  box-shadow: 0 6px 18px rgba(255, 170, 0, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-primary span, button.btn-primary span, .btn-primary i, button.btn-primary i {
+  color: #ffffff !important;
+}
+
+/* BOTÃO DANGER (Remover Acesso) */
+.btn-danger, button.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  font-weight: 700 !important;
+}
+
+.btn-danger span, button.btn-danger span, .btn-danger svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* BOTÃO SECONDARY (Changelog) NO MODO ESCURO */
+.btn-secondary, button.btn-secondary, #btnAcquireLicense {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--line-strong) !important;
+  font-weight: 700 !important;
+}
+
+.btn-secondary:hover, button.btn-secondary:hover, #btnAcquireLicense:hover {
+  background: var(--secondary) !important;
+  color: #000000 !important;
+  border-color: var(--secondary) !important;
+}
+
+.btn-secondary span, button.btn-secondary span, .btn-secondary i, button.btn-secondary i {
+  color: var(--text-main) !important;
+}
+
+.btn-secondary:hover span, button.btn-secondary:hover span, .btn-secondary:hover i, button.btn-secondary:hover i {
+  color: #000000 !important;
+}
+
+/* 4. ESPECÍFICO PARA O MODO CLARO ([data-theme="light"]) */
+[data-theme="light"] .btn-secondary, 
+[data-theme="light"] button.btn-secondary, 
+[data-theme="light"] #btnAcquireLicense {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+[data-theme="light"] .btn-secondary span, 
+[data-theme="light"] button.btn-secondary span, 
+[data-theme="light"] .btn-secondary i, 
+[data-theme="light"] button.btn-secondary i {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .btn-secondary:hover, 
+[data-theme="light"] button.btn-secondary:hover, 
+[data-theme="light"] #btnAcquireLicense:hover {
+  background: #d98200 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .btn-secondary:hover span, 
+[data-theme="light"] button.btn-secondary:hover span, 
+[data-theme="light"] .btn-secondary:hover i, 
+[data-theme="light"] button.btn-secondary:hover i {
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .zoom-btn, 
+[data-theme="light"] .toolbar-action-btn, 
+[data-theme="light"] .toolbar-volume-btn {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .zoom-btn:hover, 
+[data-theme="light"] .toolbar-action-btn:hover, 
+[data-theme="light"] .toolbar-volume-btn:hover {
+  background: #4d5b9a !important;
+  color: #ffffff !important;
+}
