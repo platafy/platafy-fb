@@ -689,24 +689,14 @@ small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 11
 .switch input:checked + .switch-track::before { transform: translateX(20px); }
 
 /* CHECKBOX OPTIONS */
-.checkbox-option {
-  padding: 12px 14px; border: 1.5px solid var(--line-soft); border-radius: 12px;
-  margin-bottom: 10px; background: #f8faff;
-  transition: border-color 0.2s ease;
-}
+.checkbox-option { padding: 12px 14px; border: 1px solid var(--line-soft); border-radius: 12px; margin-bottom: 10px; background: var(--surface-alt); transition: border-color 0.2s ease; }
 .checkbox-option:last-child { margin-bottom: 0; }
 .checkbox-option:hover { border-color: var(--primary); }
 .checkbox-row { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
 .checkbox-row span { font-size: 13px; font-weight: 600; color: var(--text-main); }
 .checkbox-help { margin-top: 6px; margin-left: 26px; color: var(--text-soft); font-size: 11px; line-height: 1.5; }
-.daily-limit-box {
-  margin-top: 14px;
-  padding: 14px;
-  border: 1.5px solid var(--line-soft);
-  border-radius: 12px;
-  background: #f8faff;
-}
+.daily-limit-box { margin-top: 14px; padding: 14px; border: 1px solid var(--line-soft); border-radius: 12px; background: var(--surface-alt); }
 .daily-limit-fields { margin-top: 12px; }
 .daily-auto-resume { margin-top: 12px; }
 .daily-limit-box.is-disabled .daily-limit-fields,
@@ -715,16 +705,7 @@ small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 11
   opacity: 0.45;
   pointer-events: none;
 }
-.dm-daily-status {
-  margin-top: 8px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: #e8f1ff;
-  color: var(--primary-dark);
-  font-size: 11px;
-  font-weight: 700;
-  text-align: center;
-}
+.dm-daily-status { margin-top: 8px; padding: 8px 10px; border-radius: 8px; background: var(--surface-alt); color: var(--secondary); font-size: 11px; font-weight: 700; border: 1px solid var(--line-soft); }
 
 /* LICENSE STATUS CARD */
 .license-status-card { background: linear-gradient(160deg, #f0f7ff 0%, #e8f0fe 100%); border: 1.5px solid #bfdbfe; }
@@ -743,7 +724,7 @@ small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 11
 .license-status-pill.is-inactive { background: #fee2e2; color: #b91c1c; }
 
 .license-meta-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.license-meta-item { min-height: 70px; padding: 12px; border: 1.5px solid #dbeafe; border-radius: 12px; background: white; }
+.license-meta-item { min-height: 70px; padding: 12px; border: 1px solid var(--line-soft); border-radius: 12px; background: var(--surface-alt); }
 .license-meta-label { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px; color: var(--primary); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
 
 /* HELP DOT */
@@ -2428,5 +2409,115 @@ input::placeholder, textarea::placeholder {
     flex-direction: column !important;
     width: 100% !important;
     gap: 16px !important;
+  }
+}
+
+/* ============================================================
+   CORREÇÃO COMPLETA DE CARDS, OPÇÕES E RESPONSIVIDADE EM TODAS AS TELAS
+   ============================================================ */
+
+/* CARDS DE LICENÇA (MINHA LICENÇA) */
+.license-meta-item, .license-status-card, .license-info-card {
+  background: var(--surface-alt) !important;
+  border: 1px solid var(--line-strong) !important;
+  color: var(--text-main) !important;
+}
+
+.license-meta-label, .license-status-eyebrow {
+  color: var(--text-soft) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+.license-meta-item strong, #licenseCustomerValue, #licensePlanValue, #licenseExpiryValue, #licenseDeviceValue {
+  color: var(--secondary) !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+
+/* CARDS DE TEMPO, LIMITES E CHECKBOXES (POSTAR EM GRUPOS / ENTRAR EM GRUPOS / POSTAR EM PERFIS) */
+.checkbox-option, .daily-limit-box, .duplicate-protection-box, 
+.dm-daily-status, .option-box, .option-card, .schedule-card, .limit-card {
+  background: var(--surface-alt) !important;
+  border: 1px solid var(--line-strong) !important;
+  color: var(--text-main) !important;
+  border-radius: 12px !important;
+}
+
+.checkbox-row span, .daily-limit-box label, .duplicate-protection-box label,
+.checkbox-help, .daily-limit-box span, .duplicate-protection-box span {
+  color: var(--text-main) !important;
+}
+
+.checkbox-help {
+  color: var(--text-soft) !important;
+}
+
+/* DROPZONES E ÁREAS DE ANEXOS */
+.dropzone, .media-dropzone, #templateMediaDropzone, .upload-dropzone {
+  background: var(--surface-alt) !important;
+  border: 2px dashed var(--secondary) !important;
+  color: var(--text-main) !important;
+}
+
+.dropzone span, .media-dropzone span, #templateMediaDropzone div {
+  color: var(--text-soft) !important;
+}
+
+/* ESPECÍFICO DO MODO CLARO ([data-theme="light"]) */
+[data-theme="light"] .license-meta-item,
+[data-theme="light"] .checkbox-option,
+[data-theme="light"] .daily-limit-box,
+[data-theme="light"] .duplicate-protection-box,
+[data-theme="light"] .dm-daily-status,
+[data-theme="light"] .option-box,
+[data-theme="light"] .option-card {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .license-meta-label,
+[data-theme="light"] .checkbox-row span,
+[data-theme="light"] .daily-limit-box label,
+[data-theme="light"] .duplicate-protection-box label {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .license-meta-item strong,
+[data-theme="light"] #licenseCustomerValue,
+[data-theme="light"] #licensePlanValue,
+[data-theme="light"] #licenseExpiryValue,
+[data-theme="light"] #licenseDeviceValue {
+  color: #d98200 !important;
+}
+
+/* RESPONSIVIDADE EXPANDIDA PARA EXTRAÇÃO E DEMAIS TELAS (EXTRAIR GRUPOS, EXTRAIR COMENTÁRIOS, ENTRAR EM GRUPOS) */
+.view-split-container {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+}
+
+.view-split-controls {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 100% !important;
+}
+
+.view-split-main {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 100% !important;
+}
+
+@media (min-width: 850px) {
+  /* Quando houver painel principal preenchido (ex: tabela ao lado) */
+  .view-split-container:has(.view-split-main:not(:empty)) {
+    display: grid !important;
+    grid-template-columns: minmax(340px, 440px) 1fr !important;
+    align-items: start !important;
   }
 }
