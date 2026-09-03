@@ -373,3 +373,42 @@ async function activateLicense(){const _0x316ffb=$('licenseKey')['value']['trim'
 
 function applyTheme(_theme){if(_theme==='light'){document['documentElement']['setAttribute']('data-theme','light');if($('themeToggleBtn'))$('themeToggleBtn')['innerHTML']='☀️';}else{document['documentElement']['removeAttribute']('data-theme');if($('themeToggleBtn'))$('themeToggleBtn')['innerHTML']='🌙';}}
 document['addEventListener']('DOMContentLoaded',()=>{chrome['storage']['local']['get'](['theme'],(_res)=>{if(_res?.['theme'])applyTheme(_res['theme']);});$('themeToggleBtn')?.['addEventListener']('click',()=>{const _curr=document['documentElement']['getAttribute']('data-theme')==='light'?'light':'dark',_new=_curr==='light'?'dark':'light';applyTheme(_new);chrome['storage']['local']['set']({'theme':_new});});});
+
+
+async function checkExtensionUpdates(){
+  try {
+    const manifest = chrome.runtime.getManifest();
+    const currVer = manifest.version || '1.0.0';
+    const res = await fetch('https://fb.platafy.com/api/version_check.php?current_version=' + encodeURIComponent(currVer));
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && data.success && data.update_available) {
+      const banner = document.getElementById('updateBanner');
+      const verSpan = document.getElementById('updateVersionNum');
+      const changelogPrev = document.getElementById('updateChangelogPrev');
+      const downloadBtn = document.getElementById('updateDownloadBtn');
+      if (verSpan) verSpan.textContent = data.latest_version;
+      if (changelogPrev && data.changelog) changelogPrev.textContent = data.changelog.substring(0, 50) + '...';
+      if (downloadBtn && data.download_url) downloadBtn.href = data.download_url;
+      if (banner) banner.style.display = 'flex';
+      window.latestVersionData = data;
+    }
+  } catch(e) {
+    console.warn('Erro ao verificar atualizacoes:', e);
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  checkExtensionUpdates();
+  
+  // Handler para botao Changelog
+  const btnChangelog = document.getElementById('btnAcquireLicense');
+  if (btnChangelog) {
+    btnChangelog.addEventListener('click', function() {
+      if (window.latestVersionData) {
+        alert('📋 NOTAS DE ATUALIZAÇÃO (' + (window.latestVersionData.latest_version || '') + '):\n\n' + (window.latestVersionData.changelog || 'Novas melhorias de desempenho.'));
+      } else {
+        alert('📋 NOTAS DE ATUALIZAÇÃO (v4.0.0):\n\n• Integração com Painel de Licenças PLATAFY FB\n• Suporte a perfis, grupos e comentários\n• Interface responsiva com modo Claro e Escuro');
+      }
+    });
+  }
+});
