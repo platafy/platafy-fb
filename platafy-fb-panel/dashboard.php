@@ -351,38 +351,23 @@ $siteLogo = getSetting('site_logo', '');
                 </button>
             </div>
 
-            <!-- BACKUPS E CRON JOB -->
+            
+            <!-- GERENCIADOR DE BACKUPS -->
             <div class="settings-card">
-                <div>
-                    <div class="card-header-custom">
-                        <div class="card-icon-box blue">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-                        </div>
-                        <div class="card-header-titles">
-                            <h3>Backups e Agendamento (Cron)</h3>
-                            <p>Automação cPanel para rotina de salvamento de banco de dados</p>
-                        </div>
+                <div class="card-header-custom">
+                    <div class="card-icon-box blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
                     </div>
-
-                    <div class="form-group-custom">
-                        <label>Comando de Agendamento (Cron Job cPanel)</label>
-                        <div class="cron-code-box">
-                            <span class="cron-code-text" id="cron-cmd-text">0 3 * * * php <?php echo realpath(__DIR__); ?>/cron/auto_updater.php</span>
-                            <button type="button" class="cron-copy-btn" onclick="copyCronCommand()">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                Copiar
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="form-group-custom">
-                        <label style="margin-bottom:12px;">Backups Armazenados no Servidor</label>
-                        <div id="backups-list-container" class="backup-list-box">
-                            <p style="color:var(--muted); font-size:12px; padding:10px;">Carregando backups...</p>
-                        </div>
+                    <div class="card-header-titles">
+                        <h3>Backups de Segurança (MySQL)</h3>
+                        <p>Histórico de salvamentos do banco de dados</p>
                     </div>
                 </div>
-            </div>
+
+                <div class="backup-list-box" id="backup-list-container">
+                    <div style="text-align:center; padding:20px; color:var(--muted); font-size:13px;">Carregando backups...</div>
+                </div>
+            </div></div>
         </div>
     </main>
 

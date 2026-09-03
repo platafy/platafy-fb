@@ -10,6 +10,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 
+require_once __DIR__ . '/../includes/settings_utils.php';
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -25,11 +26,15 @@ if (!file_exists($versionFilePath)) {
     exit;
 }
 
-$versionData = json_decode(file_get_contents($versionFilePath), true);
+$versionData = file_exists($versionFilePath) ? json_decode(file_get_contents($versionFilePath), true) : [];
 $extensionData = $versionData['extension'] ?? [];
 
-$clientVersion = $_GET['current_version'] ?? '1.0.0';
-$latestVersion = $extensionData['latest_version'] ?? '1.0.0';
+$latestVersion = getSetting('ext_latest_version') ?: ($extensionData['latest_version'] ?? '4.1.0');
+$downloadUrl = getSetting('ext_download_url') ?: ($extensionData['download_url'] ?? 'https://fb.platafy.com/downloads/platafy-fb.zip');
+$mandatory = getSetting('ext_mandatory') !== null ? (getSetting('ext_mandatory') === '1') : ($extensionData['mandatory'] ?? false);
+$changelog = getSetting('ext_changelog') ?: ($extensionData['changelog'] ?? 'Versão inicial do PLATAFY FB automação de postagem no Facebook.');
+
+$clientVersion = $_GET['current_version'] ?? '4.0.0';
 
 $updateAvailable = version_compare($latestVersion, $clientVersion, '>');
 
@@ -38,7 +43,7 @@ echo json_encode([
     'update_available' => $updateAvailable,
     'current_version' => $clientVersion,
     'latest_version' => $latestVersion,
-    'download_url' => $extensionData['download_url'] ?? '',
-    'mandatory' => $extensionData['mandatory'] ?? false,
-    'changelog' => $extensionData['changelog'] ?? ''
+    'download_url' => $downloadUrl,
+    'mandatory' => $mandatory,
+    'changelog' => $changelog
 ]);

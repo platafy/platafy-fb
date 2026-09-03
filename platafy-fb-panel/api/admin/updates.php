@@ -7,6 +7,7 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../../includes/settings_utils.php';
 
 requireAdmin();
 
@@ -74,6 +75,10 @@ try {
             ];
             
             file_put_contents($versionFilePath, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            saveSetting('ext_latest_version', $newVersion);
+            saveSetting('ext_download_url', $downloadUrl);
+            saveSetting('ext_mandatory', $mandatory ? '1' : '0');
+            saveSetting('ext_changelog', $changelog);
             
             echo json_encode(['success' => true, 'version' => $data]);
             break;

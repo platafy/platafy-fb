@@ -388,7 +388,7 @@ async function checkExtensionUpdates(){
       const changelogPrev = document.getElementById('updateChangelogPrev');
       const downloadBtn = document.getElementById('updateDownloadBtn');
       if (verSpan) verSpan.textContent = data.latest_version;
-      if (changelogPrev && data.changelog) changelogPrev.textContent = data.changelog.substring(0, 50) + '...';
+      if (changelogPrev && data.changelog) changelogPrev.textContent = data.changelog;
       if (downloadBtn && data.download_url) downloadBtn.href = data.download_url;
       if (banner) banner.style.display = 'flex';
       window.latestVersionData = data;

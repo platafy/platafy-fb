@@ -1,12 +1,12 @@
 {
   "extension": {
-    "latest_version": "1.0.0",
-    "download_url": "https://platafyfb.platafy.com/downloads/platafy-FB.zip",
+    "latest_version": "4.1.0",
+    "download_url": "https://fb.platafy.com/downloads/platafy-fb.zip",
     "mandatory": false,
-    "changelog": "Versão inicial do PLATAFY FB com gerenciador de grupos e disparos."
+    "changelog": "Versão inicial do PLATAFY FB automação de postagem no Facebook."
   },
   "panel": {
-    "version": "1.0.0",
+    "version": "4.1.0",
     "last_backup_at": null
   }
 }
