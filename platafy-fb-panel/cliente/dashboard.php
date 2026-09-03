@@ -3,6 +3,8 @@ session_start();
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/license_utils.php';
+require_once __DIR__ . '/../includes/settings_utils.php';
+$siteLogo = getSetting('site_logo', '');
 
 if (!isset($_SESSION['client_license_id'])) {
     header('Location: /cliente/');
@@ -300,7 +302,13 @@ $formattedExpiry = $license['expires_at'] ? date('d/m/Y H:i', strtotime($license
 <body>
     <div class="container">
         <div class="navbar">
-            <div class="brand">PLATAFY FB</div>
+            <div class="brand">
+                <?php if (!empty($siteLogo)): ?>
+                    <img src="<?= htmlspecialchars($siteLogo) ?>" alt="PLATAFY FB" style="max-height: 38px; vertical-align: middle;">
+                <?php else: ?>
+                    PLATAFY FB
+                <?php endif; ?>
+            </div>
             <a href="/cliente/logout.php" class="logout-link">Sair</a>
         </div>
         

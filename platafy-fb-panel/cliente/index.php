@@ -2,6 +2,8 @@
 session_start();
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/settings_utils.php';
+$siteLogo = getSetting('site_logo', '');
 
 $error = null;
 
@@ -220,7 +222,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="login-card">
         <div class="header">
-            <h1>ÁREA DO CLIENTE</h1>
+            <?php if (!empty($siteLogo)): ?>
+                <img src="<?= htmlspecialchars($siteLogo) ?>" alt="PLATAFY FB" style="max-height: 50px; margin-bottom: 12px; display: block; margin-left: auto; margin-right: auto;">
+            <?php else: ?>
+                <h1>ÁREA DO CLIENTE</h1>
+            <?php endif; ?>
             <p>Acesse sua licença e gerencie seus acessos</p>
         </div>
         

@@ -2,6 +2,8 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/license_utils.php';
+require_once __DIR__ . '/../includes/settings_utils.php';
+$siteLogo = getSetting('site_logo', '');
 require_once __DIR__ . '/../includes/mercadopago.php';
 
 $error = null;
@@ -390,7 +392,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
     <div class="header">
-        <h1>PLATAFY FB</h1>
+        <?php if (!empty($siteLogo)): ?>
+            <img src="<?= htmlspecialchars($siteLogo) ?>" alt="PLATAFY FB" style="max-height: 60px; margin-bottom: 12px;">
+        <?php else: ?>
+            <h1>PLATAFY FB</h1>
+        <?php endif; ?>
         <p>Automatize seu Facebook com ferramentas profissionais de alta performance.</p>
     </div>
     
