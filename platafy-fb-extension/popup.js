@@ -330,7 +330,7 @@ function extractGroupUrlsFromContent(fileContent) {
 }
 
 
-async function loadJoinedGroupsIntoPostList(){writeLog('postLogBody','Grupos','Info','Buscando grupos que voce participa no Facebook...','info');let _0x48663e=getSelectedTabId('postTabSelect','post');if(!_0x48663e){await refreshFacebookTabs()['catch'](()=>{});_0x48663e=getSelectedTabId('postTabSelect','post');}if(!_0x48663e){writeLog('postLogBody','Grupos','Erro','Selecione uma aba do Facebook.','error');return;}try{const _0xtab=await chrome['tabs']['get'](_0x48663e);if(!_0xtab?.['url']?.['includes']('/groups/joins')){writeLog('postLogBody','Grupos','Info','Abrindo a pagina de grupos do seu Facebook...','info');await chrome['tabs']['update'](_0x48663e,{'url':GROUPS_HOME_URL,'active':!![]});await new Promise(_0xr=>setTimeout(_0xr,3500));}writeLog('postLogBody','Grupos','Info','Iniciando varredura completa dos seus grupos...','info');let allGroups=[],lastCount=0,sameCountCycles=0;const MAX_PASSES=80;for(let pass=1;pass<=MAX_PASSES;pass++){const _0xres=await chrome['scripting']['executeScript']({'target':{'tabId':_0x48663e},'func':async function(){window['scrollTo'](0x0,document['body']['scrollHeight']);if(document['documentElement'])document['documentElement']['scrollTop']=document['documentElement']['scrollHeight'];if(document['body'])document['body']['scrollTop']=document['body']['scrollHeight'];window['scrollBy'](0x0,0xbb8);const scrollables=Array['from'](document['querySelectorAll']('div[role="main"], div[role="feed"], div[role="grid"], div[aria-label*="Grupos"], div[aria-label*="Groups"], div'));scrollables['forEach'](el=>{if(el['scrollHeight']&&el['clientHeight']&&el['scrollHeight']>el['clientHeight']+0x32){el['scrollTop']=el['scrollHeight'];if(el['scrollBy'])el['scrollBy'](0x0,0xbb8);}});const _links=new Set(),_anchors=Array['from'](document['querySelectorAll']('a[href*="/groups/"], a[href*="facebook.com/groups/"]'));_anchors['forEach'](_el=>{const _h=_el['href']||_el['getAttribute']('href')||'';if(!_h||!_h['includes']('/groups/'))return;try{const _u=new URL(_h,window['location']['origin']),_pathname=_u['pathname']['replace'](/\/+$/,''),_parts=_pathname['split']('/')['filter'](Boolean);if(_parts[0x0]!=='groups'||!_parts[0x1])return;if(['feed','discover','joins','search','create','category']['includes'](_parts[0x1]['toLowerCase']()))return;_u['hash']='',_u['search']='';const _cleanGroupUrl='https://www.facebook.com'+_pathname;_links['add'](_cleanGroupUrl);}catch{}});return Array['from'](_links);}});const extracted=_0xres?.[0x0]?.['result']||[];allGroups=extracted;const currentCount=allGroups['length'];writeLog('postLogBody','Grupos','Info','Varrendo grupos no Facebook... '+currentCount+' grupo(s) coletado(s). (Passo '+pass+'/'+MAX_PASSES+')','info');if(currentCount===lastCount){sameCountCycles++;if(sameCountCycles>=0x8&&currentCount>0x0){break;}}else{sameCountCycles=0x0,lastCount=currentCount;}await new Promise(_r=>setTimeout(_r,0x640));}if(allGroups['length']>0x0){const _0xarea=$('groupsList');if(_0xarea){const _0xcurr=_0xarea['value']['split']('\n')['map'](_s=>_s['trim']())['filter'](Boolean),_0xall=Array['from'](new Set([..._0xcurr,...allGroups]));_0xarea['value']=_0xall['join']('\n'),persistDraftField('groupsList'),resetPostingResume(),clearPostingProgress()['catch'](()=>{}),syncPostStartButton();}writeLog('postLogBody','Grupos','Sucesso','Varredura concluida com sucesso! '+allGroups['length']+' grupo(s) do Facebook carregados.','success');}else{writeLog('postLogBody','Grupos','Aviso','Nenhum grupo encontrado na pagina do Facebook.','warn');}}catch(_0x5c79ee){writeLog('postLogBody','Grupos','Erro',_0x5c79ee['message'],'error');}}
+async function loadJoinedGroupsIntoPostList(){writeLog('postLogBody','Grupos','Info','Buscando grupos que voce participa no Facebook...','info');let _0x48663e=getSelectedTabId('postTabSelect','post');if(!_0x48663e){await refreshFacebookTabs()['catch'](()=>{});_0x48663e=getSelectedTabId('postTabSelect','post');}if(!_0x48663e){writeLog('postLogBody','Grupos','Erro','Selecione uma aba do Facebook.','error');return;}try{const _0xtab=await chrome['tabs']['get'](_0x48663e);if(!_0xtab?.['url']?.['includes']('/groups/joins')){writeLog('postLogBody','Grupos','Info','Abrindo a pagina de grupos do seu Facebook...','info');await chrome['tabs']['update'](_0x48663e,{'url':GROUPS_HOME_URL,'active':!![]});await new Promise(_0xr=>setTimeout(_0xr,3500));}writeLog('postLogBody','Grupos','Info','Iniciando varredura completa dos seus grupos...','info');let allGroups=[],lastCount=0,sameCountCycles=0;const MAX_PASSES=80;for(let pass=1;pass<=MAX_PASSES;pass++){const _0xres=await chrome['scripting']['executeScript']({'target':{'tabId':_0x48663e},'func':async function(){window['scrollTo'](0x0,document['body']['scrollHeight']);if(document['documentElement'])document['documentElement']['scrollTop']=document['documentElement']['scrollHeight'];if(document['body'])document['body']['scrollTop']=document['body']['scrollHeight'];window['scrollBy'](0x0,0xbb8);const scrollables=Array['from'](document['querySelectorAll']('div[role="main"], div[role="feed"], div[role="grid"], div[aria-label*="Grupos"], div[aria-label*="Groups"], div'));scrollables['forEach'](el=>{if(el['scrollHeight']&&el['clientHeight']&&el['scrollHeight']>el['clientHeight']+0x32){el['scrollTop']=el['scrollHeight'];if(el['scrollBy'])el['scrollBy'](0x0,0xbb8);}});const _links=new Set(),_anchors=Array['from'](document['querySelectorAll']('a[href*="/groups/"], a[href*="facebook.com/groups/"]'));_anchors['forEach'](_el=>{const _h=_el['href']||_el['getAttribute']('href')||'';if(!_h||!_h['includes']('/groups/'))return;try{const _u=new URL(_h,window['location']['origin']),_pathname=_u['pathname']['replace'](/\/+$/,''),_parts=_pathname['split']('/')['filter'](Boolean);if(_parts[0x0]!=='groups'||!_parts[0x1])return;if(['feed','discover','joins','search','create','category']['includes'](_parts[0x1]['toLowerCase']()))return;_u['hash']='',_u['search']='';const _cleanGroupUrl='https://www.facebook.com'+_pathname;_links['add'](_cleanGroupUrl);}catch{}});return Array['from'](_links);}});const extracted=_0xres?.[0x0]?.['result']||[];allGroups=extracted;const currentCount=allGroups['length'];writeLog('postLogBody','Grupos','Info','Varrendo grupos no Facebook... '+currentCount+' grupo(s) coletado(s). (Passo '+pass+'/'+MAX_PASSES+')','info');if(currentCount===lastCount){sameCountCycles++;if(sameCountCycles>=0x8&&currentCount>0x0){break;}}else{sameCountCycles=0x0,lastCount=currentCount;}await new Promise(_r=>setTimeout(_r,0x640));}if(allGroups['length']>0x0){const _0xarea=$('groupsList');if(_0xarea){const _0xcurr=_0xarea['value']['split']('\n')['map'](_s=>_s['trim']())['filter'](Boolean),_0xall=Array['from'](new Set([..._0xcurr,...allGroups]));_0xarea['value']=_0xall['join']('\n'),persistDraftField('groupsList'),updatePostGroupsData(_0xall),resetPostingResume(),clearPostingProgress()['catch'](()=>{}),syncPostStartButton();}writeLog('postLogBody','Grupos','Sucesso','Varredura concluida com sucesso! '+allGroups['length']+' grupo(s) do Facebook carregados.','success');}else{writeLog('postLogBody','Grupos','Aviso','Nenhum grupo encontrado na pagina do Facebook.','warn');}}catch(_0x5c79ee){writeLog('postLogBody','Grupos','Erro',_0x5c79ee['message'],'error');}}
 async function importGroupFile(_0x291bd6){
     try {
         const _0x4592b7 = await _0x291bd6['text']();
@@ -420,6 +420,21 @@ async function checkExtensionUpdates(){
     console.warn('Erro ao verificar atualizacoes:', e);
   }
 }
+
+    $('btnClearPostGroupsTable')?.addEventListener('click', () => {
+        postGroupsDataList = [];
+        renderPostGroupsTable();
+        writeLog('postLogBody', 'Grupos', 'Info', 'Lista de grupos zerada.', 'info');
+    });
+    $('btnClearPostGroups')?.addEventListener('click', () => {
+        postGroupsDataList = [];
+        renderPostGroupsTable();
+        writeLog('postLogBody', 'Grupos', 'Info', 'Lista de grupos zerada.', 'info');
+    });
+    $('groupsList')?.addEventListener('input', () => {
+        renderPostGroupsTable();
+    });
+
 document.addEventListener('DOMContentLoaded', function() {
   checkExtensionUpdates();
   
@@ -435,3 +450,90 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+
+// ========== RENDERIZAÇÃO E REMOÇÃO DE GRUPOS NA TABELA DE POSTAR EM GRUPOS ==========
+let postGroupsDataList = [];
+
+function renderPostGroupsTable() {
+    const tableBody = document.getElementById('postGroupsTableBody');
+    const badge = document.getElementById('postGroupsCountBadge');
+    const textarea = document.getElementById('groupsList');
+
+    if (!tableBody) return;
+
+    // Se postGroupsDataList estiver vazio mas a textarea possuir links, reconstruir postGroupsDataList
+    if (textarea && textarea.value.trim() !== '') {
+        const lines = textarea.value.split('\n').map(s => s.trim()).filter(Boolean);
+        if (postGroupsDataList.length !== lines.length) {
+            postGroupsDataList = lines.map(line => {
+                const existing = postGroupsDataList.find(g => (g.url || g) === line);
+                if (existing) return existing;
+                return { url: line, name: extractGroupNameFromUrl(line), members: '-' };
+            });
+        }
+    }
+
+    const total = postGroupsDataList.length;
+    if (badge) badge.textContent = `(${total} grupos)`;
+
+    if (total === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align:center;padding:24px;color:var(--muted);">
+                    Nenhum grupo carregado. Clique em <strong>⚡ Puxar Grupos</strong> ou <strong>Importar</strong> para listar seus grupos.
+                </td>
+            </tr>`;
+        if (textarea) {
+            textarea.value = '';
+            persistDraftField('groupsList');
+        }
+        return;
+    }
+
+    tableBody.innerHTML = postGroupsDataList.map((g, idx) => {
+        const name = g.name || extractGroupNameFromUrl(g.url || g);
+        const members = g.members || '-';
+        const url = g.url || g;
+        return `
+            <tr>
+                <td style="font-weight:700;">${idx + 1}</td>
+                <td style="font-weight:600;color:var(--text-main);">${escapeHtml(name)}</td>
+                <td style="color:var(--muted);font-size:11px;">${escapeHtml(members)}</td>
+                <td><a href="${escapeHtml(url)}" target="_blank" style="font-size:11px;">${escapeHtml(url)}</a></td>
+                <td style="text-align:center;">
+                    <button type="button" class="mini-btn btn-remove-post-group" data-index="${idx}" style="background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;border:none;cursor:pointer;font-weight:700;" title="Remover grupo">x</button>
+                </td>
+            </tr>`;
+    }).join('');
+
+    // Sincronizar textarea oculta com os links atuais
+    if (textarea) {
+        textarea.value = postGroupsDataList.map(g => g.url || g).join('\n');
+        persistDraftField('groupsList');
+    }
+
+    // Adicionar escutadores para os botões "x" de remoção individual
+    tableBody.querySelectorAll('.btn-remove-post-group').forEach(btn => {
+        btn.onclick = function() {
+            const index = parseInt(this.getAttribute('data-index'), 10);
+            if (!isNaN(index) && index >= 0 && index < postGroupsDataList.length) {
+                const removed = postGroupsDataList.splice(index, 1);
+                renderPostGroupsTable();
+                writeLog('postLogBody', 'Grupos', 'Info', `Grupo removido da lista (${postGroupsDataList.length} restantes).`, 'info');
+            }
+        };
+    });
+}
+
+function updatePostGroupsData(newList) {
+    if (Array.isArray(newList)) {
+        postGroupsDataList = newList.map(item => {
+            if (typeof item === 'string') {
+                return { url: item, name: extractGroupNameFromUrl(item), members: '-' };
+            }
+            return item;
+        });
+        renderPostGroupsTable();
+    }
+}
