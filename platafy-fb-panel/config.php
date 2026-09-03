@@ -33,14 +33,14 @@ define('MP_USE_TEST', true);                                // true = modo teste
 define('PLANS', json_encode([
     'mensal' => [
         'name' => 'Plano Mensal',
-        'price' => 39.00,
+        'price' => 39.90,
         'frequency' => 1,
         'frequency_type' => 'months',
         'days' => 30
     ],
     'semestral' => [
         'name' => 'Plano Semestral',
-        'price' => 69.00,
+        'price' => 69.90,
         'frequency' => 6,
         'frequency_type' => 'months',
         'days' => 180

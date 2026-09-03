@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($_POST['phone'] ?? '');
     $planKey = trim($_POST['plan'] ?? '');
     
-    // Formatar WhatsApp limpo
     $cleanPhone = preg_replace('/\D/', '', $phone);
     if (strlen($cleanPhone) >= 10 && !str_starts_with($cleanPhone, '55')) {
         $cleanPhone = '55' . $cleanPhone;
@@ -29,10 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Por favor, selecione um plano válido.';
     } else {
         try {
-            // Criar licença pendente com Nome, E-mail e WhatsApp gravados
             $license = createLicense($name, $email, $planKey, null, $phone);
-            
-            // Criar checkout do Mercado Pago
             $plan = $plans[$planKey];
             
             $mpPreferenceData = [
@@ -93,8 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --neon-glow: rgba(255, 170, 0, 0.4);
             --primary: #4d5b9a;
             --bg-deep: #070914;
-            --glass: rgba(13, 17, 38, 0.75);
-            --glass-card: rgba(18, 24, 52, 0.65);
+            --glass: rgba(13, 17, 38, 0.8);
+            --glass-card: rgba(18, 24, 52, 0.7);
             --border: rgba(255, 170, 0, 0.25);
             --border-hover: rgba(255, 170, 0, 0.6);
             --text: #ffffff;
@@ -115,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .header {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             max-width: 700px;
         }
         
@@ -135,17 +131,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             line-height: 1.5;
         }
         
-        /* LAYOUT PRINCIPAL DE 2 COLUNAS */
+        /* CONTAINER DE 2 COLUNAS IGUAIS EM ALTURA */
         .checkout-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            max-width: 1050px;
+            gap: 25px;
+            max-width: 1080px;
             width: 100%;
-            align-items: start;
+            align-items: stretch;
         }
         
-        @media (max-width: 880px) {
+        @media (max-width: 900px) {
             .checkout-container {
                 grid-template-columns: 1fr;
                 gap: 25px;
@@ -156,7 +152,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .plans-column {
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             gap: 16px;
+            height: 100%;
         }
         
         .plan-card {
@@ -164,14 +162,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             backdrop-filter: blur(15px);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 22px 24px;
+            padding: 20px 24px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
+            text-align: center;
+            flex: 1;
+            justify-content: center;
         }
         
         .plan-card:hover {
@@ -182,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .plan-card.selected {
             border-color: var(--neon);
-            background: rgba(255, 170, 0, 0.08);
+            background: rgba(255, 170, 0, 0.09);
             box-shadow: 0 0 20px rgba(255, 170, 0, 0.25);
         }
         
@@ -196,13 +197,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .badge {
             position: absolute;
-            top: 10px;
+            top: 8px;
             right: 15px;
             background: linear-gradient(135deg, #ffaa00, #ff7700);
             color: #000;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
-            padding: 3px 10px;
+            padding: 3px 9px;
             border-radius: 20px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -213,39 +214,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #000;
         }
         
-        .plan-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+        .plan-header {
+            margin-bottom: 6px;
+            text-align: center;
         }
         
         .plan-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 16px;
             font-weight: 700;
-            color: var(--text);
+            color: var(--neon);
             letter-spacing: 1px;
+            margin-bottom: 2px;
         }
         
-        .plan-desc {
+        .plan-subtitle {
             font-size: 12px;
             color: var(--muted);
+            margin-bottom: 8px;
         }
         
-        .plan-price-tag {
-            text-align: right;
+        .plan-price-box {
+            margin-bottom: 8px;
+            text-align: center;
         }
         
         .plan-price-val {
             font-family: 'Orbitron', sans-serif;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
-            color: var(--neon);
+            color: var(--text);
         }
         
-        .plan-price-sub {
+        .plan-billing-note {
             font-size: 11px;
             color: var(--muted);
+            margin-top: 2px;
+        }
+        
+        .plan-features-list {
+            list-style: none;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-top: 6px;
+        }
+        
+        .plan-features-list li {
+            font-size: 11.5px;
+            color: #d0d8e8;
+        }
+        
+        .plan-features-list li span {
+            color: var(--neon);
+            font-weight: 700;
+            margin-right: 3px;
         }
         
         /* COLUNA DA DIREITA - FORMULÁRIO */
@@ -256,7 +280,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 20px;
             padding: 32px 28px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
         }
         
         .form-title {
@@ -368,44 +395,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     
     <div class="checkout-container">
-        <!-- COLUNA DA ESQUERDA: PLANOS -->
+        <!-- COLUNA DA ESQUERDA: PLANOS CENTRALIZADOS -->
         <div class="plans-column">
             <!-- PLANO 1: MENSAL -->
             <div class="plan-card <?= $selectedPlan === 'mensal' ? 'selected' : '' ?>" onclick="selectPlan('mensal', this)">
-                <div class="plan-info">
-                    <div class="plan-title">PLANO MENSAL</div>
-                    <div class="plan-desc">Acesso completo por 30 dias</div>
+                <div class="plan-header">
+                    <div class="plan-title">Plano Mensal</div>
+                    <div class="plan-subtitle">Acesso completo por 30 dias</div>
                 </div>
-                <div class="plan-price-tag">
-                    <div class="plan-price-val">R$ 39<small>,00</small></div>
-                    <div class="plan-price-sub">cobrado por mês</div>
+                <div class="plan-price-box">
+                    <div class="plan-price-val">R$ 39,90</div>
+                    <div class="plan-billing-note">Cobrança mensal • Cancele quando quiser</div>
                 </div>
+                <ul class="plan-features-list">
+                    <li><span>✓</span> PLATAFY FB 2026 completo</li>
+                    <li><span>✓</span> 1 ativação em 1 computador</li>
+                    <li><span>✓</span> Atualizações durante o acesso</li>
+                    <li><span>✓</span> Ideal para começar investindo menos</li>
+                </ul>
             </div>
             
             <!-- PLANO 2: SEMESTRAL -->
             <div class="plan-card <?= $selectedPlan === 'semestral' ? 'selected' : '' ?>" onclick="selectPlan('semestral', this)">
-                <span class="badge">Mais Popular</span>
-                <div class="plan-info">
-                    <div class="plan-title">PLANO SEMESTRAL</div>
-                    <div class="plan-desc">Acesso completo por 6 meses</div>
+                <span class="badge">MAIS POPULAR</span>
+                <div class="plan-header">
+                    <div class="plan-title">Plano Semestral</div>
+                    <div class="plan-subtitle">Acesso completo por 6 meses</div>
                 </div>
-                <div class="plan-price-tag">
-                    <div class="plan-price-val">R$ 69<small>,00</small></div>
-                    <div class="plan-price-sub">a cada 6 meses</div>
+                <div class="plan-price-box">
+                    <div class="plan-price-val">R$ 69,90</div>
+                    <div class="plan-billing-note">Apenas R$ 11,65 por mês no período</div>
                 </div>
+                <ul class="plan-features-list">
+                    <li><span>✓</span> PLATAFY FB 2026 completo</li>
+                    <li><span>✓</span> 1 ativação em 1 computador</li>
+                    <li><span>✓</span> Atualizações durante os 6 meses</li>
+                    <li><span>✓</span> Mais economia que o plano mensal</li>
+                </ul>
             </div>
             
             <!-- PLANO 3: VITALÍCIO -->
             <div class="plan-card <?= $selectedPlan === 'vitalicio' ? 'selected' : '' ?>" onclick="selectPlan('vitalicio', this)">
-                <span class="badge badge-green">Melhor Custo-Benefício</span>
-                <div class="plan-info">
-                    <div class="plan-title">PLANO VITALÍCIO</div>
-                    <div class="plan-desc">Acesso permanente + Atualizações</div>
+                <span class="badge badge-green">MELHOR CUSTO-BENEFÍCIO</span>
+                <div class="plan-header">
+                    <div class="plan-title">Plano Vitalício</div>
+                    <div class="plan-subtitle">Acesso completo sem data de expiração</div>
                 </div>
-                <div class="plan-price-tag">
-                    <div class="plan-price-val">R$ 149<small>,90</small></div>
-                    <div class="plan-price-sub">pagamento único</div>
+                <div class="plan-price-box">
+                    <div class="plan-price-val">R$ 149,90</div>
+                    <div class="plan-billing-note">Pagamento único • Sem mensalidade</div>
                 </div>
+                <ul class="plan-features-list">
+                    <li><span>✓</span> PLATAFY FB 2026 completo</li>
+                    <li><span>✓</span> 2 ativações em computadores diferentes</li>
+                    <li><span>✓</span> Atualizações futuras incluídas</li>
+                </ul>
             </div>
         </div>
         
@@ -436,9 +480,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label>Plano Selecionado</label>
                     <select name="plan" id="plan-select" required>
-                        <option value="mensal" <?= $selectedPlan === 'mensal' ? 'selected' : '' ?>>Mensal - R$ 39,00/mês</option>
-                        <option value="semestral" <?= $selectedPlan === 'semestral' ? 'selected' : '' ?>>Semestral - R$ 69,00/6 meses</option>
-                        <option value="vitalicio" <?= $selectedPlan === 'vitalicio' ? 'selected' : '' ?>>Vitalício - R$ 149,90 (Único)</option>
+                        <option value="mensal" <?= $selectedPlan === 'mensal' ? 'selected' : '' ?>>Mensal - R$ 39,90/mês</option>
+                        <option value="semestral" <?= $selectedPlan === 'semestral' ? 'selected' : '' ?>>Semestral - R$ 69,90/6 meses</option>
+                        <option value="vitalicio" <?= $selectedPlan === 'vitalicio' ? 'selected' : '' ?>>Vitalício - R$ 149,90 (Pagamento Único)</option>
                     </select>
                 </div>
                 
