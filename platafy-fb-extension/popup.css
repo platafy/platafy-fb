@@ -2212,3 +2212,11 @@ small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 11
   transform: scale(1.1) !important;
   box-shadow: 0 0 10px rgba(255, 170, 0, 0.4) !important;
 }
+
+
+/* COR DO TEXTO V4 */
+.brand-name span {
+  color: #ffaa00 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 0 8px rgba(255, 170, 0, 0.4) !important;
+}
