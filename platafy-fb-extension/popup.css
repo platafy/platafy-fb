@@ -2185,3 +2185,30 @@ small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 11
   background: #4d5b9a !important;
   color: #ffffff !important;
 }
+
+
+/* THEME TOGGLE BUTTON INLINE NEXT TO BRAND NAME */
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+.theme-toggle-btn:hover {
+  background: var(--secondary) !important;
+  color: #000000 !important;
+  border-color: var(--secondary) !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 0 10px rgba(255, 170, 0, 0.4) !important;
+}
