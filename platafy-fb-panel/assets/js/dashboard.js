@@ -58,7 +58,12 @@ async function loadStats() {
             const tbody = document.getElementById('expiring-tbody');
             tbody.innerHTML = data.expiring_soon.map(l => `
                 <tr>
-                    <td style="font-family:'Orbitron',sans-serif; font-size:11px; color:var(--neon);">${l.license_key}</td>
+                    <td style="font-family:'Orbitron',sans-serif; font-size:11px; color:var(--neon);">
+                    <div style="display:inline-flex; align-items:center; gap:6px;">
+                        <span>${l.license_key}</span>
+                        <button type="button" class="btn-sm btn-secondary" onclick="copyLicenseKey(this, '${l.license_key}')" title="Copiar Chave" style="padding:2px 5px; font-size:9px; border-radius:4px; cursor:pointer;">📋 Copiar</button>
+                    </div>
+                </td>
                     <td>${l.client_name || '-'}</td>
                     <td>${l.plan_type}</td>
                     <td style="color:var(--warning);">${formatDate(l.expires_at)}</td>
@@ -209,7 +214,14 @@ async function loadLicenses(page = 1) {
         
         tbody.innerHTML = data.licenses.map(l => `
             <tr>
-                <td style="font-family:'Orbitron',sans-serif; font-size:12px; color:var(--neon); letter-spacing:1px; font-weight:600;">${l.license_key}</td>
+                <td style="font-family:'Orbitron',sans-serif; font-size:12px; color:var(--neon); letter-spacing:1px; font-weight:600;">
+                    <div style="display:inline-flex; align-items:center; gap:8px;">
+                        <span>${l.license_key}</span>
+                        <button type="button" class="btn-sm btn-secondary" onclick="copyLicenseKey(this, '${l.license_key}')" title="Copiar Chave da Licença" style="padding:2px 7px; font-size:10px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; font-family:sans-serif; text-transform:none;">
+                            📋 Copiar
+                        </button>
+                    </div>
+                </td>
                 <td><strong style="color:var(--text);">${l.client_name || '<span style="color:var(--muted)">—</span>'}</strong></td>
                 <td>
                     ${l.client_phone ? `
@@ -342,7 +354,13 @@ async function viewDetail(id) {
         const l = data.license;
         document.getElementById('detail-content').innerHTML = `
             <div class="detail-grid">
-                <div class="detail-item"><label>Chave da Licença</label><span style="font-family:'Orbitron',sans-serif; color:var(--neon); font-size:13px; font-weight:700;">${l.license_key}</span></div>
+                <div class="detail-item">
+            <label>Chave da Licença</label>
+            <div style="display:flex; align-items:center; gap:10px; margin-top:4px;">
+                <span style="font-family:'Orbitron',sans-serif; color:var(--neon); font-size:13px; font-weight:700;">${l.license_key}</span>
+                <button type="button" class="btn-sm btn-secondary" onclick="copyLicenseKey(this, '${l.license_key}')" style="padding:3px 8px; font-size:11px; border-radius:6px; cursor:pointer;">📋 Copiar Licença</button>
+            </div>
+        </div>
                 <div class="detail-item"><label>Status Atual</label><span><span class="badge badge-${l.status}">${l.status}</span></span></div>
                 <div class="detail-item"><label>Nome do Cliente</label><span>${l.client_name || '—'}</span></div>
                 <div class="detail-item"><label>E-mail</label><span>${l.client_email || '—'}</span></div>
@@ -880,3 +898,44 @@ async function installPWA() {
 }
 
 
+
+function copyLicenseKey(btn, key) {
+    if (!key) return;
+    const originalHTML = btn.innerHTML;
+    
+    function showSuccess() {
+        btn.innerHTML = '✅ Copiado!';
+        btn.style.borderColor = '#22c55e';
+        btn.style.color = '#4ade80';
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.style.borderColor = '';
+            btn.style.color = '';
+        }, 2000);
+    }
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(key).then(showSuccess).catch(() => fallbackCopy(key, btn, originalHTML));
+    } else {
+        fallbackCopy(key, btn, originalHTML);
+    }
+}
+
+function fallbackCopy(key, btn, originalHTML) {
+    const input = document.createElement('input');
+    input.value = key;
+    document.body.appendChild(input);
+    input.select();
+    try {
+        document.execCommand('copy');
+        btn.innerHTML = '✅ Copiado!';
+        btn.style.borderColor = '#22c55e';
+        btn.style.color = '#4ade80';
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.style.borderColor = '';
+            btn.style.color = '';
+        }, 2000);
+    } catch(e) {}
+    document.body.removeChild(input);
+}
