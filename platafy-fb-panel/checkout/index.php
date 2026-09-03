@@ -1,64 +1,81 @@
 <?php
-/**
- * PLATAFY FB - Página de Checkout (Pública)
- * URL: https://platafyfb.platafy.com/checkout/
- */
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/license_utils.php';
 require_once __DIR__ . '/../includes/mercadopago.php';
 
-$plans = json_decode(PLANS, true);
-$error = '';
-$success = false;
+$error = null;
+$selectedPlan = $_GET['plan'] ?? 'mensal';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $planKey = $_POST['plan'] ?? '';
+    $phone = trim($_POST['phone'] ?? '');
+    $planKey = trim($_POST['plan'] ?? '');
     
-    if (!$name || !$email || !isset($plans[$planKey])) {
-        $error = 'Preencha todos os campos corretamente.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = 'E-mail inválido.';
+    // Formatar WhatsApp limpo
+    $cleanPhone = preg_replace('/\D/', '', $phone);
+    if (strlen($cleanPhone) >= 10 && !str_starts_with($cleanPhone, '55')) {
+        $cleanPhone = '55' . $cleanPhone;
+    }
+    
+    // Gerar um email sintético para Mercado Pago se o cliente digitou apenas o Zap
+    $email = 'zap_' . $cleanPhone . '@platafy.com';
+    
+    $plans = json_decode(PLANS, true);
+    
+    if (empty($name) || empty($phone)) {
+        $error = 'Por favor, preencha seu nome e número de WhatsApp.';
+    } elseif (!isset($plans[$planKey])) {
+        $error = 'Por favor, selecione um plano válido.';
     } else {
-        $plan = $plans[$planKey];
-        
-        // Criar assinatura no Mercado Pago
-        $subData = [
-            'reason' => 'PLATAFY FB - ' . $plan['name'],
-            'auto_recurring' => [
-                'frequency' => $plan['frequency'],
-                'frequency_type' => $plan['frequency_type'],
-                'transaction_amount' => $plan['price'],
-                'currency_id' => 'BRL'
-            ],
-            'payer_email' => $email,
-            'back_url' => SITE_URL . '/checkout/obrigado.php',
-            'status' => 'pending'
-        ];
-        
-        $result = mpRequest('/preapproval', 'POST', $subData);
-        
-        if (isset($result['id']) && isset($result['init_point'])) {
-            // Criar licença pendente vinculada à assinatura
-            $pdo = db();
-            $licenseKey = generateLicenseKey();
+        try {
+            // Criar licença pendente com telefone gravado
+            $license = createLicense($name, $email, $planKey, null, $phone);
             
-            $stmt = $pdo->prepare("
-                INSERT INTO licenses (license_key, client_name, client_email, plan_type, status, mp_subscription_id, mp_payer_email)
-                VALUES (?, ?, ?, ?, 'pending', ?, ?)
-            ");
-            $stmt->execute([$licenseKey, $name, $email, $planKey, $result['id'], $email]);
+            // Criar checkout do Mercado Pago
+            $plan = $plans[$planKey];
             
-            logActivity($pdo->lastInsertId(), 'checkout_started', "Checkout iniciado via MP | Sub: {$result['id']}");
+            // Tentar criar preferência direta de pagamento no MP
+            $mpPreferenceData = [
+                'items' => [
+                    [
+                        'title' => 'PLATAFY FB - ' . $plan['name'],
+                        'quantity' => 1,
+                        'currency_id' => 'BRL',
+                        'unit_price' => (float)$plan['price']
+                    ]
+                ],
+                'payer' => [
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => [
+                        'area_code' => substr($cleanPhone, 2, 2),
+                        'number' => substr($cleanPhone, 4)
+                    ]
+                ],
+                'external_reference' => (string)$license['id'],
+                'back_urls' => [
+                    'success' => CHECKOUT_BACK_URL,
+                    'pending' => CHECKOUT_BACK_URL,
+                    'failure' => SITE_URL . '/checkout/'
+                ],
+                'auto_return' => 'approved'
+            ];
             
-            // Redirecionar para o Mercado Pago
-            header('Location: ' . $result['init_point']);
-            exit;
-        } else {
-            $error = 'Erro ao criar assinatura. Tente novamente. ' . ($result['message'] ?? '');
-            error_log("[PLATAFY Checkout] MP Error: " . json_encode($result));
+            $mpRes = mpRequest('/checkout/preferences', 'POST', $mpPreferenceData);
+            
+            if (isset($mpRes['init_point'])) {
+                header('Location: ' . $mpRes['init_point']);
+                exit;
+            } elseif (isset($mpRes['sandbox_init_point']) && MP_USE_TEST) {
+                header('Location: ' . $mpRes['sandbox_init_point']);
+                exit;
+            } else {
+                // Fallback para link genérico ou mensagem de erro
+                $error = 'Erro ao conectar ao Mercado Pago: ' . ($mpRes['message'] ?? 'Verifique as chaves nas Configurações.');
+            }
+        } catch (Exception $e) {
+            $error = 'Erro no servidor: ' . $e->getMessage();
         }
     }
 }
@@ -68,294 +85,335 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLATAFY FB - Assine Agora</title>
-    <meta name="description" content="Assine o PLATAFY FB e tenha acesso a ferramentas avançadas de gerenciamento de grupos no WhatsApp.">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>PLATAFY FB - Finalizar Assinatura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
             --neon: #ffaa00;
+            --neon-glow: rgba(255, 170, 0, 0.4);
             --primary: #4d5b9a;
-            --bg: #0a0d1a;
-            --glass: rgba(10, 13, 30, 0.7);
-            --border: rgba(255, 170, 0, 0.2);
+            --bg-deep: #070914;
+            --glass: rgba(13, 17, 38, 0.75);
+            --glass-card: rgba(18, 24, 52, 0.65);
+            --border: rgba(255, 170, 0, 0.25);
+            --border-hover: rgba(255, 170, 0, 0.6);
             --text: #ffffff;
-            --muted: #b0b8cc;
+            --muted: #a0aabf;
+            --success: #00e676;
         }
+        
         body {
-            background: radial-gradient(ellipse at top, #1a2040, #0a0d1a);
+            background: radial-gradient(ellipse at top, #161c38 0%, #070914 100%);
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
             color: var(--text);
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+        
         .header {
             text-align: center;
-            padding: 50px 20px 30px;
+            margin-bottom: 35px;
+            max-width: 700px;
         }
+        
         .header h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 36px;
+            font-size: 32px;
+            font-weight: 800;
             color: var(--neon);
-            text-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+            text-shadow: 0 0 20px var(--neon-glow);
             letter-spacing: 3px;
             margin-bottom: 10px;
         }
+        
         .header p {
             color: var(--muted);
-            font-size: 16px;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
+            font-size: 14px;
+            line-height: 1.5;
         }
-        .plans-grid {
+        
+        /* LAYOUT PRINCIPAL DE 2 COLUNAS */
+        .checkout-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 1050px;
+            width: 100%;
+            align-items: start;
         }
+        
+        @media (max-width: 880px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+        }
+        
+        /* COLUNA DA ESQUERDA - CARDS DE PLANOS */
+        .plans-column {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
         .plan-card {
-            background: var(--glass);
+            background: var(--glass-card);
             backdrop-filter: blur(15px);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s;
-            position: relative;
+            padding: 22px 24px;
             cursor: pointer;
-        }
-        .plan-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,170,0,0.1) inset;
-            border-color: rgba(255, 170, 0, 0.4);
-        }
-        .plan-card.popular {
-            border-color: var(--neon);
-            box-shadow: 0 0 25px rgba(255, 170, 0, 0.15);
-        }
-        .plan-card.popular::before {
-            content: 'MAIS POPULAR';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #4d5b9a, #ffaa00);
-            color: #0a0d1a;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 5px 15px;
-            border-radius: 20px;
-            letter-spacing: 1px;
-        }
-        .plan-card.selected {
-            border-color: var(--neon);
-            background: rgba(255, 170, 0, 0.05);
-        }
-        .plan-name {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
-            color: var(--neon);
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-        }
-        .plan-price {
-            font-size: 38px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        .plan-price small {
-            font-size: 14px;
-            color: var(--muted);
-            font-weight: 400;
-        }
-        .plan-period {
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
-        .plan-features {
-            list-style: none;
-            text-align: left;
-            margin-bottom: 25px;
-        }
-        .plan-features li {
-            padding: 6px 0;
-            font-size: 13px;
-            color: var(--muted);
-        }
-        .plan-features li::before {
-            content: '✓';
-            color: var(--neon);
-            margin-right: 8px;
-            font-weight: 700;
-        }
-        .plan-savings {
-            background: rgba(0, 230, 118, 0.1);
-            color: #00e676;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 15px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        /* CHECKOUT FORM */
-        .checkout-section {
-            max-width: 500px;
-            margin: 40px auto;
-            padding: 0 20px 50px;
+        .plan-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
-        .checkout-card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 30px;
+        
+        .plan-card.selected {
+            border-color: var(--neon);
+            background: rgba(255, 170, 0, 0.07);
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
         }
-        .checkout-card h3 {
+        
+        .plan-card.selected::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--neon);
+            box-shadow: 0 0 10px var(--neon);
+        }
+        
+        .badge {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: linear-gradient(135deg, #ffaa00, #ff7700);
+            color: #000;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-green {
+            background: linear-gradient(135deg, #00e676, #00b0ff);
+            color: #000;
+        }
+        
+        .plan-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .plan-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 1px;
+        }
+        
+        .plan-desc {
+            font-size: 12px;
+            color: var(--muted);
+        }
+        
+        .plan-price-tag {
+            text-align: right;
+        }
+        
+        .plan-price-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--neon);
+        }
+        
+        .plan-price-sub {
+            font-size: 11px;
+            color: var(--muted);
+        }
+        
+        /* COLUNA DA DIREITA - FORMULÁRIO */
+        .form-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px 28px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .form-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
             color: var(--neon);
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 24px;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
         }
+        
         .form-group {
             margin-bottom: 18px;
         }
+        
         .form-group label {
             display: block;
             color: var(--muted);
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 6px;
+            margin-bottom: 7px;
         }
+        
         .form-group input, .form-group select {
             width: 100%;
-            padding: 13px 16px;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255, 170, 0, 0.15);
-            border-radius: 10px;
+            padding: 14px 16px;
+            background: rgba(5, 7, 18, 0.7);
+            border: 1px solid rgba(255, 170, 0, 0.2);
+            border-radius: 12px;
             color: var(--text);
             font-family: 'Inter', sans-serif;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
             transition: all 0.3s;
         }
+        
         .form-group input:focus, .form-group select:focus {
             border-color: var(--neon);
-            box-shadow: 0 0 15px rgba(255, 170, 0, 0.1);
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.2);
         }
-        .form-group select option { background: #1a2040; }
+        
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ffaa00' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: calc(100% - 15px) center;
+            cursor: pointer;
+        }
         
         .checkout-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #4d5b9a, #ffaa00);
+            background: linear-gradient(135deg, #4d5b9a 0%, #ffaa00 100%);
             border: none;
-            border-radius: 10px;
-            color: #0a0d1a;
+            border-radius: 12px;
+            color: #050712;
             font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 800;
             letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(255, 170, 0, 0.25);
         }
+        
         .checkout-btn:hover {
-            box-shadow: 0 0 30px rgba(255, 170, 0, 0.4);
             transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 170, 0, 0.45);
         }
-        .error-msg {
-            background: rgba(255, 85, 85, 0.1);
-            border: 1px solid rgba(255, 85, 85, 0.3);
-            color: #ff5555;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        
         .secure-badge {
             text-align: center;
             margin-top: 20px;
-            color: rgba(176, 184, 204, 0.4);
-            font-size: 11px;
+            color: var(--muted);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
-        .secure-badge span { color: #00e676; }
         
-        @media (max-width: 768px) {
-            .header h1 { font-size: 24px; }
-            .plan-price { font-size: 28px; }
+        .secure-badge span {
+            color: #00e676;
+            font-weight: 700;
+        }
+        
+        .error-msg {
+            background: rgba(255, 75, 75, 0.12);
+            border: 1px solid rgba(255, 75, 75, 0.4);
+            color: #ff5252;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
+
     <div class="header">
         <h1>PLATAFY FB</h1>
-        <p>Gerencie seus grupos do WhatsApp com ferramentas profissionais. Crie grupos em massa, gerencie membros, dispare campanhas e muito mais.</p>
+        <p>Automatize seu Facebook com ferramentas profissionais de alta performance.</p>
     </div>
     
-    <div class="plans-grid">
-        <div class="plan-card" onclick="selectPlan('mensal')">
-            <div class="plan-name">MENSAL</div>
-            <div class="plan-price">R$ 27<small>,00</small></div>
-            <div class="plan-period">por mês</div>
-            <ul class="plan-features">
-                <li>Criação de grupos em massa</li>
-                <li>Gestão de membros</li>
-                <li>Campanhas de disparo</li>
-                <li>Bot automático</li>
-                <li>Suporte via WhatsApp</li>
-            </ul>
+    <div class="checkout-container">
+        <!-- COLUNA DA ESQUERDA: PLANOS -->
+        <div class="plans-column">
+            <!-- PLANO 1: MENSAL -->
+            <div class="plan-card <?= $selectedPlan === 'mensal' ? 'selected' : '' ?>" onclick="selectPlan('mensal', this)">
+                <div class="plan-info">
+                    <div class="plan-title">PLANO MENSAL</div>
+                    <div class="plan-desc">Acesso completo por 30 dias</div>
+                </div>
+                <div class="plan-price-tag">
+                    <div class="plan-price-val">R$ 39<small>,00</small></div>
+                    <div class="plan-price-sub">cobrado por mês</div>
+                </div>
+            </div>
+            
+            <!-- PLANO 2: SEMESTRAL -->
+            <div class="plan-card <?= $selectedPlan === 'semestral' ? 'selected' : '' ?>" onclick="selectPlan('semestral', this)">
+                <span class="badge">Mais Popular</span>
+                <div class="plan-info">
+                    <div class="plan-title">PLANO SEMESTRAL</div>
+                    <div class="plan-desc">Acesso completo por 6 meses</div>
+                </div>
+                <div class="plan-price-tag">
+                    <div class="plan-price-val">R$ 69<small>,00</small></div>
+                    <div class="plan-price-sub">a cada 6 meses</div>
+                </div>
+            </div>
+            
+            <!-- PLANO 3: VITALÍCIO -->
+            <div class="plan-card <?= $selectedPlan === 'vitalicio' ? 'selected' : '' ?>" onclick="selectPlan('vitalicio', this)">
+                <span class="badge badge-green">Melhor Custo-Benefício</span>
+                <div class="plan-info">
+                    <div class="plan-title">PLANO VITALÍCIO</div>
+                    <div class="plan-desc">Acesso permanente + Atualizações</div>
+                </div>
+                <div class="plan-price-tag">
+                    <div class="plan-price-val">R$ 149<small>,90</small></div>
+                    <div class="plan-price-sub">pagamento único</div>
+                </div>
+            </div>
         </div>
         
-        <div class="plan-card" onclick="selectPlan('trimestral')">
-            <div class="plan-name">TRIMESTRAL</div>
-            <div class="plan-savings">Economize 17%</div>
-            <div class="plan-price">R$ 67<small>,00</small></div>
-            <div class="plan-period">a cada 3 meses</div>
-            <ul class="plan-features">
-                <li>Tudo do plano mensal</li>
-                <li>Prioridade no suporte</li>
-                <li>Desconto de R$ 14,00</li>
-            </ul>
-        </div>
-        
-        <div class="plan-card popular" onclick="selectPlan('semestral')">
-            <div class="plan-name">SEMESTRAL</div>
-            <div class="plan-savings">Economize 9%</div>
-            <div class="plan-price">R$ 147<small>,00</small></div>
-            <div class="plan-period">a cada 6 meses</div>
-            <ul class="plan-features">
-                <li>Tudo do plano mensal</li>
-                <li>Suporte prioritário VIP</li>
-                <li>Desconto de R$ 15,00</li>
-            </ul>
-        </div>
-        
-        <div class="plan-card" onclick="selectPlan('anual')">
-            <div class="plan-name">ANUAL</div>
-            <div class="plan-savings">Melhor Custo-Benefício</div>
-            <div class="plan-price">R$ 197<small>,00</small></div>
-            <div class="plan-period">por ano</div>
-            <ul class="plan-features">
-                <li>Tudo do plano mensal</li>
-                <li>Suporte VIP prioritário</li>
-                <li>Economia de R$ 127,00</li>
-                <li>Menor preço por mês</li>
-            </ul>
-        </div>
-    </div>
-    
-    <div class="checkout-section">
-        <div class="checkout-card">
-            <h3>FINALIZAR ASSINATURA</h3>
+        <!-- COLUNA DA DIREITA: FORMULÁRIO -->
+        <div class="form-card">
+            <div class="form-title">FINALIZAR ASSINATURA</div>
             
             <?php if ($error): ?>
                 <div class="error-msg"><?= htmlspecialchars($error) ?></div>
@@ -364,22 +422,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST" id="checkout-form">
                 <div class="form-group">
                     <label>Seu Nome</label>
-                    <input type="text" name="name" placeholder="Nome completo" required>
+                    <input type="text" name="name" placeholder="Digite seu nome completo" required autofocus>
                 </div>
+                
                 <div class="form-group">
-                    <label>Seu E-mail</label>
-                    <input type="email" name="email" placeholder="seu@email.com" required>
+                    <label>Seu WhatsApp</label>
+                    <input type="tel" name="phone" id="phone" placeholder="(11) 99999-9999" required maxlength="15">
                 </div>
+                
                 <div class="form-group">
                     <label>Plano Selecionado</label>
                     <select name="plan" id="plan-select" required>
-                        <option value="">Selecione um plano acima</option>
-                        <option value="mensal">Mensal - R$ 27,00/mês</option>
-                        <option value="trimestral">Trimestral - R$ 67,00</option>
-                        <option value="semestral">Semestral - R$ 147,00</option>
-                        <option value="anual">Anual - R$ 197,00</option>
+                        <option value="mensal" <?= $selectedPlan === 'mensal' ? 'selected' : '' ?>>Mensal - R$ 39,00/mês</option>
+                        <option value="semestral" <?= $selectedPlan === 'semestral' ? 'selected' : '' ?>>Semestral - R$ 69,00/6 meses</option>
+                        <option value="vitalicio" <?= $selectedPlan === 'vitalicio' ? 'selected' : '' ?>>Vitalício - R$ 149,90 (Único)</option>
                     </select>
                 </div>
+                
                 <button type="submit" class="checkout-btn">ASSINAR AGORA</button>
             </form>
             
@@ -390,11 +449,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     
     <script>
-        function selectPlan(plan) {
+        function selectPlan(plan, element) {
             document.getElementById('plan-select').value = plan;
             document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-            document.querySelector('.checkout-section').scrollIntoView({ behavior: 'smooth' });
+            if (element) {
+                element.classList.add('selected');
+            }
+        }
+        
+        // Mascara automatica de WhatsApp
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let v = e.target.value.replace(/\D/g, '');
+                if (v.length > 11) v = v.substring(0, 11);
+                if (v.length > 6) {
+                    v = '(' + v.substring(0, 2) + ') ' + v.substring(2, 7) + '-' + v.substring(7);
+                } else if (v.length > 2) {
+                    v = '(' + v.substring(0, 2) + ') ' + v.substring(2);
+                } else if (v.length > 0) {
+                    v = '(' + v;
+                }
+                e.target.value = v;
+            });
         }
     </script>
 </body>

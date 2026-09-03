@@ -33,31 +33,24 @@ define('MP_USE_TEST', true);                                // true = modo teste
 define('PLANS', json_encode([
     'mensal' => [
         'name' => 'Plano Mensal',
-        'price' => 27.00,
+        'price' => 39.00,
         'frequency' => 1,
         'frequency_type' => 'months',
         'days' => 30
     ],
-    'trimestral' => [
-        'name' => 'Plano Trimestral',
-        'price' => 67.00,
-        'frequency' => 3,
-        'frequency_type' => 'months',
-        'days' => 90
-    ],
     'semestral' => [
         'name' => 'Plano Semestral',
-        'price' => 147.00,
+        'price' => 69.00,
         'frequency' => 6,
         'frequency_type' => 'months',
         'days' => 180
     ],
-    'anual' => [
-        'name' => 'Plano Anual',
-        'price' => 197.00,
-        'frequency' => 12,
+    'vitalicio' => [
+        'name' => 'Plano Vitalício',
+        'price' => 149.90,
+        'frequency' => 1200,
         'frequency_type' => 'months',
-        'days' => 365
+        'days' => 36500
     ]
 ]));
 
