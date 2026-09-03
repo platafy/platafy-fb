@@ -2977,3 +2977,81 @@ input::placeholder, textarea::placeholder {
 [data-theme="light"] .results-table a {
   color: #2563eb !important;
 }
+
+/* ============================================================
+   CORREÇÃO DE ESTILIZAÇÃO DARK E LIGHT DA CAIXA DE FILTRO DE CONTA (ENTRAR EM GRUPOS)
+   ============================================================ */
+
+.join-account-filter {
+  margin: 2px 0 10px !important;
+  padding: 11px 14px !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  border-radius: 8px !important;
+  background: rgba(30, 41, 59, 0.7) !important;
+}
+
+.join-account-filter .checkbox-row {
+  margin: 0 !important;
+  color: #93c5fd !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.join-account-filter .checkbox-row span {
+  color: #93c5fd !important;
+}
+
+.join-account-status {
+  margin-top: 7px !important;
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+}
+
+.join-account-status.is-warning {
+  color: #fca5a5 !important;
+}
+
+.join-account-warning {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  margin: 0 0 13px !important;
+  padding: 10px 12px !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  border-radius: 8px !important;
+  background: rgba(127, 29, 29, 0.25) !important;
+  color: #fca5a5 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+}
+
+.join-account-warning svg {
+  fill: #ef4444 !important;
+}
+
+/* MODO CLARO ([data-theme="light"]) */
+[data-theme="light"] .join-account-filter {
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+}
+
+[data-theme="light"] .join-account-filter .checkbox-row,
+[data-theme="light"] .join-account-filter .checkbox-row span {
+  color: #1e3a8a !important;
+}
+
+[data-theme="light"] .join-account-status {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .join-account-status.is-warning {
+  color: #b91c1c !important;
+}
+
+[data-theme="light"] .join-account-warning {
+  background: #fef2f2 !important;
+  border: 1px solid #fca5a5 !important;
+  color: #991b1b !important;
+}
