@@ -33,7 +33,8 @@ try {
                     'mp_access_token_test' => $mpTokenTest,
                     'mp_public_key'        => $mpPublicKey,
                     'mp_use_test'          => $mpUseTest === 'true' || $mpUseTest === '1' || $mpUseTest === true,
-                    'site_logo'            => $siteLogo
+                    'site_logo'            => $siteLogo,
+                    'site_favicon'         => getSetting('site_favicon', '')
                 ]
             ]);
             break;
@@ -169,6 +170,55 @@ try {
                 ]);
             } else {
                 echo json_encode(['error' => 'Falha ao salvar a imagem no servidor.']);
+            }
+            break;
+
+        
+        // ========== UPLOAD DE FAVICON DO SISTEMA ==========
+        case 'upload_favicon':
+            if ($method !== 'POST') { echo json_encode(['error' => 'Método inválido']); exit; }
+
+            if (!isset($_FILES['favicon']) || $_FILES['favicon']['error'] !== UPLOAD_ERR_OK) {
+                echo json_encode(['error' => 'Nenhum arquivo enviado ou erro no upload.']);
+                exit;
+            }
+
+            $file = $_FILES['favicon'];
+
+            if ($file['size'] > 2 * 1024 * 1024) {
+                echo json_encode(['error' => 'O arquivo do favicon deve ter no máximo 2MB.']);
+                exit;
+            }
+
+            $allowedTypes = ['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/jpeg', 'image/webp'];
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_file($finfo, $file['tmp_name']);
+            finfo_close($finfo);
+
+            if (!in_array($mimeType, $allowedTypes)) {
+                echo json_encode(['error' => 'Formato inválido. Use PNG ou ICO.']);
+                exit;
+            }
+
+            $uploadDir = __DIR__ . '/../../uploads';
+            if (!is_dir($uploadDir)) {
+                @mkdir($uploadDir, 0755, true);
+            }
+
+            $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $filename = 'favicon_' . time() . '.' . strtolower($ext);
+            $targetPath = $uploadDir . '/' . $filename;
+
+            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+                $faviconUrl = '/uploads/' . $filename;
+                setSetting('site_favicon', $faviconUrl);
+                echo json_encode([
+                    'success' => true, 
+                    'message' => 'Favicon atualizado com sucesso!',
+                    'favicon_url' => $faviconUrl
+                ]);
+            } else {
+                echo json_encode(['error' => 'Falha ao salvar o favicon no servidor.']);
             }
             break;
 

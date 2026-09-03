@@ -2,6 +2,7 @@
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/settings_utils.php';
 $siteLogo = getSetting('site_logo', '');
+$siteFavicon = getSetting('site_favicon', '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['username'] ?? '';
@@ -22,6 +23,7 @@ if (isAdminLogged()) {
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars($siteFavicon ?: '/assets/img/favicon.png') ?>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLATAFY FB - Login</title>

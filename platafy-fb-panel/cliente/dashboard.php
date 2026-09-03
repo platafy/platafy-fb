@@ -5,6 +5,7 @@ require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/license_utils.php';
 require_once __DIR__ . '/../includes/settings_utils.php';
 $siteLogo = getSetting('site_logo', '');
+$siteFavicon = getSetting('site_favicon', '');
 
 if (!isset($_SESSION['client_license_id'])) {
     header('Location: /cliente/');
@@ -57,6 +58,7 @@ $formattedExpiry = $license['expires_at'] ? date('d/m/Y H:i', strtotime($license
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars($siteFavicon ?: '/assets/img/favicon.png') ?>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLATAFY FB - Minha Licença</title>

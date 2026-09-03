@@ -10,10 +10,12 @@ if (isset($_GET['logout'])) {
 }
 
 $siteLogo = getSetting('site_logo', '');
+$siteFavicon = getSetting('site_favicon', '');
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars($siteFavicon ?: '/assets/img/favicon.png') ?>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PLATAFY FB - Dashboard</title>
@@ -517,6 +519,50 @@ $siteLogo = getSetting('site_logo', '');
             </div>
 
             <!-- UPLOAD E ALTERAÇÃO DE LOGOMARCA -->
+
+            <!-- UPLOAD E ALTERAÇÃO DE FAVICON -->
+            <div class="card" style="margin-top:20px;">
+                <div class="card-header">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="width:40px; height:40px; border-radius:10px; background:rgba(255, 170, 0, 0.15); display:flex; align-items:center; justify-content:center; color:var(--neon); font-size:18px;">
+                            📌
+                        </div>
+                        <div>
+                            <h3 style="margin:0; font-size:16px; font-weight:700;">Favicon do Sistema (Ícone da Aba - PNG)</h3>
+                            <p style="margin:2px 0 0; font-size:12px; color:var(--muted);">Personalize o ícone que aparece nas abas do navegador no Painel, Cliente e Checkout.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="display:grid; grid-template-columns: 200px 1fr; gap:20px; align-items:center;">
+                        <!-- Preview do Favicon Atual -->
+                        <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:10px; padding:15px; text-align:center;">
+                            <div style="font-size:11px; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:10px;">Favicon Atual</div>
+                            <div id="favicon-preview-box" style="display:flex; align-items:center; justify-content:center; height:60px; background:rgba(0,0,0,0.2); border-radius:8px; border:1px dashed var(--border);">
+                                <?php if (!empty($siteFavicon)): ?>
+                                    <img src="<?= htmlspecialchars($siteFavicon) ?>" id="settings-favicon-preview" style="max-height:36px; max-width:36px; object-fit:contain;" alt="Favicon">
+                                <?php else: ?>
+                                    <span style="font-size:24px;">📌</span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Dropzone de Upload do Favicon -->
+                        <form id="form-upload-favicon" enctype="multipart/form-data">
+                            <input type="file" id="faviconFileInput" name="favicon" accept="image/png,image/x-icon,image/vnd.microsoft.icon,image/jpeg,image/webp" style="display:none;">
+                            <div id="faviconDropzone" style="border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; background:rgba(255,255,255,0.02); transition:all 0.2s;" onclick="document.getElementById('faviconFileInput').click()">
+                                <div style="font-size:24px; color:var(--neon); margin-bottom:6px;">📌</div>
+                                <span style="font-size:13px; font-weight:600; color:var(--text);">Arraste o novo favicon aqui ou clique para buscar</span>
+                                <div style="font-size:11px; color:var(--muted); margin-top:4px;">Formatos recomendados: PNG de 32x32px ou 64x64px (Tamanho Máximo: 2MB)</div>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="btnUploadFavicon" style="width:100%; margin-top:12px; background:linear-gradient(135deg, var(--neon), #d98200); color:#000; font-weight:700; border:none; padding:10px; border-radius:8px; cursor:pointer;">
+                                📌 Fazer Upload e Aplicar Novo Favicon
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div class="settings-card full-width">
                 <div>
                     <div class="card-header-custom">

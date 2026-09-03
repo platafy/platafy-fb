@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/license_utils.php';
 require_once __DIR__ . '/../includes/settings_utils.php';
 $siteLogo = getSetting('site_logo', '');
+$siteFavicon = getSetting('site_favicon', '');
 require_once __DIR__ . '/../includes/mercadopago.php';
 
 $error = null;
@@ -79,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars($siteFavicon ?: '/assets/img/favicon.png') ?>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLATAFY FB - Finalizar Assinatura</title>

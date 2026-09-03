@@ -645,6 +645,12 @@ async function loadSettingsInfo() {
         const previewBox = document.getElementById('logo-preview-box');
         if (s.site_logo) {
             previewBox.innerHTML = `<img src="${s.site_logo}" id="settings-logo-preview" style="max-height:60px; max-width:200px;" alt="Logo">`;
+        }
+        const favPreviewBox = document.getElementById('favicon-preview-box');
+        if (favPreviewBox && s.site_favicon) {
+            favPreviewBox.innerHTML = `<img src="${s.site_favicon}?t=${Date.now()}" id="settings-favicon-preview" style="max-height:36px; max-width:36px; object-fit:contain;" alt="Favicon">`;
+            let favLink = document.querySelector('link[rel="icon"]');
+            if (favLink) favLink.href = s.site_favicon;
         } else {
             previewBox.innerHTML = `<span id="settings-logo-preview-text" style="font-family:'Orbitron',sans-serif; color:var(--neon); font-size:20px;">PLATAFY</span>`;
         }
@@ -938,4 +944,99 @@ function fallbackCopy(key, btn, originalHTML) {
         }, 2000);
     } catch(e) {}
     document.body.removeChild(input);
+}
+
+// ========== UPLOAD DE FAVICON DO SISTEMA ==========
+async function handleFaviconUpload() {
+    const fileInput = document.getElementById('faviconFileInput');
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        showToast('Por favor, selecione uma imagem PNG para o favicon.', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('btnUploadFavicon');
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Enviando Favicon...';
+    }
+
+    const formData = new FormData();
+    formData.append('favicon', fileInput.files[0]);
+
+    try {
+        const data = await apiFetch('api/admin/settings.php?action=upload_favicon', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (data && data.success) {
+            showToast('📌 Favicon atualizado com sucesso!');
+            const favPreviewBox = document.getElementById('favicon-preview-box');
+            if (favPreviewBox) {
+                favPreviewBox.innerHTML = `<img src="${data.favicon_url}?t=${Date.now()}" id="settings-favicon-preview" style="max-height:36px; max-width:36px; object-fit:contain;" alt="Favicon">`;
+            }
+            // Atualizar favicon nas abas dinamicamente
+            let favLink = document.querySelector('link[rel="icon"]');
+            if (!favLink) {
+                favLink = document.createElement('link');
+                favLink.rel = 'icon';
+                favLink.type = 'image/png';
+                document.head.appendChild(favLink);
+            }
+            favLink.href = data.favicon_url + '?t=' + Date.now();
+        } else {
+            showToast(data.error || 'Erro ao enviar favicon.', 'error');
+        }
+    } catch (err) {
+        showToast('Erro de conexão ao enviar favicon.', 'error');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+}
+
+function setupFaviconDropzone() {
+    const dropzone = document.getElementById('faviconDropzone');
+    const fileInput = document.getElementById('faviconFileInput');
+    if (!dropzone || !fileInput) return;
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => {
+            dropzone.style.borderColor = 'var(--neon)';
+            dropzone.style.background = 'rgba(255, 170, 0, 0.08)';
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => {
+            dropzone.style.borderColor = 'var(--border)';
+            dropzone.style.background = 'rgba(255, 255, 255, 0.02)';
+        }, false);
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files && files.length > 0) {
+            fileInput.files = files;
+            showToast('📌 Imagem de Favicon selecionada. Clique em Fazer Upload.', 'info');
+        }
+    }, false);
+
+    const btnUpload = document.getElementById('btnUploadFavicon');
+    if (btnUpload) {
+        btnUpload.addEventListener('click', handleFaviconUpload);
+    }
 }
