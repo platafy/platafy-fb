@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/settings_utils.php';
+$siteLogo = getSetting('site_logo', '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST['username'] ?? '';
@@ -195,7 +197,11 @@ if (isAdminLogged()) {
 <body>
     <div class="login-card">
         <div class="login-header">
-            <h1>PLATAFY</h1>
+            <?php if (!empty($siteLogo)): ?>
+                <img src="<?= htmlspecialchars($siteLogo) ?>" id="site-logo-img" alt="PLATAFY" style="max-height: 55px; max-width: 260px; margin-bottom: 8px; vertical-align: middle;">
+            <?php else: ?>
+                <h1 id="site-logo-text">PLATAFY</h1>
+            <?php endif; ?>
             <p>PAINEL ADMINISTRATIVO</p>
         </div>
         <div class="login-body">
