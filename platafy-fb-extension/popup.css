@@ -2648,3 +2648,58 @@ input::placeholder, textarea::placeholder {
   border: 1px solid #cbd5e1 !important;
   color: #0f172a !important;
 }
+
+/* ============================================================
+   CORREÇÃO VISUAL DOS TEMPLATES SALVOS E MÍDIA PREVIEW
+   ============================================================ */
+
+/* CARDS DE TEMPLATES SALVOS NO MODO ESCURO (DARK MODE) */
+.template-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: 12px !important;
+  color: var(--text-main) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+  padding: 14px !important;
+}
+
+.template-card-head h3, .template-card h3 {
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+
+.template-card p {
+  background: var(--surface-alt) !important;
+  border: 1px solid var(--line-soft) !important;
+  color: #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  font-size: 12px !important;
+  margin-top: 8px !important;
+}
+
+.template-card-meta, .template-media-badge {
+  color: var(--secondary) !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+}
+
+/* CARDS DE TEMPLATES SALVOS NO MODO CLARO ([data-theme="light"]) */
+[data-theme="light"] .template-card {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .template-card-head h3, 
+[data-theme="light"] .template-card h3 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .template-card p {
+  background: #f8fbff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+}
