@@ -2864,3 +2864,39 @@ input::placeholder, textarea::placeholder {
   border-color: #d98200 !important;
   color: #d98200 !important;
 }
+
+/* BOTÃO "JÁ BAIXEI" NO BANNER DE ATUALIZAÇÃO (#dismissUpdateBtn) */
+.update-dismiss-btn {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  white-space: nowrap !important;
+  transition: all 0.2s ease !important;
+}
+
+.update-dismiss-btn:hover {
+  background: #16a34a !important;
+  border-color: #22c55e !important;
+  color: #ffffff !important;
+  transform: scale(1.04) !important;
+}
+
+[data-theme="light"] .update-dismiss-btn {
+  background: rgba(0, 0, 0, 0.08) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="light"] .update-dismiss-btn:hover {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  border-color: #16a34a !important;
+}

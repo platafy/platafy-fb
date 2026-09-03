@@ -385,15 +385,36 @@ async function checkExtensionUpdates(){
     if (!res.ok) return;
     const data = await res.json();
     if (data && data.success && data.update_available) {
+      const dismissedRes = await storageGet(['dismissedUpdateVersion']);
+      if (dismissedRes && dismissedRes['dismissedUpdateVersion'] === data.latest_version) {
+        return;
+      }
       const banner = document.getElementById('updateBanner');
       const verSpan = document.getElementById('updateVersionNum');
       const changelogPrev = document.getElementById('updateChangelogPrev');
       const downloadBtn = document.getElementById('updateDownloadBtn');
+      const dismissBtn = document.getElementById('dismissUpdateBtn');
       if (verSpan) verSpan.textContent = data.latest_version;
       if (changelogPrev && data.changelog) changelogPrev.textContent = data.changelog;
       if (downloadBtn && data.download_url) downloadBtn.href = data.download_url;
       if (banner) banner.style.display = 'flex';
       window.latestVersionData = data;
+
+      if (dismissBtn) {
+        dismissBtn.onclick = async function() {
+          if (banner) banner.style.display = 'none';
+          await storageSet({ 'dismissedUpdateVersion': data.latest_version });
+        };
+      }
+
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', async function() {
+          setTimeout(async () => {
+            if (banner) banner.style.display = 'none';
+            await storageSet({ 'dismissedUpdateVersion': data.latest_version });
+          }, 1500);
+        });
+      }
     }
   } catch(e) {
     console.warn('Erro ao verificar atualizacoes:', e);
