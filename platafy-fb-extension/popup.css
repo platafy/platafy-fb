@@ -2278,3 +2278,155 @@ small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 11
   transform: translateY(-2px);
   box-shadow: 0 4px 14px rgba(255, 170, 0, 0.5);
 }
+
+/* ============================================================
+   CORREÇÃO UNIVERSAL DE CAMPOS, CARDS E LAYOUTS RESPONSIVOS
+   ============================================================ */
+
+/* 1. ESTILIZAÇÃO UNIVERSAL DE INPUTS, TEXTAREAS E SELECTS (DARK & LIGHT) */
+input, textarea, select,
+.field-group input, .field-group textarea, .field-group select,
+.input-text, .form-control {
+  background: var(--surface-alt) !important;
+  border: 1px solid var(--line-strong) !important;
+  color: var(--text-main) !important;
+  font-family: 'Inter', 'Segoe UI', sans-serif !important;
+  font-size: 13px !important;
+  border-radius: 10px !important;
+  padding: 11px 14px !important;
+  transition: all 0.25s ease !important;
+}
+
+input:focus, textarea:focus, select:focus,
+.field-group input:focus, .field-group textarea:focus, .field-group select:focus {
+  border-color: var(--secondary) !important;
+  box-shadow: 0 0 12px var(--secondary-glow) !important;
+  outline: none !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.8 !important;
+}
+
+/* 2. CORREÇÃO DA TELA "MINHA LICENÇA" E CARDS DE MÉTRICA */
+.license-status-card, .license-info-card, .license-card, 
+.metric-card, .license-metric, .info-box, .status-box {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-soft) !important;
+  color: var(--text-main) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+.license-status-top h3, .license-status-top p,
+.license-info-card strong, .license-info-card span,
+.license-metric strong, .license-metric span,
+.license-status-eyebrow, .license-title span {
+  color: var(--text-main) !important;
+}
+
+.license-info-grid, .license-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.license-info-card, .license-metric {
+  background: var(--surface-alt) !important;
+  border: 1px solid var(--line-soft) !important;
+  padding: 14px 16px !important;
+  border-radius: 12px !important;
+}
+
+.license-info-card label, .license-metric label, .field-group label {
+  color: var(--text-soft) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin-bottom: 4px !important;
+  display: block !important;
+}
+
+.license-info-card .val, .license-metric .val, .license-info-card strong {
+  color: var(--secondary) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+}
+
+/* 3. MODO CLARO ([data-theme="light"]) PARA CAMPOS E CARDS */
+[data-theme="light"] input, 
+[data-theme="light"] textarea, 
+[data-theme="light"] select,
+[data-theme="light"] .field-group input, 
+[data-theme="light"] .field-group textarea, 
+[data-theme="light"] .field-group select {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] input::placeholder, 
+[data-theme="light"] textarea::placeholder {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .license-status-card, 
+[data-theme="light"] .license-info-card, 
+[data-theme="light"] .license-card, 
+[data-theme="light"] .metric-card, 
+[data-theme="light"] .license-metric {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .license-status-top h3, 
+[data-theme="light"] .license-info-card strong, 
+[data-theme="light"] .license-metric strong {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .license-info-card label, 
+[data-theme="light"] .license-metric label, 
+[data-theme="light"] .field-group label {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .license-info-card .val, 
+[data-theme="light"] .license-metric .val {
+  color: #d98200 !important;
+}
+
+/* 4. RESPONSIVIDADE E LAYOUT HARMONIOSO PARA TELAS EXPANDIDAS E TELAS DE EXTRAÇÃO */
+@media (min-width: 768px) {
+  .view-split-container {
+    display: grid !important;
+    grid-template-columns: minmax(320px, 420px) 1fr !important;
+    gap: 20px !important;
+    width: 100% !important;
+  }
+  
+  .view-split-controls {
+    width: 100% !important;
+  }
+  
+  .view-split-main {
+    width: 100% !important;
+  }
+  
+  /* Se não houver painel principal preenchido, expande o painel de controle */
+  .view-split-container:has(.view-split-main:empty) {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .view-split-container {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 16px !important;
+  }
+}
