@@ -1009,6 +1009,52 @@
                 </div>
               </div>
 
+              <div class="daily-limit-box">
+                <div class="toggle-group">
+                  <div class="toggle-copy">
+                    <label for="dmDailyLimitEnabled">Limite diario de envio para perfis</label>
+                    <small>Opcional. Ao atingir o limite, salva o perfil seguinte e espera o proximo dia.</small>
+                  </div>
+                  <label class="switch" for="dmDailyLimitEnabled">
+                    <input type="checkbox" id="dmDailyLimitEnabled" checked />
+                    <span class="switch-track"></span>
+                  </label>
+                </div>
+                <div class="field-row daily-limit-fields" id="dmDailyLimitFields">
+                  <div class="field-group">
+                    <label for="dmDailyLimit">Maximo por dia</label>
+                    <input type="number" id="dmDailyLimit" value="50" min="1" max="50" />
+                    <small>O usuario escolhe entre 1 e 50 perfis.</small>
+                  </div>
+                  <div class="field-group">
+                    <label for="dmResumeTime">Retomar a partir de</label>
+                    <input type="time" id="dmResumeTime" value="09:00" />
+                    <small>Horario local do computador.</small>
+                  </div>
+                </div>
+                <label class="checkbox-row daily-auto-resume" for="dmAutoResume">
+                  <input type="checkbox" id="dmAutoResume" checked />
+                  <span>Continuar automaticamente ao ligar o computador e abrir o Chrome</span>
+                </label>
+              </div>
+
+              <div class="daily-limit-box duplicate-protection-box">
+                <div class="toggle-group">
+                  <div class="toggle-copy">
+                    <label for="dmAvoidDuplicates">Evitar envio repetido</label>
+                    <small>Compara apenas o historico local deste computador.</small>
+                  </div>
+                  <label class="switch" for="dmAvoidDuplicates">
+                    <input type="checkbox" id="dmAvoidDuplicates" checked />
+                    <span class="switch-track"></span>
+                  </label>
+                </div>
+                <div class="field-group duplicate-days-field">
+                  <label for="dmDuplicateDays">Nao reenviar para perfis com envio recente nos ultimos X dias</label>
+                  <input type="number" id="dmDuplicateDays" value="30" min="1" max="365" />
+                </div>
+              </div>
+
               <div class="field-group">
                 <div class="field-label-row">
                   <label for="dmMessages" style="display:inline-flex;align-items:center;gap:7px;">
@@ -1088,6 +1134,7 @@
                 <div class="progress-bar" id="dmProgressBar" style="width:0%"></div>
               </div>
               <div class="progress-text" id="dmProgressText">0 / 0 perfis</div>
+              <div class="dm-daily-status" id="dmDailyStatus">0 perfis contatados hoje.</div>
             </div>
 
             <!-- CARD 3: LOG DE MENSAGENS -->
