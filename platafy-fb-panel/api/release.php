@@ -36,8 +36,9 @@ try {
     $pdo = db();
 
     // Buscar licença
-    $stmt = $pdo->prepare("SELECT * FROM licenses WHERE license_key = ?");
-    $stmt->execute([$licenseKey]);
+    $cleanKey = str_replace(['-', ' '], '', strtoupper($licenseKey));
+    $stmt = $pdo->prepare("SELECT * FROM licenses WHERE license_key = ? OR REPLACE(REPLACE(license_key, '-', ''), ' ', '') = ?");
+    $stmt->execute([$licenseKey, $cleanKey]);
     $license = $stmt->fetch();
 
     if (!$license) {

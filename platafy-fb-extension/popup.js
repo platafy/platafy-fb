@@ -92,6 +92,7 @@ function showLicenseNotice(_0x2a1769,_0x4ea18e='info'){const _0x3056f0=$('licens
           actionTitleEl = $('licenseActionTitle'),
           actionTextEl = $('licenseActionText'),
           keyFieldGroup = $('licenseKeyFieldGroup'),
+          licenseKeyInput = $('licenseKey'),
           btnActivate = $('btnActivate'),
           btnRemoveLicense = $('btnRemoveLicense'),
           btnRemoveLicenseDashboard = $('btnRemoveLicenseDashboard');
@@ -99,21 +100,34 @@ function showLicenseNotice(_0x2a1769,_0x4ea18e='info'){const _0x3056f0=$('licens
     if (pillEl) pillEl.classList.remove('is-active', 'is-checking', 'is-inactive');
 
     if (_0xacda13 === 'active') {
-        if (titleEl) titleEl.textContent = 'Licenca ativa neste dispositivo';
-        if (textEl) textEl.textContent = details.customerName ? ('Acesso liberado para ' + details.customerName + '. Sua extensao esta pronta para uso.') : 'Seu acesso esta liberado e pronto para uso.';
+        if (titleEl) titleEl.textContent = 'Licença ativa neste dispositivo';
+        if (textEl) textEl.textContent = details.customerName ? ('Acesso liberado para ' + details.customerName + '. Sua extensão está pronta para uso.') : 'Seu acesso está liberado e pronto para uso.';
         if (pillEl) {
             pillEl.textContent = 'Ativa';
             pillEl.classList.add('is-active');
         }
-        if (customerEl) customerEl.textContent = details.customerName || 'Licenca Ativa';
-        if (planEl) planEl.textContent = getLicensePlanLabel(details);
+        if (customerEl) customerEl.textContent = details.customerName || 'Licença PLATAFY FB';
+        if (planEl) planEl.textContent = getLicensePlanLabel(details) !== '-' ? getLicensePlanLabel(details) : 'Vitalício';
         if (expiryEl) expiryEl.textContent = getLicenseExpiryLabel(details);
         if (deviceEl) deviceEl.textContent = 'Vinculado';
 
-        if (actionTitleEl) actionTitleEl.textContent = 'Acesso liberado';
-        if (actionTextEl) actionTextEl.textContent = 'Sua licenca ja esta ativa neste dispositivo.';
-        if (keyFieldGroup) keyFieldGroup.hidden = true;
-        if (btnActivate) btnActivate.hidden = true;
+        if (actionTitleEl) actionTitleEl.textContent = 'Sua Licença Ativa';
+        if (actionTextEl) actionTextEl.textContent = 'Sua extensão está liberada e ativada neste dispositivo.';
+        if (keyFieldGroup) keyFieldGroup.hidden = false;
+        if (licenseKeyInput) {
+            licenseKeyInput.readOnly = true;
+            licenseKeyInput.style.opacity = '0.95';
+            licenseKeyInput.style.cursor = 'default';
+            if (state['licenseKey']) licenseKeyInput.value = state['licenseKey'];
+        }
+        if (btnActivate) {
+            btnActivate.hidden = false;
+            btnActivate.disabled = true;
+            btnActivate.textContent = '✓ Licença Ativa';
+            btnActivate.style.background = '#16a34a';
+            btnActivate.style.borderColor = '#16a34a';
+            btnActivate.style.color = '#ffffff';
+        }
         if (btnRemoveLicense) btnRemoveLicense.hidden = false;
         if (btnRemoveLicenseDashboard) btnRemoveLicenseDashboard.hidden = false;
         showLicenseNotice('');
@@ -121,25 +135,36 @@ function showLicenseNotice(_0x2a1769,_0x4ea18e='info'){const _0x3056f0=$('licens
     }
 
     if (_0xacda13 === 'checking') {
-        if (titleEl) titleEl.textContent = 'Verificando sua licenca';
-        if (textEl) textEl.textContent = 'Estamos consultando o servidor com seguranca.';
+        if (titleEl) titleEl.textContent = 'Verificando sua licença';
+        if (textEl) textEl.textContent = 'Estamos consultando o servidor com segurança...';
         if (pillEl) {
             pillEl.textContent = 'Verificando';
             pillEl.classList.add('is-checking');
         }
-        if (deviceEl) deviceEl.textContent = details.customerName || details.expiresAt ? 'Validando' : 'Verificando';
+        if (deviceEl) deviceEl.textContent = 'Verificando';
         if (actionTitleEl) actionTitleEl.textContent = 'Validando acesso';
-        if (actionTextEl) actionTextEl.textContent = 'Aguarde um instante enquanto confirmamos sua licenca.';
-        if (keyFieldGroup) keyFieldGroup.hidden = true;
-        if (btnActivate) btnActivate.hidden = true;
+        if (actionTextEl) actionTextEl.textContent = 'Aguarde um instante enquanto confirmamos sua licença.';
+        if (keyFieldGroup) keyFieldGroup.hidden = false;
+        if (licenseKeyInput) {
+            licenseKeyInput.readOnly = true;
+        }
+        if (btnActivate) {
+            btnActivate.hidden = false;
+            btnActivate.disabled = true;
+            btnActivate.textContent = 'Validando...';
+            btnActivate.style.background = '';
+            btnActivate.style.borderColor = '';
+            btnActivate.style.color = '';
+        }
         showLicenseNotice('');
         return;
     }
 
     // Inactive state
     state['licenseDetails'] = emptyLicenseDetails();
-    if (titleEl) titleEl.textContent = 'Nenhuma licenca ativa';
-    if (textEl) textEl.textContent = 'Ative sua chave para liberar todos os recursos da extensao.';
+    state['licenseKey'] = '';
+    if (titleEl) titleEl.textContent = 'Nenhuma licença ativa';
+    if (textEl) textEl.textContent = 'Ative sua chave para liberar todos os recursos da extensão.';
     if (pillEl) {
         pillEl.textContent = 'Inativa';
         pillEl.classList.add('is-inactive');
@@ -147,16 +172,25 @@ function showLicenseNotice(_0x2a1769,_0x4ea18e='info'){const _0x3056f0=$('licens
     if (customerEl) customerEl.textContent = '-';
     if (planEl) planEl.textContent = '-';
     if (expiryEl) expiryEl.textContent = '-';
-    if (deviceEl) deviceEl.textContent = 'Nao vinculado';
+    if (deviceEl) deviceEl.textContent = 'Não vinculado';
 
     if (actionTitleEl) actionTitleEl.textContent = 'Ativar acesso';
-    if (actionTextEl) actionTextEl.textContent = 'Cole sua chave abaixo para liberar a extensao neste dispositivo.';
+    if (actionTextEl) actionTextEl.textContent = 'Cole sua chave abaixo para liberar a extensão neste dispositivo.';
     if (keyFieldGroup) keyFieldGroup.hidden = false;
+    if (licenseKeyInput) {
+        licenseKeyInput.readOnly = false;
+        licenseKeyInput.style.opacity = '';
+        licenseKeyInput.style.cursor = '';
+        licenseKeyInput.value = '';
+        licenseKeyInput.placeholder = 'XXXX-XXXX-XXXX-XXXX';
+    }
     if (btnActivate) {
         btnActivate.hidden = false;
         btnActivate.disabled = false;
         btnActivate.textContent = 'Ativar acesso';
         btnActivate.style.background = '';
+        btnActivate.style.borderColor = '';
+        btnActivate.style.color = '';
     }
     if (btnRemoveLicense) btnRemoveLicense.hidden = true;
     if (btnRemoveLicenseDashboard) btnRemoveLicenseDashboard.hidden = true;
@@ -165,7 +199,6 @@ function showLicenseNotice(_0x2a1769,_0x4ea18e='info'){const _0x3056f0=$('licens
 function setLicenseBadge(_0x4f2c6e) {
     const isActive = _0x4f2c6e === 'active';
     const isChecking = _0x4f2c6e === 'checking';
-    syncLicensedUi(isActive);
 
     const badge = $('licenseBadge');
     if (badge) {
@@ -181,11 +214,11 @@ function setLicenseBadge(_0x4f2c6e) {
         }
     }
 
-    if ($('btnActivate')) $('btnActivate').hidden = isActive || isChecking;
+    if ($('btnActivate')) $('btnActivate').hidden = false; // Always visible in both states with proper styling
     if ($('btnManageLicenseDashboard')) {
         $('btnManageLicenseDashboard').hidden = isChecking;
         const label = $('btnManageLicenseDashboard').querySelector('span:last-child');
-        if (label) label.textContent = isActive ? 'Gerenciar Acesso' : 'Adicionar Licenca';
+        if (label) label.textContent = isActive ? 'Gerenciar Acesso' : 'Adicionar Licença';
     }
     if ($('btnRemoveLicenseDashboard')) $('btnRemoveLicenseDashboard').hidden = !isActive;
     if ($('btnRemoveLicense')) $('btnRemoveLicense').hidden = !isActive;
@@ -860,12 +893,12 @@ async function useExtractedGroupsForJoin(){const _0x1a185f=await getStoredExtrac
         }
         return {
             valid: false,
-            message: res?.message || 'Resposta invalida do servidor.'
+            message: res?.message || 'Resposta inválida do servidor.'
         };
     } catch (err) {
         return {
             valid: false,
-            message: 'Erro ao conectar ao servidor de licenca: ' + (err?.message || 'Erro de rede')
+            message: 'Erro ao conectar ao servidor de licença: ' + (err?.message || 'Erro de rede')
         };
     }
 }
@@ -892,18 +925,26 @@ async function loadLicenseStatus() {
 
     if (!key || data['licenseActive'] !== true) {
         state['licenseActive'] = false;
+        state['licenseKey'] = '';
         state['licenseDetails'] = emptyLicenseDetails();
-        if ($('licenseKey')) $('licenseKey').value = '';
+        if ($('licenseKey')) {
+            $('licenseKey').value = '';
+            $('licenseKey').readOnly = false;
+        }
         setLicenseBadge('inactive');
         return;
     }
 
+    state['licenseKey'] = key;
     state['licenseDetails'] = extractLicenseDetails(data);
     state['licenseActive'] = true;
-    if ($('licenseKey')) $('licenseKey').value = key;
+    if ($('licenseKey')) {
+        $('licenseKey').value = key;
+        $('licenseKey').readOnly = true;
+    }
     setLicenseBadge('active');
 
-    // Passive background recheck (does NOT de-activate if server is unreachable)
+    // Passive background recheck (does NOT de-activate if server is unreachable / network offline)
     validateLicenseWithServer(key).then(async (res) => {
         if (res && res.valid) {
             const updated = extractLicenseDetails(res);
@@ -913,8 +954,12 @@ async function loadLicenseStatus() {
         } else if (res && res.valid === false && res.message && (res.message.includes('revogada') || res.message.includes('expirou'))) {
             await clearStoredLicenseData();
             state['licenseActive'] = false;
+            state['licenseKey'] = '';
             state['licenseDetails'] = emptyLicenseDetails();
-            if ($('licenseKey')) $('licenseKey').value = '';
+            if ($('licenseKey')) {
+                $('licenseKey').value = '';
+                $('licenseKey').readOnly = false;
+            }
             setLicenseBadge('inactive');
             showLicenseNotice(res.message, 'error');
         }
@@ -931,15 +976,20 @@ async function activateLicense() {
     showLicenseNotice('');
 
     if (!key) {
-        showLicenseNotice('Digite uma chave de licenca.', 'error');
+        showLicenseNotice('Por favor, digite sua chave de licença.', 'error');
+        $('licenseKey')?.focus();
         return;
     }
     if (!looksLikeLicenseKey(key)) {
-        showLicenseNotice('A chave precisa ter no minimo 4 caracteres.', 'error');
+        showLicenseNotice('A chave precisa ter no mínimo 4 caracteres.', 'error');
+        $('licenseKey')?.focus();
         return;
     }
 
-    if ($('btnActivate')) $('btnActivate').disabled = true;
+    if ($('btnActivate')) {
+        $('btnActivate').disabled = true;
+        $('btnActivate').textContent = 'Validando...';
+    }
     setLicenseBadge('checking');
 
     try {
@@ -947,31 +997,46 @@ async function activateLicense() {
         if (!res || !res.valid) {
             state['licenseDetails'] = emptyLicenseDetails();
             state['licenseActive'] = false;
+            state['licenseKey'] = '';
             setLicenseBadge('inactive');
-            showLicenseNotice(res?.message || 'Chave de licenca invalida.', 'error');
+            if ($('licenseKey')) {
+                $('licenseKey').value = key; // Preserve typed key so user can edit if typo
+                $('licenseKey').readOnly = false;
+                $('licenseKey').focus();
+            }
+            showLicenseNotice(res?.message || 'Chave de licença inválida ou não encontrada.', 'error');
             return;
         }
 
         const details = extractLicenseDetails(res);
         state['licenseDetails'] = details;
         state['licenseActive'] = true;
+        state['licenseKey'] = key;
         await storageSet(licenseStoragePayload(key, details));
         setLicenseBadge('active');
-        showLicenseNotice('Licenca ativada com sucesso!', 'success');
+        showLicenseNotice('✓ Licença ativada com sucesso!', 'success');
     } catch (err) {
         state['licenseDetails'] = emptyLicenseDetails();
         state['licenseActive'] = false;
+        state['licenseKey'] = '';
         setLicenseBadge('inactive');
-        showLicenseNotice('Nao foi possivel validar a licenca no servidor.', 'error');
+        if ($('licenseKey')) {
+            $('licenseKey').value = key;
+            $('licenseKey').readOnly = false;
+        }
+        showLicenseNotice('Não foi possível conectar ao servidor de licença.', 'error');
     } finally {
-        if ($('btnActivate')) $('btnActivate').disabled = false;
+        if ($('btnActivate') && !state['licenseActive']) {
+            $('btnActivate').disabled = false;
+            $('btnActivate').textContent = 'Ativar acesso';
+        }
     }
 }
 
 async function removeLicense() {
-    if (!confirm('Remover a licenca salva neste navegador?')) return;
+    if (!confirm('Deseja realmente remover e desvincular a licença deste navegador?')) return;
     const stored = await storageGet(['licenseKey']);
-    const key = normalizeLicenseKey(stored['licenseKey'] || $('licenseKey')?.value || '');
+    const key = normalizeLicenseKey(stored['licenseKey'] || state['licenseKey'] || $('licenseKey')?.value || '');
     if (key) {
         try {
             await releaseLicenseWithServer(key);
@@ -979,14 +1044,19 @@ async function removeLicense() {
     }
     state['licenseDetails'] = emptyLicenseDetails();
     state['licenseActive'] = false;
+    state['licenseKey'] = '';
     await clearStoredLicenseData();
-    if ($('licenseKey')) $('licenseKey').value = '';
+    if ($('licenseKey')) {
+        $('licenseKey').value = '';
+        $('licenseKey').readOnly = false;
+        $('licenseKey').placeholder = 'XXXX-XXXX-XXXX-XXXX';
+    }
     setLicenseBadge('inactive');
-    showLicenseNotice('Licenca removida com sucesso. Para adicionar novamente, cole sua chave e clique em Ativar.', 'info');
-    alert('Licenca removida com sucesso. Para adicionar novamente, cole sua chave e clique em Ativar.');
+    showLicenseNotice('Licença removida com sucesso. Para ativar novamente, cole sua chave e clique em Ativar.', 'info');
+    alert('Licença removida com sucesso. Para ativar novamente, cole sua chave e clique em Ativar.');
 }
 
-function applyZoom(){document['body']['style']['zoom']=String(state['zoom']),$('zoomValue')['textContent']=Math['round'](state['zoom']*0x64)+'%';}function registerToolFilters(){const _0x4047c7=Array['from'](document['querySelectorAll']('[data-tool-filter]')),_0x38f93c=Array['from'](document['querySelectorAll']('.tool-category[data-category]'));_0x4047c7['forEach'](_0x48d08a=>{_0x48d08a['addEventListener']('click',()=>{const _0x275467=_0x48d08a['dataset']['toolFilter'];_0x4047c7['forEach'](_0x3899d9=>{const _0x98e4bf=_0x3899d9===_0x48d08a;_0x3899d9['classList']['toggle']('is-active',_0x98e4bf),_0x3899d9['setAttribute']('aria-pressed',String(_0x98e4bf));}),_0x38f93c['forEach'](_0xbcfe3d=>{_0xbcfe3d['classList']['toggle']('is-active',_0xbcfe3d['dataset']['category']===_0x275467);});});});}function registerRoutes(){document['querySelectorAll']('[data-route]')['forEach'](_0x612d00=>{_0x612d00['addEventListener']('click',()=>{const _0x3c2b78=_0x612d00['dataset']['route'];if(['extract','messages','post-groups','join-groups','templates','reports']['includes'](_0x3c2b78)&&!requireActiveLicense())return;if(_0x3c2b78==='extract'){navigateToView('extract',{'extractMode':_0x612d00['dataset']['extractMode']||'groups'});return;}if(_0x3c2b78==='messages'){navigateToView('messages',{'messageMode':_0x612d00['dataset']['messageMode']||'messages'});return;}navigateToView(_0x3c2b78);});});}function enforceFacebookOnlyUi(){document['querySelector']('[data-tool-filter=\x22whatsapp\x22]')?.['remove'](),document['querySelector']('[data-category=\x22whatsapp\x22]')?.['remove'](),document['querySelector']('.traffic-panel')?.['remove'](),document['querySelectorAll']('[id^=\x22view-whatsapp-\x22]')['forEach'](_0x3b951b=>_0x3b951b['remove']()),$('btnCommentsToLeads')?.['remove']();}function registerEvents(){registerToolFilters(),registerRoutes(),registerTemplateEvents(),registerBackupEvents(),$('btnZoomOut')['addEventListener']('click',()=>{state['zoom']=Math['max'](0.8,Number((state['zoom']-0.1)['toFixed'](0x1))),applyZoom();}),$('btnZoomIn')['addEventListener']('click',()=>{state['zoom']=Math['min'](1.2,Number((state['zoom']+0.1)['toFixed'](0x1))),applyZoom();}),$('btnAcquireLicense')['addEventListener']('click',()=>openExternalUrl(CHANGELOG_URL)),$('btnManageLicenseDashboard')['addEventListener']('click',openLicenseConfig),$('btnAcquireLicenseConfig')['addEventListener']('click',()=>openExternalUrl(CONTACT_URL)),$('btnOpenLicenseView')?.['addEventListener']('click',()=>navigateToView('config')),$('btnRemoveLicenseDashboard')['addEventListener']('click',removeLicense),$('btnActivate')['addEventListener']('click',activateLicense),$('btnRemoveLicense')['addEventListener']('click',removeLicense),$('volumeBoostRange')['addEventListener']('input',()=>{updateVolumeBoostLabel(),persistDraftField('volumeBoostRange');}),$('btnApplyVolumeBoost')['addEventListener']('click',()=>applyVolumeBoost(![])),$('btnResetVolumeBoost')['addEventListener']('click',()=>applyVolumeBoost(!![])),$('btnClearVolumeLog')['addEventListener']('click',()=>{$('volumeLogBody')['textContent']='';}),$('btnRightClickOn')?.['addEventListener']('click',()=>setRightClickUnlock(!![])),$('btnRightClickOff')?.['addEventListener']('click',()=>setRightClickUnlock(![])),$('btnClearRightClickLog')?.['addEventListener']('click',()=>{$('rightClickLogBody')['textContent']='';}),$('extractTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['extract']=getSelectedTabId('extractTabSelect','extract');}),$('postTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['post']=getSelectedTabId('postTabSelect','post');}),$('joinTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['join']=getSelectedTabId('joinTabSelect','join');}),$('btnExtractRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('extractLogBody','Janela')['catch'](_0x26b156=>{writeLog('extractLogBody','Janela','Erro',_0x26b156['message'],'error');});}),$('btnExtractNavigate')['addEventListener']('click',navigateExtractTab),$('btnOpenPostUrl')?.['addEventListener']('click',navigateToPostUrl),$('btnExtractSearch')['addEventListener']('click',runExtractSearch),$('btnExtractMembers')?.['addEventListener']('click',enrichExtractedGroupMembers),$('btnStopExtractMembers')?.['addEventListener']('click',stopExtractMembers),$('btnFilterByMembers')?.['addEventListener']('click',filterExtractItemsByMinimumMembers),$('btnExtractDeduplicate')['addEventListener']('click',deduplicateExtractItems),$('btnExtractSave')['addEventListener']('click',saveExtractItemsJson),$('btnExtractClear')['addEventListener']('click',clearExtractItems),$('btnHeaderClearExtract')?.['addEventListener']('click',clearExtractItems),$('btnClearExtractLog')['addEventListener']('click',()=>{$('extractLogBody')['textContent']='';}),$('btnSelectMedia')['addEventListener']('click',()=>$('mediaInput')['click']()),$('mediaUploadArea')['addEventListener']('click',()=>$('mediaInput')['click']()),$('mediaUploadArea')['addEventListener']('dragover',_0x3c8eb3=>{_0x3c8eb3['preventDefault'](),$('mediaUploadArea')['style']['borderColor']='rgba(59,\x20130,\x20246,\x200.72)';}),$('mediaUploadArea')['addEventListener']('dragleave',()=>{$('mediaUploadArea')['style']['borderColor']='#bfdbfe';}),$('mediaUploadArea')['addEventListener']('drop',_0x5aa90a=>{_0x5aa90a['preventDefault'](),$('mediaUploadArea')['style']['borderColor']='#bfdbfe',handleMediaFiles(Array['from'](_0x5aa90a['dataTransfer']['files']));}),$('mediaInput')['addEventListener']('change',_0xd9cedc=>{handleMediaFiles(Array['from'](_0xd9cedc['target']['files'])),_0xd9cedc['target']['value']='';}),$('btnAddMessageLine')['addEventListener']('click',()=>{const _0x3f10c7=$('postMessages');_0x3f10c7['value']=_0x3f10c7['value']['trim']()?_0x3f10c7['value']['trim']()+'\x0a---\x0a':'',_0x3f10c7['focus'](),updateMessageCount(),persistDraftField('postMessages');}),$('btnResetPosting')['addEventListener']('click',resetPostingForm),$('btnPostRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('postLogBody','Janela')['catch'](_0x2c8e14=>{writeLog('postLogBody','Janela','Erro',_0x2c8e14['message'],'error');});}),$('btnUseJoinedGroups')?.['addEventListener']('click',loadJoinedGroupsIntoPostList);$('btnUseJoinedGroupsAlt')?.['addEventListener']('click',loadJoinedGroupsIntoPostList);$('btnImportGroupsJson')?.['addEventListener']('click',()=>$('fileGroupsInput')['click']());$('btnExportPostGroups')?.['addEventListener']('click',exportGroupList);$('btnClearPostGroups')?.['addEventListener']('click',clearPostGroupsList);$('btnClearPostGroupsTable')?.['addEventListener']('click',clearPostGroupsList);$('groupsList')?.['addEventListener']('input',()=>{updatePostGroupsData(parseList($('groupsList')['value']));});['groupsList','joinGroupsList'].forEach(id=>{const el=$(id);if(!el)return;el.addEventListener('dragover',e=>e.preventDefault());el.addEventListener('drop',async e=>{e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f){if(id==='groupsList')await importGroupFile(f);else if(id==='joinGroupsList')await importJoinGroupFile(f);}});}),$('fileGroupsInput')['addEventListener']('change',async _0x2cee9e=>{const _0x535290=_0x2cee9e['target']['files'][0x0];_0x535290&&await importGroupFile(_0x535290),_0x2cee9e['target']['value']='';}),$('btnStartPost')['addEventListener']('click',startPosting),$('btnStopPost')['addEventListener']('click',async()=>{$('progressContainer')['style']['display']='block',$('progressText')['textContent']='Pedido\x20de\x20parada\x20recebido.\x20Finalizando\x20a\x20etapa\x20atual...',$('btnStopPost')['querySelector']('strong')['textContent']='Parando...',$('btnStopPost')['querySelector']('span:last-child')['textContent']='Aguarde\x20a\x20etapa\x20atual\x20encerrar.',$('btnStopPost')['disabled']=!![];const _0x2b17f3=await chrome['runtime']['sendMessage']({'action':'stopFacebookGroupQueue'})['catch'](_0x55ba0c=>({'success':![],'error':_0x55ba0c?.['message']||'Falha\x20ao\x20parar.'}));_0x2b17f3?.['success']?(renderFacebookGroupQueueStatus(_0x2b17f3['queue']),loadGroupReports()['catch'](()=>{}),writeLog('postLogBody','Postar','Parado','Fila\x20pausada.\x20O\x20proximo\x20grupo\x20ficou\x20salvo.','warn')):($('btnStopPost')['disabled']=![],writeLog('postLogBody','Postar','Erro',_0x2b17f3?.['error']||'Falha\x20ao\x20parar\x20a\x20fila.','error'));}),$('btnManualNavigate')['addEventListener']('click',manualNavigateToFirstGroup),$('btnManualOpenComposer')['addEventListener']('click',manualOpenComposer),$('btnManualPasteText')['addEventListener']('click',manualPasteDraft),$('btnManualPublish')['addEventListener']('click',manualPublishDraft),$('btnClearPostLog')['addEventListener']('click',()=>{$('postLogBody')['textContent']='';}),$('btnJoinRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('joinLogBody','Janela')['catch'](_0x383b8d=>{writeLog('joinLogBody','Janela','Erro',_0x383b8d['message'],'error');});}),$('btnFetchMyFriends')?.['addEventListener']('click',loadFriendsIntoProfileList),$('btnJoinUseExtracted')['addEventListener']('click',()=>{useExtractedGroupsForJoin()['catch'](_0x58e39d=>{writeLog('joinLogBody','Lista','Erro',_0x58e39d['message'],'error');});}),$('btnImportJoinGroupsJson')['addEventListener']('click',()=>$('fileJoinGroupsInput')['click']()),$('fileJoinGroupsInput')['addEventListener']('change',async _0x4924ef=>{const _0x137ad7=_0x4924ef['target']['files'][0x0];_0x137ad7&&await importJoinGroupFile(_0x137ad7),_0x4924ef['target']['value']='';}),$('btnStartJoinGroups')['addEventListener']('click',startJoinGroups),$('btnStopJoinGroups')['addEventListener']('click',()=>{state['joinGroupsAbort']=!![],$('joinProgressContainer')['style']['display']='block',$('joinProgressText')['textContent']='Pedido\x20de\x20parada\x20recebido.\x20Finalizando\x20a\x20etapa\x20atual...',$('btnStopJoinGroups')['querySelector']('strong')['textContent']='Parando...',$('btnStopJoinGroups')['querySelector']('span:last-child')['textContent']='Aguarde\x20a\x20etapa\x20atual\x20encerrar.',$('btnStopJoinGroups')['disabled']=!![],writeLog('joinLogBody','Entrar','Parando','Pedido\x20de\x20parada\x20recebido.\x20A\x20extensao\x20vai\x20parar\x20antes\x20do\x20proximo\x20grupo.','warn');}),$('btnClearJoinLog')['addEventListener']('click',()=>{$('joinLogBody')['textContent']='';}),$('btnLoadProfilesFile')['addEventListener']('click',()=>$('fileProfilesInput')['click']()),$('fileProfilesInput')['addEventListener']('change',async _0x15869c=>{const _0x471f53=_0x15869c['target']['files'][0x0];if(_0x471f53)try{const _0x45b2b0=await _0x471f53['text']();if(_0x471f53['name']['toLowerCase']()['endsWith']('.json')){const _0x4e8619=normalizeExtractedItems(parseJsonPayload(_0x45b2b0),'profiles');$('profilesList')['value']=_0x4e8619['map'](_0x314106=>_0x314106['url'])['filter'](Boolean)['join']('\x0a');}else $('profilesList')['value']=_0x45b2b0;persistDraftField('profilesList');}catch(_0x567c87){writeLog('dmLogBody','Arquivo','Erro',_0x567c87['message'],'error');}_0x15869c['target']['value']='';}),$('btnStartDM')['addEventListener']('click',startDmFlow),$('btnStopDM')['addEventListener']('click',()=>{state['dmAbort']=!![],$('btnStopDM')['disabled']=!![],writeLog('dmLogBody','Mensagens','Parando','A\x20extensao\x20vai\x20parar\x20antes\x20do\x20proximo\x20perfil.','warn');}),$('groupDailyLimitEnabled')?.['addEventListener']('change',()=>{syncGroupDailyLimitFields(),persistDraftField('groupDailyLimitEnabled');}),$('groupDailyLimit')?.['addEventListener']('change',()=>{$('groupDailyLimit')['value']=String(Math['min'](0x32,Math['max'](0x1,Number($('groupDailyLimit')['value'])||0x32))),persistDraftField('groupDailyLimit');}),$('groupAvoidDuplicates')?.['addEventListener']('change',()=>{syncDuplicateProtectionFields(),persistDraftField('groupAvoidDuplicates');}),$('groupDuplicateDays')?.['addEventListener']('change',()=>{persistDraftField('groupDuplicateDays');}),$('btnExportGroupReportsCsv')?.['addEventListener']('click',exportGroupReportsCsv),$('btnExportGroupReportsJson')?.['addEventListener']('click',exportGroupReportsJson),$('btnClearGroupReports')?.['addEventListener']('click',()=>{clearGroupReports()['catch'](_0x3ec363=>alert(_0x3ec363?.['message']||'Falha\x20ao\x20limpar\x20relatorios.'));}),$('btnClearGroupHistory')?.['addEventListener']('click',()=>{clearGroupPostHistory()['catch'](_0x1bdc77=>alert(_0x1bdc77?.['message']||'Falha\x20ao\x20limpar\x20historico.'));}),$('btnClearDmLog')['addEventListener']('click',()=>{$('dmLogBody')['textContent']='';}),document['querySelectorAll']('.external-link')['forEach'](_0x340ba4=>{_0x340ba4['addEventListener']('click',()=>{openExternalUrl(_0x340ba4['dataset']['url']||CONTACT_URL);});});}document['addEventListener']('DOMContentLoaded',async()=>{enforceFacebookOnlyUi(),registerEvents(),bindDraftPersistence(),loadDraftFields(),loadMessageTemplates()['catch'](()=>{}),await loadLicenseStatus(),refreshFacebookTabs()['catch'](()=>{}),applyZoom(),updateExtractViewText(),updateMessagesViewText(),updateMessageCount(),updateMediaCount(),updateVolumeBoostLabel(),renderBackupCategories()['catch'](()=>{}),renderExtractTable(),loadExtractItemsForMode()['catch'](()=>{}),syncGroupDailyLimitFields(),syncDuplicateProtectionFields(),loadGroupReports()['catch'](()=>{}),refreshFacebookGroupQueueStatus()['catch'](()=>{}),window['setInterval'](()=>refreshFacebookGroupQueueStatus()['catch'](()=>{}),0x9c4);const _0x5bedbc=window['location']['hash']['replace'](/^#/,''),_0x58924f=new Set(['dashboard','volume','right-click','backup','extract','messages','post-groups','join-groups','reports','templates','settings','config']);_0x58924f['has'](_0x5bedbc)&&document['getElementById']('view-'+_0x5bedbc)&&navigateToView(_0x5bedbc);});
+function applyZoom(){document['body']['style']['zoom']=String(state['zoom']),$('zoomValue')['textContent']=Math['round'](state['zoom']*0x64)+'%';}function registerToolFilters(){const _0x4047c7=Array['from'](document['querySelectorAll']('[data-tool-filter]')),_0x38f93c=Array['from'](document['querySelectorAll']('.tool-category[data-category]'));_0x4047c7['forEach'](_0x48d08a=>{_0x48d08a['addEventListener']('click',()=>{const _0x275467=_0x48d08a['dataset']['toolFilter'];_0x4047c7['forEach'](_0x3899d9=>{const _0x98e4bf=_0x3899d9===_0x48d08a;_0x3899d9['classList']['toggle']('is-active',_0x98e4bf),_0x3899d9['setAttribute']('aria-pressed',String(_0x98e4bf));}),_0x38f93c['forEach'](_0xbcfe3d=>{_0xbcfe3d['classList']['toggle']('is-active',_0xbcfe3d['dataset']['category']===_0x275467);});});});}function registerRoutes(){document['querySelectorAll']('[data-route]')['forEach'](_0x612d00=>{_0x612d00['addEventListener']('click',()=>{const _0x3c2b78=_0x612d00['dataset']['route'];if(['extract','messages','post-groups','join-groups','templates','reports']['includes'](_0x3c2b78)&&!requireActiveLicense())return;if(_0x3c2b78==='extract'){navigateToView('extract',{'extractMode':_0x612d00['dataset']['extractMode']||'groups'});return;}if(_0x3c2b78==='messages'){navigateToView('messages',{'messageMode':_0x612d00['dataset']['messageMode']||'messages'});return;}navigateToView(_0x3c2b78);});});}function enforceFacebookOnlyUi(){document['querySelector']('[data-tool-filter=\x22whatsapp\x22]')?.['remove'](),document['querySelector']('[data-category=\x22whatsapp\x22]')?.['remove'](),document['querySelector']('.traffic-panel')?.['remove'](),document['querySelectorAll']('[id^=\x22view-whatsapp-\x22]')['forEach'](_0x3b951b=>_0x3b951b['remove']()),$('btnCommentsToLeads')?.['remove']();}function registerEvents(){registerToolFilters(),registerRoutes(),registerTemplateEvents(),registerBackupEvents(),$('btnZoomOut')['addEventListener']('click',()=>{state['zoom']=Math['max'](0.8,Number((state['zoom']-0.1)['toFixed'](0x1))),applyZoom();}),$('btnZoomIn')['addEventListener']('click',()=>{state['zoom']=Math['min'](1.2,Number((state['zoom']+0.1)['toFixed'](0x1))),applyZoom();}),$('btnAcquireLicense')['addEventListener']('click',()=>openExternalUrl(CHANGELOG_URL)),$('btnManageLicenseDashboard')['addEventListener']('click',openLicenseConfig),$('btnAcquireLicenseConfig')['addEventListener']('click',()=>openExternalUrl(CONTACT_URL)),$('btnOpenLicenseView')?.['addEventListener']('click',()=>navigateToView('config')),$('btnRemoveLicenseDashboard')['addEventListener']('click',removeLicense),$('btnActivate')['addEventListener']('click',activateLicense),$('licenseKey')?.['addEventListener']('keydown',e=>{if(e.key==='Enter'){e.preventDefault();activateLicense();}}),$('btnRemoveLicense')['addEventListener']('click',removeLicense),$('volumeBoostRange')['addEventListener']('input',()=>{updateVolumeBoostLabel(),persistDraftField('volumeBoostRange');}),$('btnApplyVolumeBoost')['addEventListener']('click',()=>applyVolumeBoost(![])),$('btnResetVolumeBoost')['addEventListener']('click',()=>applyVolumeBoost(!![])),$('btnClearVolumeLog')['addEventListener']('click',()=>{$('volumeLogBody')['textContent']='';}),$('btnRightClickOn')?.['addEventListener']('click',()=>setRightClickUnlock(!![])),$('btnRightClickOff')?.['addEventListener']('click',()=>setRightClickUnlock(![])),$('btnClearRightClickLog')?.['addEventListener']('click',()=>{$('rightClickLogBody')['textContent']='';}),$('extractTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['extract']=getSelectedTabId('extractTabSelect','extract');}),$('postTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['post']=getSelectedTabId('postTabSelect','post');}),$('joinTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['join']=getSelectedTabId('joinTabSelect','join');}),$('btnExtractRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('extractLogBody','Janela')['catch'](_0x26b156=>{writeLog('extractLogBody','Janela','Erro',_0x26b156['message'],'error');});}),$('btnExtractNavigate')['addEventListener']('click',navigateExtractTab),$('btnOpenPostUrl')?.['addEventListener']('click',navigateToPostUrl),$('btnExtractSearch')['addEventListener']('click',runExtractSearch),$('btnExtractMembers')?.['addEventListener']('click',enrichExtractedGroupMembers),$('btnStopExtractMembers')?.['addEventListener']('click',stopExtractMembers),$('btnFilterByMembers')?.['addEventListener']('click',filterExtractItemsByMinimumMembers),$('btnExtractDeduplicate')['addEventListener']('click',deduplicateExtractItems),$('btnExtractSave')['addEventListener']('click',saveExtractItemsJson),$('btnExtractClear')['addEventListener']('click',clearExtractItems),$('btnHeaderClearExtract')?.['addEventListener']('click',clearExtractItems),$('btnClearExtractLog')['addEventListener']('click',()=>{$('extractLogBody')['textContent']='';}),$('btnSelectMedia')['addEventListener']('click',()=>$('mediaInput')['click']()),$('mediaUploadArea')['addEventListener']('click',()=>$('mediaInput')['click']()),$('mediaUploadArea')['addEventListener']('dragover',_0x3c8eb3=>{_0x3c8eb3['preventDefault'](),$('mediaUploadArea')['style']['borderColor']='rgba(59,\x20130,\x20246,\x200.72)';}),$('mediaUploadArea')['addEventListener']('dragleave',()=>{$('mediaUploadArea')['style']['borderColor']='#bfdbfe';}),$('mediaUploadArea')['addEventListener']('drop',_0x5aa90a=>{_0x5aa90a['preventDefault'](),$('mediaUploadArea')['style']['borderColor']='#bfdbfe',handleMediaFiles(Array['from'](_0x5aa90a['dataTransfer']['files']));}),$('mediaInput')['addEventListener']('change',_0xd9cedc=>{handleMediaFiles(Array['from'](_0xd9cedc['target']['files'])),_0xd9cedc['target']['value']='';}),$('btnAddMessageLine')['addEventListener']('click',()=>{const _0x3f10c7=$('postMessages');_0x3f10c7['value']=_0x3f10c7['value']['trim']()?_0x3f10c7['value']['trim']()+'\x0a---\x0a':'',_0x3f10c7['focus'](),updateMessageCount(),persistDraftField('postMessages');}),$('btnResetPosting')['addEventListener']('click',resetPostingForm),$('btnPostRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('postLogBody','Janela')['catch'](_0x2c8e14=>{writeLog('postLogBody','Janela','Erro',_0x2c8e14['message'],'error');});}),$('btnUseJoinedGroups')?.['addEventListener']('click',loadJoinedGroupsIntoPostList);$('btnUseJoinedGroupsAlt')?.['addEventListener']('click',loadJoinedGroupsIntoPostList);$('btnImportGroupsJson')?.['addEventListener']('click',()=>$('fileGroupsInput')['click']());$('btnExportPostGroups')?.['addEventListener']('click',exportGroupList);$('btnClearPostGroups')?.['addEventListener']('click',clearPostGroupsList);$('btnClearPostGroupsTable')?.['addEventListener']('click',clearPostGroupsList);$('groupsList')?.['addEventListener']('input',()=>{updatePostGroupsData(parseList($('groupsList')['value']));});['groupsList','joinGroupsList'].forEach(id=>{const el=$(id);if(!el)return;el.addEventListener('dragover',e=>e.preventDefault());el.addEventListener('drop',async e=>{e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f){if(id==='groupsList')await importGroupFile(f);else if(id==='joinGroupsList')await importJoinGroupFile(f);}});}),$('fileGroupsInput')['addEventListener']('change',async _0x2cee9e=>{const _0x535290=_0x2cee9e['target']['files'][0x0];_0x535290&&await importGroupFile(_0x535290),_0x2cee9e['target']['value']='';}),$('btnStartPost')['addEventListener']('click',startPosting),$('btnStopPost')['addEventListener']('click',async()=>{$('progressContainer')['style']['display']='block',$('progressText')['textContent']='Pedido\x20de\x20parada\x20recebido.\x20Finalizando\x20a\x20etapa\x20atual...',$('btnStopPost')['querySelector']('strong')['textContent']='Parando...',$('btnStopPost')['querySelector']('span:last-child')['textContent']='Aguarde\x20a\x20etapa\x20atual\x20encerrar.',$('btnStopPost')['disabled']=!![];const _0x2b17f3=await chrome['runtime']['sendMessage']({'action':'stopFacebookGroupQueue'})['catch'](_0x55ba0c=>({'success':![],'error':_0x55ba0c?.['message']||'Falha\x20ao\x20parar.'}));_0x2b17f3?.['success']?(renderFacebookGroupQueueStatus(_0x2b17f3['queue']),loadGroupReports()['catch'](()=>{}),writeLog('postLogBody','Postar','Parado','Fila\x20pausada.\x20O\x20proximo\x20grupo\x20ficou\x20salvo.','warn')):($('btnStopPost')['disabled']=![],writeLog('postLogBody','Postar','Erro',_0x2b17f3?.['error']||'Falha\x20ao\x20parar\x20a\x20fila.','error'));}),$('btnManualNavigate')['addEventListener']('click',manualNavigateToFirstGroup),$('btnManualOpenComposer')['addEventListener']('click',manualOpenComposer),$('btnManualPasteText')['addEventListener']('click',manualPasteDraft),$('btnManualPublish')['addEventListener']('click',manualPublishDraft),$('btnClearPostLog')['addEventListener']('click',()=>{$('postLogBody')['textContent']='';}),$('btnJoinRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('joinLogBody','Janela')['catch'](_0x383b8d=>{writeLog('joinLogBody','Janela','Erro',_0x383b8d['message'],'error');});}),$('btnFetchMyFriends')?.['addEventListener']('click',loadFriendsIntoProfileList),$('btnJoinUseExtracted')['addEventListener']('click',()=>{useExtractedGroupsForJoin()['catch'](_0x58e39d=>{writeLog('joinLogBody','Lista','Erro',_0x58e39d['message'],'error');});}),$('btnImportJoinGroupsJson')['addEventListener']('click',()=>$('fileJoinGroupsInput')['click']()),$('fileJoinGroupsInput')['addEventListener']('change',async _0x4924ef=>{const _0x137ad7=_0x4924ef['target']['files'][0x0];_0x137ad7&&await importJoinGroupFile(_0x137ad7),_0x4924ef['target']['value']='';}),$('btnStartJoinGroups')['addEventListener']('click',startJoinGroups),$('btnStopJoinGroups')['addEventListener']('click',()=>{state['joinGroupsAbort']=!![],$('joinProgressContainer')['style']['display']='block',$('joinProgressText')['textContent']='Pedido\x20de\x20parada\x20recebido.\x20Finalizando\x20a\x20etapa\x20atual...',$('btnStopJoinGroups')['querySelector']('strong')['textContent']='Parando...',$('btnStopJoinGroups')['querySelector']('span:last-child')['textContent']='Aguarde\x20a\x20etapa\x20atual\x20encerrar.',$('btnStopJoinGroups')['disabled']=!![],writeLog('joinLogBody','Entrar','Parando','Pedido\x20de\x20parada\x20recebido.\x20A\x20extensao\x20vai\x20parar\x20antes\x20do\x20proximo\x20grupo.','warn');}),$('btnClearJoinLog')['addEventListener']('click',()=>{$('joinLogBody')['textContent']='';}),$('btnLoadProfilesFile')['addEventListener']('click',()=>$('fileProfilesInput')['click']()),$('fileProfilesInput')['addEventListener']('change',async _0x15869c=>{const _0x471f53=_0x15869c['target']['files'][0x0];if(_0x471f53)try{const _0x45b2b0=await _0x471f53['text']();if(_0x471f53['name']['toLowerCase']()['endsWith']('.json')){const _0x4e8619=normalizeExtractedItems(parseJsonPayload(_0x45b2b0),'profiles');$('profilesList')['value']=_0x4e8619['map'](_0x314106=>_0x314106['url'])['filter'](Boolean)['join']('\x0a');}else $('profilesList')['value']=_0x45b2b0;persistDraftField('profilesList');}catch(_0x567c87){writeLog('dmLogBody','Arquivo','Erro',_0x567c87['message'],'error');}_0x15869c['target']['value']='';}),$('btnStartDM')['addEventListener']('click',startDmFlow),$('btnStopDM')['addEventListener']('click',()=>{state['dmAbort']=!![],$('btnStopDM')['disabled']=!![],writeLog('dmLogBody','Mensagens','Parando','A\x20extensao\x20vai\x20parar\x20antes\x20do\x20proximo\x20perfil.','warn');}),$('groupDailyLimitEnabled')?.['addEventListener']('change',()=>{syncGroupDailyLimitFields(),persistDraftField('groupDailyLimitEnabled');}),$('groupDailyLimit')?.['addEventListener']('change',()=>{$('groupDailyLimit')['value']=String(Math['min'](0x32,Math['max'](0x1,Number($('groupDailyLimit')['value'])||0x32))),persistDraftField('groupDailyLimit');}),$('groupAvoidDuplicates')?.['addEventListener']('change',()=>{syncDuplicateProtectionFields(),persistDraftField('groupAvoidDuplicates');}),$('groupDuplicateDays')?.['addEventListener']('change',()=>{persistDraftField('groupDuplicateDays');}),$('btnExportGroupReportsCsv')?.['addEventListener']('click',exportGroupReportsCsv),$('btnExportGroupReportsJson')?.['addEventListener']('click',exportGroupReportsJson),$('btnClearGroupReports')?.['addEventListener']('click',()=>{clearGroupReports()['catch'](_0x3ec363=>alert(_0x3ec363?.['message']||'Falha\x20ao\x20limpar\x20relatorios.'));}),$('btnClearGroupHistory')?.['addEventListener']('click',()=>{clearGroupPostHistory()['catch'](_0x1bdc77=>alert(_0x1bdc77?.['message']||'Falha\x20ao\x20limpar\x20historico.'));}),$('btnClearDmLog')['addEventListener']('click',()=>{$('dmLogBody')['textContent']='';}),document['querySelectorAll']('.external-link')['forEach'](_0x340ba4=>{_0x340ba4['addEventListener']('click',()=>{openExternalUrl(_0x340ba4['dataset']['url']||CONTACT_URL);});});}document['addEventListener']('DOMContentLoaded',async()=>{enforceFacebookOnlyUi(),registerEvents(),bindDraftPersistence(),loadDraftFields(),loadMessageTemplates()['catch'](()=>{}),await loadLicenseStatus(),refreshFacebookTabs()['catch'](()=>{}),applyZoom(),updateExtractViewText(),updateMessagesViewText(),updateMessageCount(),updateMediaCount(),updateVolumeBoostLabel(),renderBackupCategories()['catch'](()=>{}),renderExtractTable(),loadExtractItemsForMode()['catch'](()=>{}),syncGroupDailyLimitFields(),syncDuplicateProtectionFields(),loadGroupReports()['catch'](()=>{}),refreshFacebookGroupQueueStatus()['catch'](()=>{}),window['setInterval'](()=>refreshFacebookGroupQueueStatus()['catch'](()=>{}),0x9c4);const _0x5bedbc=window['location']['hash']['replace'](/^#/,''),_0x58924f=new Set(['dashboard','volume','right-click','backup','extract','messages','post-groups','join-groups','reports','templates','settings','config']);_0x58924f['has'](_0x5bedbc)&&document['getElementById']('view-'+_0x5bedbc)&&navigateToView(_0x5bedbc);});
 
 
 function applyTheme(_theme){if(_theme==='light'){document['documentElement']['setAttribute']('data-theme','light');if($('themeToggleBtn'))$('themeToggleBtn')['innerHTML']='☀️';}else{document['documentElement']['removeAttribute']('data-theme');if($('themeToggleBtn'))$('themeToggleBtn')['innerHTML']='🌙';}}
