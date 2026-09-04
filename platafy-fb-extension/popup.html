@@ -974,86 +974,121 @@
           </div>
         </div>
 
-        <div class="panel">
-          <div class="field-group">
-            <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:6px;"><label for="profilesList" style="display:inline-flex;align-items:center;gap:7px;margin-bottom:0;">
-              <span style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#2563eb,#1e40af);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-              </span>
-              Lista de perfis
-            </label>
-            <div style="display:flex;gap:6px;align-items:center;">
-              <button class="mini-btn" id="btnFetchMyFriends" type="button" style="background:#16a34a;color:#fff;font-weight:600;padding:4px 10px;border-radius:6px;border:none;cursor:pointer;">👥 Puxar Meus Amigos do Facebook</button>
-              
-            </div>
-            </div>
-            <textarea id="profilesList" rows="4" placeholder="https://www.facebook.com/perfil1"></textarea>
-          </div>
-          <div class="field-group">
-            <div class="field-label-row">
-              <label for="dmMessages" style="display:inline-flex;align-items:center;gap:7px;">
-                <span style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#7c3aed,#6d28d9);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
-                </span>
-                Mensagens
-              </label>
-              <select class="template-select" id="dmTemplateSelect" data-template-target="dmMessages" aria-label="Selecionar template para mensagens">
-                <option value="">Templates</option>
-              </select>
-            </div>
-            <textarea id="dmMessages" rows="4" placeholder="Ola {nome}, tudo bem?"></textarea>
-            <small>Use {nome} para personalizar automaticamente.</small>
-          </div>
-          <div class="field-row">
-            <div class="field-group">
-              <label for="dmDelayMin" style="display:inline-flex;align-items:center;gap:7px;">
-                <span style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#f59e0b,#d97706);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
-                </span>
-                Delay minimo (seg)
-              </label>
-              <input type="number" id="dmDelayMin" value="45" min="10" max="300" />
-            </div>
-            <div class="field-group">
-              <label for="dmDelayMax" style="display:inline-flex;align-items:center;gap:7px;">
-                <span style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#ef4444,#dc2626);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
-                </span>
-                Delay maximo (seg)
-              </label>
-              <input type="number" id="dmDelayMax" value="120" min="20" max="600" />
-            </div>
-          </div>
-          <div class="button-row">
-            <button class="btn btn-secondary" id="btnLoadProfilesFile" type="button" style="display:inline-flex;align-items:center;gap:7px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
-              Carregar Arquivo
-            </button>
-            <button class="btn btn-primary" id="btnStartDM" type="button" style="display:inline-flex;align-items:center;gap:7px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-              <span id="btnStartDMLabel">Iniciar Envio</span>
-            </button>
-            <button class="btn btn-danger" id="btnStopDM" type="button" disabled style="display:inline-flex;align-items:center;gap:7px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M6 6h12v12H6z"/></svg>
-              Parar
-            </button>
-            <input type="file" id="fileProfilesInput" accept=".txt,.csv,.json" hidden />
-          </div>
-        </div>
+        <div class="view-split-container">
+          <!-- COLUNA DA ESQUERDA: CONFIGURAÇÕES E PARÂMETROS -->
+          <div class="view-split-controls">
+            <div class="panel">
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="dmDelayMin" style="display:inline-flex;align-items:center;gap:7px;">
+                    <span style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#f59e0b,#d97706);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+                    </span>
+                    Delay mínimo (seg)
+                  </label>
+                  <input type="number" id="dmDelayMin" value="45" min="10" max="300" />
+                </div>
+                <div class="field-group">
+                  <label for="dmDelayMax" style="display:inline-flex;align-items:center;gap:7px;">
+                    <span style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#ef4444,#dc2626);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+                    </span>
+                    Delay máximo (seg)
+                  </label>
+                  <input type="number" id="dmDelayMax" value="120" min="20" max="600" />
+                </div>
+              </div>
 
-        <div class="panel progress-panel" id="dmProgressContainer" style="display:none;">
-          <div class="progress-bar-wrap">
-            <div class="progress-bar" id="dmProgressBar" style="width:0%"></div>
-          </div>
-          <div class="progress-text" id="dmProgressText">0 / 0 perfis</div>
-        </div>
+              <div class="field-group">
+                <div class="field-label-row">
+                  <label for="dmMessages" style="display:inline-flex;align-items:center;gap:7px;">
+                    <span style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#7c3aed,#6d28d9);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                    </span>
+                    Mensagens
+                  </label>
+                  <select class="template-select" id="dmTemplateSelect" data-template-target="dmMessages" aria-label="Selecionar template para mensagens">
+                    <option value="">Templates</option>
+                  </select>
+                </div>
+                <textarea id="dmMessages" rows="4" placeholder="Olá {nome}, tudo bem?"></textarea>
+                <small>Use {nome} para personalizar automaticamente com o nome do perfil.</small>
+              </div>
 
-        <div class="log-panel">
-          <div class="log-head">
-            <span>Log de Mensagens</span>
-            <button class="btn-inline" id="btnClearDmLog" type="button">Limpar</button>
+              <div class="button-row" style="flex-direction:column;gap:8px;margin-top:12px;">
+                <button class="btn btn-primary" id="btnStartDM" type="button" style="display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                  <span id="btnStartDMLabel">Iniciar Envio</span>
+                </button>
+                <button class="btn btn-danger" id="btnStopDM" type="button" disabled style="display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M6 6h12v12H6z"/></svg>
+                  Parar
+                </button>
+                <button class="btn btn-secondary" id="btnLoadProfilesFile" type="button" style="display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                  Carregar Arquivo (.txt, .json)
+                </button>
+                <input type="file" id="fileProfilesInput" accept=".txt,.csv,.json" hidden />
+              </div>
+            </div>
           </div>
-          <div class="log-body" id="dmLogBody"></div>
+
+          <!-- COLUNA DA DIREITA: LISTA DE PERFIS -> PROGRESSO -> LOG -->
+          <div class="view-split-main">
+            <!-- CARD 1: LISTA DE PERFIS ENCONTRADOS (IGUAL A POSTAR EM GRUPOS) -->
+            <div class="panel">
+              <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <h2 style="margin:0;">Lista de Perfis Encontrados</h2>
+                  <span id="profilesCountBadge" class="count-badge">(0 perfis)</span>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  <button class="mini-btn" id="btnFetchMyFriends" type="button" style="background:#2563eb;color:#fff;font-weight:700;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;">⚡ Puxar Meus Amigos</button>
+                  <button class="mini-btn" id="btnClearProfilesTable" type="button" style="background:#ef4444;color:#fff;font-weight:700;padding:6px 10px;border-radius:6px;border:none;cursor:pointer;">🗑️ Limpar</button>
+                </div>
+              </div>
+
+              <div style="max-height:360px;overflow-y:auto;border-radius:8px;border:1px solid rgba(255,255,255,0.08);">
+                <table class="results-table" id="profilesTable">
+                  <thead>
+                    <tr>
+                      <th style="width:40px;">QTD</th>
+                      <th>NOME</th>
+                      <th>LINK</th>
+                      <th style="width:50px;text-align:center;">ACAO</th>
+                    </tr>
+                  </thead>
+                  <tbody id="profilesTableBody">
+                    <tr>
+                      <td colspan="4" style="text-align:center;padding:24px;color:var(--muted);">
+                        Nenhum perfil carregado. Clique em <strong>⚡ Puxar Meus Amigos</strong> ou <strong>Carregar Arquivo</strong> para listar perfis.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- MANTÉM TEXTAREA OCULTA PARA COMPATIBILIDADE INTEGRAL E DRAFTS -->
+              <textarea id="profilesList" style="display:none;"></textarea>
+            </div>
+
+            <!-- CARD 2: PROGRESSO DE ENVIO -->
+            <div class="panel progress-panel" id="dmProgressContainer" style="display:none;">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" id="dmProgressBar" style="width:0%"></div>
+              </div>
+              <div class="progress-text" id="dmProgressText">0 / 0 perfis</div>
+            </div>
+
+            <!-- CARD 3: LOG DE MENSAGENS -->
+            <div class="log-panel">
+              <div class="log-head">
+                <span>Log de Mensagens</span>
+                <button class="btn-inline" id="btnClearDmLog" type="button">Limpar</button>
+              </div>
+              <div class="log-body" id="dmLogBody"></div>
+            </div>
+          </div>
         </div>
       </section>
 
