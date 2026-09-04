@@ -22,9 +22,9 @@
           <div class="brand-meta"><em>"O Senhor é o meu pastor, nada me faltará" Salmos 23:1-6</em></div>
         </div>
       </div>
-      <div class="license-badge is-active" id="licenseBadge">
-        <span class="badge-dot green"></span>
-        <span>Ativado</span>
+      <div class="license-badge is-inactive" id="licenseBadge">
+        <span class="badge-dot red"></span>
+        <span>Inativo</span>
       </div>
     </header>
 
@@ -1093,10 +1093,10 @@
           <div class="license-status-top">
             <div>
               <span class="license-status-eyebrow">Status da licenca</span>
-              <h3 id="licenseStatusTitle">Licenca ativa neste dispositivo</h3>
-              <p id="licenseStatusText">Seu acesso esta liberado e pronto para uso.</p>
+              <h3 id="licenseStatusTitle">Nenhuma licenca ativa</h3>
+              <p id="licenseStatusText">Ative sua chave para liberar todos os recursos da extensao.</p>
             </div>
-            <span class="license-status-pill is-active" id="licenseStatusPill">Ativa</span>
+            <span class="license-status-pill is-inactive" id="licenseStatusPill">Inativa</span>
           </div>
           <div class="license-meta-grid">
             <div class="license-meta-item">
@@ -1104,42 +1104,42 @@
                 Cliente
                 <button class="help-dot" type="button" aria-label="Ajuda sobre cliente" data-help="Mostra para quem essa licenca foi criada no painel WordPress."></button>
               </span>
-              <strong id="licenseCustomerValue">Licença PLATAFY FB</strong>
+              <strong id="licenseCustomerValue">-</strong>
             </div>
             <div class="license-meta-item">
               <span class="license-meta-label">
                 Plano
                 <button class="help-dot" type="button" aria-label="Ajuda sobre plano" data-help="Tipos que existem agora:&#10;&#10;Semanal: vale 7 dias.&#10;Mensal: vale 1 mes.&#10;Anual: vale 1 ano.&#10;Por dias: voce escolhe quantos dias.&#10;Vitalicio: sem data para acabar."></button>
               </span>
-              <strong id="licensePlanValue">Vitalício</strong>
+              <strong id="licensePlanValue">-</strong>
             </div>
             <div class="license-meta-item">
               <span class="license-meta-label">
                 Validade
                 <button class="help-dot" type="button" aria-label="Ajuda sobre validade" data-help="Mostra quando a licenca expira. Se aparecer Sem validade, a licenca e vitalicia."></button>
               </span>
-              <strong id="licenseExpiryValue">Sem validade</strong>
+              <strong id="licenseExpiryValue">-</strong>
             </div>
             <div class="license-meta-item">
               <span class="license-meta-label">
                 Dispositivo
                 <button class="help-dot" type="button" aria-label="Ajuda sobre dispositivo" data-help="Mostra se a licenca ja esta vinculada a este navegador. Para trocar de PC, libere o navegador no WordPress."></button>
               </span>
-              <strong id="licenseDeviceValue">Vinculado</strong>
+              <strong id="licenseDeviceValue">Nao vinculado</strong>
             </div>
           </div>
         </div>
 
         <div class="panel" id="licenseActivationPanel">
           <div class="panel-head panel-head-column">
-            <h3 id="licenseActionTitle">Sua Licença Ativa</h3>
-            <p id="licenseActionText">Sua extensão está liberada e ativada neste dispositivo.</p>
+            <h3 id="licenseActionTitle">Ativar acesso</h3>
+            <p id="licenseActionText">Cole sua chave abaixo para liberar a extensao neste dispositivo.</p>
           </div>
           <div class="field-group" id="licenseKeyFieldGroup">
             <label for="licenseKey">Chave da licenca</label>
             <div class="inline-field">
               <input type="text" id="licenseKey" placeholder="XXXX-XXXX-XXXX-XXXX" spellcheck="false" />
-              <button class="btn btn-primary" id="btnActivate" type="button" disabled style="background:#16a34a;color:#fff;">✓ Licença Ativa</button>
+              <button class="btn btn-primary" id="btnActivate" type="button">Ativar acesso</button>
             </div>
           </div>
           <div class="license-inline-notice" id="licenseInlineNotice" hidden></div>
