@@ -3077,3 +3077,93 @@ input::placeholder, textarea::placeholder {
   border: 1px solid #fca5a5 !important;
   color: #991b1b !important;
 }
+
+/* ============================================================
+   AJUSTE DE LAYOUT PARA POSTAR EM PERFIS (PUXAR MEUS AMIGOS)
+   ALINHAMENTO DA ALTURA ATÉ A COLUNA DA ESQUERDA
+   ============================================================ */
+
+.profiles-table-panel {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.profiles-table-wrap {
+  flex: 1 1 0 !important;
+  min-height: 220px !important;
+  overflow-y: auto !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.profiles-table-wrap thead th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 2 !important;
+}
+
+[data-theme="light"] .profiles-table-wrap {
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+}
+
+/* Telas a partir de 820px (layout em 2 colunas lado a lado) */
+@media (min-width: 820px) {
+  #view-messages .view-split-container {
+    align-items: stretch !important;
+  }
+
+  #view-messages .view-split-controls {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  #view-messages .view-split-main {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    gap: 14px !important;
+  }
+
+  /* Card 1: Lista de Perfis Encontrados preenche o espaço flexível */
+  #view-messages .profiles-table-panel {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* A tabela preenche a altura disponível no card e rola internamente */
+  #view-messages .profiles-table-wrap {
+    flex: 1 1 0 !important;
+    min-height: 220px !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
+
+  /* Card 2: Progresso de Envio */
+  #view-messages #dmProgressContainer {
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Card 3: Log de Mensagens alinhado ao rodapé */
+  #view-messages .log-panel {
+    flex-shrink: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  #view-messages .log-panel .log-body {
+    min-height: 140px !important;
+    max-height: 180px !important;
+    overflow-y: auto !important;
+  }
+}
+
+/* Telas menores (empilhadas) */
+@media (max-width: 819px) {
+  #view-messages .profiles-table-wrap {
+    max-height: 380px !important;
+  }
+}
+
