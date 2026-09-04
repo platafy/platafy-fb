@@ -6,6 +6,13 @@
   <title>PLATAFY FB</title>
   <link rel="stylesheet" href="vendor/font-awesome/css/cloud-upload.css" />
   <link rel="stylesheet" href="popup.css" />
+  <script>
+    try {
+      if (localStorage.getItem('platafy_licenseActive') === 'true' || localStorage.getItem('platafy_license_active') === 'true') {
+        document.documentElement.classList.add('license-pre-active');
+      }
+    } catch(e) {}
+  </script>
 </head>
 <body>
   <div class="app-shell">
@@ -182,7 +189,7 @@
               <span class="btn-inline-icon" aria-hidden="true"><i class="fa-solid fa-gear" aria-hidden="true"></i></span>
               <span>Gerenciar Acesso</span>
             </button>
-            <button class="btn btn-danger" id="btnRemoveLicenseDashboard" type="button">
+            <button class="btn btn-danger" id="btnRemoveLicenseDashboard" type="button" hidden>
               <span class="btn-inline-icon" aria-hidden="true">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm-3 6h12l-1 12H7L6 9zm4 2v8h2v-8h-2zm4 0v8h2v-8h-2z"/>
