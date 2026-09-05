@@ -31,7 +31,7 @@
         }
     ],
     "action": {
-        "default_popup": "popup.html",
+        "default_title": "PLATAFY FB - Abrir Painel Completo",
         "default_icon": {
             "16": "icons/action16.png",
             "32": "icons/action32.png",
