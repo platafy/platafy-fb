@@ -372,12 +372,17 @@
             <div class="panel extract-filter-panel">
               <div class="field-group">
                 <label for="extractTabSelect" style="display:inline-flex;align-items:center;gap:7px;">
-                <span style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#0891b2,#0e7490);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg>
-                </span>
-                Aba do Facebook
-              </label>
-                <select id="extractTabSelect"></select>
+                  <span style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#0891b2,#0e7490);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg>
+                  </span>
+                  Aba do Facebook
+                </label>
+                <div style="display:flex;gap:6px;">
+                  <select id="extractTabSelect" style="flex:1;"></select>
+                  <button class="btn btn-secondary" id="btnExtractRefreshTabs" type="button" title="Atualizar abas do Facebook" style="padding:0 12px;display:inline-flex;align-items:center;justify-content:center;height:38px;border-radius:6px;cursor:pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                  </button>
+                </div>
               </div>
               <div class="field-group" id="extractPostUrlGroup" style="display:none;">
                 <label for="extractPostUrl" style="display:inline-flex;align-items:center;gap:7px;">
@@ -409,76 +414,69 @@
                   </span>
                   Mínimo de membros
                 </label>
-                <input type="number" id="extractMinMembers" min="0" step="1" placeholder="Ex: 10000" />
-                <small>Use "Membros" para ler a quantidade. Depois use "Filtrar membros" para remover grupos abaixo do mínimo informado.</small>
+                <div style="display:flex;gap:6px;">
+                  <input type="number" id="extractMinMembers" min="0" step="1" placeholder="Ex: 5000" style="flex:1;" />
+                  <button class="btn btn-secondary" id="btnFilterByMembers" type="button" title="Aplicar filtro de membros na tabela" style="padding:0 14px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;white-space:nowrap;">
+                    Filtrar
+                  </button>
+                </div>
+                <small>Filtrado automaticamente na extração. Clique em "Filtrar" para refiltrar a lista existente.</small>
               </div>
             </div>
 
             <div class="panel extract-features-panel">
-              <div class="panel-head">
+              <div class="panel-head" style="margin-bottom:0;">
                 <h2 style="display:inline-flex;align-items:center;gap:8px;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#2563eb" style="flex-shrink:0"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
-                  Funcionalidades
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#2563eb" style="flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                  Ação
                 </h2>
               </div>
-              <div class="feature-grid feature-grid-6">
-                <button class="feature-card" id="btnExtractRefreshTabs" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg></span>
-                  <strong>Janela</strong>
-                  <span>Atualizar abas do Facebook.</span>
-                </button>
-                <button class="feature-card" id="btnExtractNavigate" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></span>
-                  <strong>Navegar</strong>
-                  <span>Ir ate a area base da coleta.</span>
-                </button>
-                <button class="feature-card" id="btnExtractSearch" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span>
-                  <strong>Extrair</strong>
-                  <span>Executar a varredura da pagina.</span>
-                </button>
-                <button class="feature-card" id="btnExtractMembers" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zm8 0c-.32 0-.68.02-1.06.06 1.2.86 2.06 2.02 2.06 3.44V19h7v-2c0-2.66-5.33-4-8-4z"/></svg></span>
-                  <strong>Membros</strong>
-                  <span>Abrir grupo por grupo e filtrar.</span>
-                </button>
-                <button class="feature-card" id="btnStopExtractMembers" type="button" disabled>
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M6 6h12v12H6z"/></svg></span>
-                  <strong>Parar membros</strong>
-                  <span>Interromper a leitura dos grupos.</span>
-                </button>
-                <button class="feature-card" id="btnExtractDeduplicate" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z"/></svg></span>
-                  <strong>Remover DP</strong>
-                  <span>Remover duplicados e itens invalidos.</span>
-                </button>
-                <button class="feature-card" id="btnExtractSave" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></span>
-                  <strong>Salvar</strong>
-                  <span>Exportar a lista final em JSON.</span>
-                </button>
-                <button class="feature-card" id="btnExtractClear" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></span>
-                  <strong>Limpar</strong>
-                  <span>Zerar a tabela atual.</span>
-                </button>
-                <button class="feature-card" id="btnFilterByMembers" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg></span>
-                  <strong>Filtrar membros</strong>
-                  <span>Remover abaixo do minimo.</span>
-                </button>
-                <button class="feature-card" id="btnCommentsToLeads" type="button" hidden>
-                  <span class="feature-icon"><i class="fa-solid fa-user-tag" aria-hidden="true"></i></span>
-                  <strong>Comentario para lead</strong>
-                  <span>Salvar comentarios como lead e subscriber.</span>
-                </button>
+              
+              <button class="extract-cta-btn" id="btnExtractSearch" type="button">
+                <span class="extract-cta-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                </span>
+                <div class="extract-cta-content">
+                  <strong>Iniciar Extração de Grupos</strong>
+                  <span>Navega e varre a página automaticamente</span>
+                </div>
+              </button>
+
+              <!-- Seção secundária de enriquecimento individual de membros -->
+              <div class="extract-secondary-card" id="extractAdvancedMembersCard">
+                <div class="extract-secondary-header" style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                  <span style="font-size:12px;font-weight:600;color:var(--text-muted, #94a3b8);display:inline-flex;align-items:center;gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    Leitura Individual de Membros (Opcional)
+                  </span>
+                </div>
+                <p style="font-size:11px;color:var(--text-muted, #64748b);margin:0 0 8px 0;line-height:1.3;">
+                  Abre cada grupo individualmente para verificar membros não informados no card da pesquisa.
+                </p>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn btn-secondary" id="btnExtractMembers" type="button" style="flex:1;font-size:12px;padding:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    <strong>Ler Membros</strong>
+                  </button>
+                  <button class="btn btn-secondary" id="btnStopExtractMembers" type="button" disabled style="flex:1;font-size:12px;padding:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+                    <strong>Parar</strong>
+                    <span style="display:none;"></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Elementos mantidos ocultos para compatibilidade com event handlers existentes -->
+              <div style="display:none;">
+                <button id="btnExtractNavigate" type="button"></button>
+                <button id="btnExtractDeduplicate" type="button"></button>
               </div>
             </div>
           </div>
 
           <div class="view-split-main">
             <div class="panel extract-table-panel">
-              <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
                 <div style="display:flex;align-items:center;gap:8px;">
                   <h2 id="extractTableTitle" style="display:inline-flex;align-items:center;gap:8px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#2563eb" style="flex-shrink:0"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
@@ -486,10 +484,16 @@
                   </h2>
                   <span class="count-badge" id="extractCountBadge">(0 grupos)</span>
                 </div>
-                <button class="mini-btn is-soft" id="btnHeaderClearExtract" type="button" title="Limpar Lista de Grupos Encontrados" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;padding:5px 12px;font-size:12px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-weight:600;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                  Limpar Lista
-                </button>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <button class="btn btn-secondary" id="btnExtractSave" type="button" title="Exportar lista em JSON" style="padding:6px 13px;font-size:12px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Exportar JSON
+                  </button>
+                  <button class="mini-btn is-soft" id="btnExtractClear" type="button" title="Limpar Lista de Resultados" style="background:rgba(239, 68, 68, 0.12);color:#ef4444;border:1px solid rgba(239, 68, 68, 0.3);padding:6px 13px;font-size:12px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-weight:600;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                    Limpar Lista
+                  </button>
+                </div>
               </div>
               <div class="table-wrap extract-table-wrap">
                 <table class="results-table">
