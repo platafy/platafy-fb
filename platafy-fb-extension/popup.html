@@ -474,18 +474,10 @@
                 </button>
               </div>
             </div>
-
-            <div class="log-panel">
-              <div class="log-head">
-                <span>Log de Extracao</span>
-                <button class="btn-inline" id="btnClearExtractLog" type="button">Limpar</button>
-              </div>
-              <div class="log-body" id="extractLogBody"></div>
-            </div>
           </div>
 
           <div class="view-split-main">
-            <div class="panel">
+            <div class="panel extract-table-panel">
               <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;">
                 <div style="display:flex;align-items:center;gap:8px;">
                   <h2 id="extractTableTitle" style="display:inline-flex;align-items:center;gap:8px;">
@@ -499,7 +491,7 @@
                   Limpar Lista
                 </button>
               </div>
-              <div class="table-wrap">
+              <div class="table-wrap extract-table-wrap">
                 <table class="results-table">
                   <thead>
                     <tr>
@@ -517,6 +509,15 @@
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            <!-- LOG DE EXTRAÇÃO -->
+            <div class="log-panel extract-log-panel" style="margin-top:0;">
+              <div class="log-head">
+                <span>Log de Extracao</span>
+                <button class="btn-inline" id="btnClearExtractLog" type="button">Limpar</button>
+              </div>
+              <div class="log-body" id="extractLogBody"></div>
             </div>
           </div>
         </div>
