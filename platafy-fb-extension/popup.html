@@ -810,57 +810,10 @@
 
           </div>
 
-          <!-- COLUNA DA DIREITA: LISTA DE GRUPOS -> GRUPOS PROCESSADOS -> FUNCIONALIDADES -> TESTES MANUAIS -->
+          <!-- COLUNA DA DIREITA: FUNCIONALIDADES -> LISTA DE GRUPOS -> GRUPOS PROCESSADOS -> LOG -->
           <div class="view-split-main">
             
-            <!-- CARD 1: LISTA DE GRUPOS ENCONTRADOS -->
-            <div class="panel post-groups-table-panel">
-              <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <h2 style="margin:0;">Lista de Grupos Encontrados</h2>
-                  <span id="postGroupsCountBadge" class="count-badge">(0 grupos)</span>
-                </div>
-                <div style="display:flex;gap:6px;align-items:center;">
-                  <button class="mini-btn" id="btnUseJoinedGroups" type="button" style="background:#2563eb;color:#fff;font-weight:700;padding:6px 12px;">⚡ Puxar Meus Grupos</button>
-                  <button class="mini-btn" id="btnClearPostGroupsTable" type="button" style="background:#ef4444;color:#fff;font-weight:700;padding:6px 10px;">🗑️ Limpar</button>
-                </div>
-              </div>
-
-              <div class="post-groups-table-wrap" id="postGroupsTableWrap">
-                <table class="results-table" id="postGroupsTable">
-                  <thead>
-                    <tr>
-                      <th style="width:40px;">QTD</th>
-                      <th>NOME</th>
-                      <th>MEMBROS</th>
-                      <th>LINK</th>
-                      <th style="width:50px;text-align:center;">ACAO</th>
-                    </tr>
-                  </thead>
-                  <tbody id="postGroupsTableBody">
-                    <tr>
-                      <td colspan="5" style="text-align:center;padding:24px;color:var(--muted);">
-                        Nenhum grupo carregado. Clique em <strong>⚡ Puxar Meus Grupos</strong> ou <strong>Importar</strong> para listar seus grupos.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- MANTÉM TEXTAREA OCULTA PARA COMPATIBILIDADE INTEGRAL E DRAFTS -->
-              <textarea id="groupsList" style="display:none;"></textarea>
-            </div>
-
-            <!-- CARD 2: GRUPOS PROCESSADOS (PROGRESSO) -->
-            <div class="panel progress-panel" id="progressContainer" style="display:none;">
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" id="progressBar" style="width:0%"></div>
-              </div>
-              <div class="progress-text" id="progressText">0 / 0 grupos processados</div>
-              <div class="dm-daily-status" id="groupDailyStatus">Nenhuma fila de grupos salva.</div>
-            </div>
-
-            <!-- CARD 3: FUNCIONALIDADES -->
+            <!-- CARD 1: FUNCIONALIDADES -->
             <div class="panel post-features-panel">
               <div class="panel-head">
                 <h2 style="display:inline-flex;align-items:center;gap:8px;margin:0;">
@@ -906,6 +859,53 @@
                 </button>
               </div>
               <input type="file" id="fileGroupsInput" accept=".txt,.csv,.json" hidden />
+            </div>
+
+            <!-- CARD 2: LISTA DE GRUPOS ENCONTRADOS -->
+            <div class="panel post-groups-table-panel">
+              <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <h2 style="margin:0;">Lista de Grupos Encontrados</h2>
+                  <span id="postGroupsCountBadge" class="count-badge">(0 grupos)</span>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  <button class="mini-btn" id="btnUseJoinedGroups" type="button" style="background:#2563eb;color:#fff;font-weight:700;padding:6px 12px;">⚡ Puxar Meus Grupos</button>
+                  <button class="mini-btn" id="btnClearPostGroupsTable" type="button" style="background:#ef4444;color:#fff;font-weight:700;padding:6px 10px;">🗑️ Limpar</button>
+                </div>
+              </div>
+
+              <div class="post-groups-table-wrap" id="postGroupsTableWrap">
+                <table class="results-table" id="postGroupsTable">
+                  <thead>
+                    <tr>
+                      <th style="width:40px;">QTD</th>
+                      <th>NOME</th>
+                      <th>MEMBROS</th>
+                      <th>LINK</th>
+                      <th style="width:50px;text-align:center;">ACAO</th>
+                    </tr>
+                  </thead>
+                  <tbody id="postGroupsTableBody">
+                    <tr>
+                      <td colspan="5" style="text-align:center;padding:24px;color:var(--muted);">
+                        Nenhum grupo carregado. Clique em <strong>⚡ Puxar Meus Grupos</strong> ou <strong>Importar</strong> para listar seus grupos.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- MANTÉM TEXTAREA OCULTA PARA COMPATIBILIDADE INTEGRAL E DRAFTS -->
+              <textarea id="groupsList" style="display:none;"></textarea>
+            </div>
+
+            <!-- CARD 3: GRUPOS PROCESSADOS (PROGRESSO) -->
+            <div class="panel progress-panel" id="progressContainer" style="display:none;">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" id="progressBar" style="width:0%"></div>
+              </div>
+              <div class="progress-text" id="progressText">0 / 0 grupos processados</div>
+              <div class="dm-daily-status" id="groupDailyStatus">Nenhuma fila de grupos salva.</div>
             </div>
 
             <!-- LOG DE POSTAGEM -->
