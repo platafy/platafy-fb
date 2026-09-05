@@ -3116,7 +3116,7 @@ input::placeholder, textarea::placeholder {
 
 /* Telas a partir de 820px (layout em 2 colunas lado a lado) */
 @media (min-width: 820px) {
-  /* Extrair Grupos: Alinhamento harmônico e Log abaixo da Tabela */
+  /* Extrair Grupos / Extrair Comentários: Alinhamento harmônico e Log abaixo da Tabela */
   #view-extract .view-split-container {
     align-items: stretch !important;
   }
@@ -3124,6 +3124,26 @@ input::placeholder, textarea::placeholder {
   #view-extract .view-split-controls {
     display: flex !important;
     flex-direction: column !important;
+    height: 100% !important;
+    gap: 10px !important;
+  }
+
+  #view-extract .extract-filter-panel {
+    flex: 0 0 auto !important;
+    margin-bottom: 0 !important;
+    padding: 12px 14px !important;
+  }
+
+  #view-extract .extract-features-panel {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    margin-bottom: 0 !important;
+    padding: 12px 14px !important;
+  }
+
+  #view-extract .extract-features-panel .feature-grid {
+    margin-top: 8px !important;
   }
 
   #view-extract .view-split-main {
@@ -3138,7 +3158,7 @@ input::placeholder, textarea::placeholder {
     height: auto !important;
   }
 
-  /* Card 1: Tabela de Grupos Extraídos expandida até o Log */
+  /* Card 1: Tabela de Grupos / Comentários expandida até o Log */
   #view-extract .extract-table-panel {
     flex: 1 1 auto !important;
     display: flex !important;
