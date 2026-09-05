@@ -852,6 +852,7 @@ small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 11
 .upload-dropzone-caption { color: var(--text-muted); }
 
 .media-preview { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.media-preview:empty { display: none !important; margin: 0 !important; }
 .media-thumb { position: relative; width: 64px; height: 64px; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--line-soft); background: white; }
 .media-thumb img, .media-thumb-video { width: 100%; height: 100%; }
 .media-thumb img { object-fit: cover; }
@@ -3079,16 +3080,18 @@ input::placeholder, textarea::placeholder {
 }
 
 /* ============================================================
-   AJUSTE DE LAYOUT PARA POSTAR EM PERFIS (PUXAR MEUS AMIGOS)
+   AJUSTE DE LAYOUT PARA POSTAR EM PERFIS E ENTRAR EM GRUPOS
    ALINHAMENTO DA ALTURA ATÉ A COLUNA DA ESQUERDA
    ============================================================ */
 
-.profiles-table-panel {
+.profiles-table-panel,
+.join-groups-table-panel {
   display: flex !important;
   flex-direction: column !important;
 }
 
-.profiles-table-wrap {
+.profiles-table-wrap,
+.join-groups-table-wrap {
   flex: 1 1 0 !important;
   min-height: 220px !important;
   overflow-y: auto !important;
@@ -3096,13 +3099,15 @@ input::placeholder, textarea::placeholder {
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
-.profiles-table-wrap thead th {
+.profiles-table-wrap thead th,
+.join-groups-table-wrap thead th {
   position: sticky !important;
   top: 0 !important;
   z-index: 2 !important;
 }
 
-[data-theme="light"] .profiles-table-wrap {
+[data-theme="light"] .profiles-table-wrap,
+[data-theme="light"] .join-groups-table-wrap {
   border: 1px solid #cbd5e1 !important;
   background: #ffffff !important;
 }
@@ -3126,7 +3131,7 @@ input::placeholder, textarea::placeholder {
     gap: 14px !important;
   }
 
-  /* Card 1: Lista de Perfis Encontrados preenche o espaço flexível */
+  /* Card 1: Lista preenche o espaço flexível */
   #view-messages .profiles-table-panel {
     flex: 1 1 0 !important;
     min-height: 0 !important;
@@ -3141,13 +3146,13 @@ input::placeholder, textarea::placeholder {
     overflow-y: auto !important;
   }
 
-  /* Card 2: Progresso de Envio */
+  /* Card 2: Progresso */
   #view-messages #dmProgressContainer {
     flex-shrink: 0 !important;
     margin: 0 !important;
   }
 
-  /* Card 3: Log de Mensagens alinhado ao rodapé */
+  /* Card 3: Log alinhado ao rodapé */
   #view-messages .log-panel {
     flex-shrink: 0 !important;
     margin-top: 0 !important;
@@ -3158,12 +3163,248 @@ input::placeholder, textarea::placeholder {
     max-height: 180px !important;
     overflow-y: auto !important;
   }
+
+  /* Entrar em Grupos: painel com tabela rolável idêntico a Postar em Grupos */
+  #view-join-groups .view-split-container {
+    align-items: flex-start !important;
+  }
+
+  #view-join-groups .view-split-main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  #view-join-groups .join-groups-table-wrap {
+    min-height: 240px !important;
+    max-height: 360px !important;
+    overflow-y: auto !important;
+  }
+
+  #view-join-groups .log-panel .log-body {
+    min-height: 140px !important;
+    max-height: 180px !important;
+    overflow-y: auto !important;
+  }
+
+  /* Postar em Grupos: Alinhamento harmônico de altura com a coluna da direita */
+  #view-post-groups .view-split-container {
+    align-items: stretch !important;
+  }
+
+  #view-post-groups .view-split-controls {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+  }
+
+  #view-post-groups .view-split-controls > .panel {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Área de Mensagens flexível que se expande harmoniosamente */
+  #view-post-groups .post-messages-field-group {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 160px !important;
+    margin-bottom: 14px !important;
+  }
+
+  #view-post-groups #postMessages {
+    flex: 1 1 130px !important;
+    min-height: 130px !important;
+    box-sizing: border-box !important;
+    resize: vertical !important;
+  }
+
+  /* Card de Anexos no rodapé da coluna esquerda */
+  #view-post-groups .post-media-field-group {
+    flex-shrink: 0 !important;
+    margin-top: auto !important;
+  }
+
+  #view-post-groups #mediaUploadArea {
+    min-height: 76px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Coluna da direita com layout equilibrado e harmônico */
+  #view-post-groups .view-split-main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    min-height: 0 !important;
+  }
+
+  /* Impede que painéis internos estiquem para 100% da altura */
+  #view-post-groups .view-split-main > .panel {
+    height: auto !important;
+  }
+
+  /* Card 1: Tabela de Grupos Encontrados expandida e confortável */
+  #view-post-groups .post-groups-table-panel {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 250px !important;
+    height: auto !important;
+    padding: 12px 14px !important;
+    margin-bottom: 0 !important;
+  }
+
+  #view-post-groups .post-groups-table-wrap {
+    flex: 1 1 auto !important;
+    min-height: 200px !important;
+    max-height: 380px !important;
+    overflow-y: auto !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  /* Card 2: Progresso ultra-compacto, moderno e harmônico */
+  #view-post-groups #progressContainer,
+  #view-post-groups .progress-panel {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 10px 14px !important;
+    border-radius: 12px !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--line-soft) !important;
+    box-shadow: var(--shadow-card) !important;
+  }
+
+  #view-post-groups #progressContainer .progress-bar-wrap {
+    height: 6px !important;
+    margin-bottom: 6px !important;
+    border-radius: 999px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    overflow: hidden !important;
+  }
+
+  #view-post-groups #progressContainer .progress-bar {
+    height: 100% !important;
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899) !important;
+    transition: width 0.3s ease !important;
+  }
+
+  #view-post-groups #progressContainer .progress-text {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: var(--secondary) !important;
+    letter-spacing: 0.02em !important;
+    text-align: center !important;
+  }
+
+  #view-post-groups #progressContainer .dm-daily-status {
+    margin-top: 6px !important;
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    background: var(--surface-alt) !important;
+    border: 1px solid var(--line-soft) !important;
+  }
+
+  /* Card 3: Funcionalidades com botões elegantes e compactos */
+  #view-post-groups .post-features-panel {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 12px 14px !important;
+    margin-bottom: 0 !important;
+  }
+
+  #view-post-groups .post-features-panel .panel-head {
+    margin-bottom: 8px !important;
+  }
+
+  #view-post-groups .post-features-panel .feature-grid {
+    margin-top: 0 !important;
+    gap: 8px !important;
+  }
+
+  #view-post-groups .post-features-panel .feature-card {
+    min-height: 62px !important;
+    padding: 8px 6px !important;
+    gap: 4px !important;
+    border-radius: 10px !important;
+  }
+
+  #view-post-groups .post-features-panel .feature-icon {
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 8px !important;
+  }
+
+  #view-post-groups .post-features-panel .feature-icon svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  #view-post-groups .post-features-panel .feature-card strong {
+    font-size: 12px !important;
+    line-height: 1.15 !important;
+  }
+
+  #view-post-groups .post-features-panel .feature-card span:last-child {
+    font-size: 10px !important;
+    line-height: 1.15 !important;
+    opacity: 0.8 !important;
+  }
+
+  /* Card 4: Log de Postagem compacto e harmônico no rodapé */
+  #view-post-groups .post-log-panel,
+  #view-post-groups .log-panel {
+    flex: 0 0 auto !important;
+    margin-top: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+  }
+
+  #view-post-groups .log-panel .log-head {
+    padding: 8px 14px !important;
+    flex-shrink: 0 !important;
+  }
+
+  #view-post-groups .log-panel .log-body {
+    min-height: 85px !important;
+    max-height: 120px !important;
+    height: 105px !important;
+    padding: 8px 14px !important;
+    overflow-y: auto !important;
+    flex: 0 0 auto !important;
+  }
+}
+
+/* Espaçamento nítido entre 'Evitar postagem repetida' e 'Mensagens / Templates' */
+#view-post-groups .duplicate-protection-box {
+  margin-bottom: 18px !important;
+}
+
+#view-post-groups .post-messages-field-group {
+  margin-top: 4px !important;
 }
 
 /* Telas menores (empilhadas) */
 @media (max-width: 819px) {
-  #view-messages .profiles-table-wrap {
+  #view-messages .profiles-table-wrap,
+  #view-join-groups .join-groups-table-wrap {
     max-height: 380px !important;
   }
 }
+
 
