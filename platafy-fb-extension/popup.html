@@ -814,67 +814,72 @@
 
           </div>
 
-          <!-- COLUNA DA DIREITA: FUNCIONALIDADES -> LISTA DE GRUPOS -> GRUPOS PROCESSADOS -> LOG -->
+          <!-- COLUNA DA DIREITA: AÇÃO DE DISPARO -> LISTA DE GRUPOS -> PROGRESSO -> LOG -->
           <div class="view-split-main">
             
-            <!-- CARD 1: FUNCIONALIDADES -->
-            <div class="panel post-features-panel">
-              <div class="panel-head">
+            <!-- CARD 1: DISPARO / AÇÃO PRINCIPAL DE POSTAGEM -->
+            <div class="panel post-action-panel">
+              <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
                 <h2 style="display:inline-flex;align-items:center;gap:8px;margin:0;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#2563eb" style="flex-shrink:0"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
-                  Funcionalidades
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#2563eb" style="flex-shrink:0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                  Ação de Disparo
                 </h2>
+                <span class="action-hint" style="font-size:11px;color:var(--muted);">Inicia ou pausa a postagem automática</span>
               </div>
-              <div class="feature-grid feature-grid-6" style="margin-top:12px;">
-                <button class="feature-card" id="btnUseJoinedGroupsAlt" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></span>
-                  <strong>Puxar Grupos</strong>
-                  <span>Carregar meus grupos.</span>
-                </button>
-
-                <button class="feature-card" id="btnStartPost" type="button" style="background:linear-gradient(135deg, #16a34a, #15803d);">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></span>
+              
+              <div class="post-cta-row">
+                <button class="post-cta-btn post-cta-start" id="btnStartPost" type="button">
+                  <span class="post-cta-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                  </span>
                   <strong>Iniciar Post</strong>
-                  <span>Disparar publicacoes.</span>
+                  <span>Disparar publicações nos grupos.</span>
                 </button>
 
-                <button class="feature-card" id="btnStopPost" type="button" disabled style="background:linear-gradient(135deg, #dc2626, #991b1b);">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M6 6h12v12H6z"/></svg></span>
+                <button class="post-cta-btn post-cta-stop" id="btnStopPost" type="button" disabled>
+                  <span class="post-cta-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M6 6h12v12H6z"/></svg>
+                  </span>
                   <strong>Parar Post</strong>
                   <span>Interromper envios.</span>
                 </button>
-
-                <button class="feature-card" id="btnImportGroupsJson" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></span>
-                  <strong>Importar</strong>
-                  <span>Carregar JSON/TXT.</span>
-                </button>
-
-                <button class="feature-card" id="btnExportPostGroups" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></span>
-                  <strong>Salvar Lista</strong>
-                  <span>Exportar lista.</span>
-                </button>
-
-                <button class="feature-card" id="btnClearPostGroups" type="button">
-                  <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></span>
-                  <strong>Limpar Lista</strong>
-                  <span>Zerar os grupos.</span>
-                </button>
               </div>
-              <input type="file" id="fileGroupsInput" accept=".txt,.csv,.json" hidden />
+
+              <!-- Elementos legados mantidos ocultos para compatibilidade 100% segura -->
+              <div style="display:none;">
+                <button id="btnUseJoinedGroupsAlt" type="button"></button>
+                <button id="btnClearPostGroups" type="button"></button>
+              </div>
             </div>
 
             <!-- CARD 2: LISTA DE GRUPOS ENCONTRADOS -->
             <div class="panel post-groups-table-panel">
-              <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+              <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
                 <div style="display:flex;align-items:center;gap:8px;">
-                  <h2 style="margin:0;">Lista de Grupos Encontrados</h2>
+                  <h2 style="margin:0;display:inline-flex;align-items:center;gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#2563eb" style="flex-shrink:0"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+                    Lista de Grupos
+                  </h2>
                   <span id="postGroupsCountBadge" class="count-badge">(0 grupos)</span>
                 </div>
-                <div style="display:flex;gap:6px;align-items:center;">
-                  <button class="mini-btn" id="btnUseJoinedGroups" type="button" style="background:#2563eb;color:#fff;font-weight:700;padding:6px 12px;">⚡ Puxar Meus Grupos</button>
-                  <button class="mini-btn" id="btnClearPostGroupsTable" type="button" style="background:#ef4444;color:#fff;font-weight:700;padding:6px 10px;">🗑️ Limpar</button>
+                <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                  <button class="mini-btn" id="btnUseJoinedGroups" type="button" title="Puxar grupos da sua conta do Facebook" style="background:#2563eb;color:#fff;font-weight:700;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+                    <span>Puxar Meus Grupos</span>
+                  </button>
+                  <button class="mini-btn is-soft" id="btnImportGroupsJson" type="button" title="Importar lista de grupos (JSON, TXT, CSV)" style="background:rgba(37,99,235,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);font-weight:600;padding:6px 11px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                    <span>Importar</span>
+                  </button>
+                  <button class="mini-btn is-soft" id="btnExportPostGroups" type="button" title="Exportar lista de grupos" style="background:rgba(37,99,235,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);font-weight:600;padding:6px 11px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    <span>Salvar Lista</span>
+                  </button>
+                  <button class="mini-btn is-soft" id="btnClearPostGroupsTable" type="button" title="Limpar lista de grupos" style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3);font-weight:600;padding:6px 10px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                    <span>Limpar</span>
+                  </button>
+                  <input type="file" id="fileGroupsInput" accept=".txt,.csv,.json" hidden />
                 </div>
               </div>
 
