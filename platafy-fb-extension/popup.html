@@ -576,6 +576,35 @@
                 </div>
               </div>
 
+              <div class="daily-limit-box">
+                <div class="toggle-group">
+                  <div class="toggle-copy">
+                    <label for="joinDailyLimitEnabled">Limite diario para entrar em grupos</label>
+                    <small>Opcional. Ao atingir o limite, salva o grupo seguinte e espera o proximo dia.</small>
+                  </div>
+                  <label class="switch" for="joinDailyLimitEnabled">
+                    <input type="checkbox" id="joinDailyLimitEnabled" checked />
+                    <span class="switch-track"></span>
+                  </label>
+                </div>
+                <div class="field-row daily-limit-fields" id="joinDailyLimitFields">
+                  <div class="field-group">
+                    <label for="joinDailyLimit">Maximo por dia</label>
+                    <input type="number" id="joinDailyLimit" value="20" min="1" max="50" />
+                    <small>O usuario escolhe entre 1 e 50 grupos.</small>
+                  </div>
+                  <div class="field-group">
+                    <label for="joinResumeTime">Retomar a partir de</label>
+                    <input type="time" id="joinResumeTime" value="09:00" />
+                    <small>Horario local do computador.</small>
+                  </div>
+                </div>
+                <label class="checkbox-row daily-auto-resume" for="joinAutoResume">
+                  <input type="checkbox" id="joinAutoResume" checked />
+                  <span>Continuar automaticamente ao ligar o computador e abrir o Chrome</span>
+                </label>
+              </div>
+
               <div class="join-account-filter">
                 <label class="checkbox-row" for="joinRemoveKnownGroups">
                   <input type="checkbox" id="joinRemoveKnownGroups" checked />
@@ -656,6 +685,7 @@
                 <div class="progress-bar" id="joinProgressBar" style="width:0%"></div>
               </div>
               <div class="progress-text" id="joinProgressText">0 / 0 grupos</div>
+              <div class="dm-daily-status" id="joinDailyStatus">Nenhum envio recente registrado.</div>
             </div>
 
             <!-- CARD 3: LOG DE ENTRADA -->
