@@ -3481,27 +3481,91 @@ input::placeholder, textarea::placeholder {
     overflow-y: auto !important;
   }
 
-  /* Entrar em Grupos: painel com tabela rolável idêntico a Postar em Grupos */
+  /* Entrar em Grupos: Alinhamento harmônico e proporcional à altura da coluna esquerda */
   #view-join-groups .view-split-container {
-    align-items: flex-start !important;
+    align-items: stretch !important;
+  }
+
+  #view-join-groups .view-split-controls {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+  }
+
+  #view-join-groups .view-split-controls > .panel {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 0 !important;
   }
 
   #view-join-groups .view-split-main {
     display: flex !important;
     flex-direction: column !important;
-    gap: 14px !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    gap: 12px !important;
+  }
+
+  #view-join-groups .view-split-main > .panel {
+    height: auto !important;
+  }
+
+  /* Card 1: Lista de Grupos para Entrada proporcional */
+  #view-join-groups .join-groups-table-panel {
+    flex: 1.35 1 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 260px !important;
+    height: auto !important;
+    margin-bottom: 0 !important;
+  }
+
+  #view-join-groups .join-groups-table-panel .panel-head {
+    flex-shrink: 0 !important;
   }
 
   #view-join-groups .join-groups-table-wrap {
-    min-height: 240px !important;
-    max-height: 360px !important;
+    flex: 1 1 0 !important;
+    min-height: 180px !important;
+    max-height: none !important;
+    height: auto !important;
     overflow-y: auto !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  /* Card 2: Progresso de Entrada */
+  #view-join-groups #joinProgressContainer {
+    flex-shrink: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Card 3: Log de Entrada proporcional até o rodapé da coluna esquerda */
+  #view-join-groups .log-panel {
+    flex: 1 1 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 160px !important;
+    height: auto !important;
+    margin-bottom: 0 !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+  }
+
+  #view-join-groups .log-panel .log-head {
+    flex-shrink: 0 !important;
+    padding: 8px 14px !important;
   }
 
   #view-join-groups .log-panel .log-body {
-    min-height: 140px !important;
-    max-height: 180px !important;
+    flex: 1 1 0 !important;
+    min-height: 110px !important;
+    max-height: none !important;
+    height: auto !important;
     overflow-y: auto !important;
+    padding: 10px 14px !important;
   }
 
   /* Postar em Grupos: Alinhamento harmônico de altura com a coluna da direita */
