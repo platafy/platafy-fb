@@ -3610,12 +3610,12 @@ input::placeholder, textarea::placeholder {
     height: auto !important;
   }
 
-  /* Card 1: Lista de Grupos para Entrada proporcional */
+  /* Card 1: Lista de Grupos para Entrada expandida e prioritária */
   #view-join-groups .join-groups-table-panel {
-    flex: 1.35 1 0 !important;
+    flex: 1 1 auto !important;
     display: flex !important;
     flex-direction: column !important;
-    min-height: 260px !important;
+    min-height: 320px !important;
     height: auto !important;
     margin-bottom: 0 !important;
   }
@@ -3626,7 +3626,7 @@ input::placeholder, textarea::placeholder {
 
   #view-join-groups .join-groups-table-wrap {
     flex: 1 1 0 !important;
-    min-height: 180px !important;
+    min-height: 240px !important;
     max-height: none !important;
     height: auto !important;
     overflow-y: auto !important;
@@ -3640,14 +3640,12 @@ input::placeholder, textarea::placeholder {
     margin-bottom: 0 !important;
   }
 
-  /* Card 3: Log de Entrada proporcional até o rodapé da coluna esquerda */
+  /* Card 3: Log de Entrada compacto e harmônico no rodapé */
   #view-join-groups .log-panel {
-    flex: 1 1 0 !important;
+    flex: 0 0 auto !important;
+    margin-top: auto !important;
     display: flex !important;
     flex-direction: column !important;
-    min-height: 160px !important;
-    height: auto !important;
-    margin-bottom: 0 !important;
     border-radius: 14px !important;
     overflow: hidden !important;
   }
@@ -3658,10 +3656,10 @@ input::placeholder, textarea::placeholder {
   }
 
   #view-join-groups .log-panel .log-body {
-    flex: 1 1 0 !important;
-    min-height: 110px !important;
-    max-height: none !important;
-    height: auto !important;
+    flex: 0 0 auto !important;
+    height: 110px !important;
+    min-height: 90px !important;
+    max-height: 130px !important;
     overflow-y: auto !important;
     padding: 10px 14px !important;
   }
