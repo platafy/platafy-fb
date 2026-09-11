@@ -87,7 +87,7 @@
             </h2>
           </div>
           <div class="tool-filter" role="tablist" aria-label="Categorias de ferramentas">
-            <button class="tool-filter-btn is-active" type="button" data-tool-filter="facebook" aria-pressed="true"><i class="fa-brands fa-facebook" aria-hidden="true"></i><span>Facebook</span></button>
+            <button class="tool-filter-btn is-active" type="button" id="btnOpenFacebookHome" data-tool-filter="facebook" aria-pressed="true" title="Clique para abrir ou focar o Facebook no seu navegador"><i class="fa-brands fa-facebook" aria-hidden="true"></i><span>Facebook</span></button>
             <button class="tool-filter-btn" type="button" data-tool-filter="whatsapp" aria-pressed="false" hidden><i class="fa-brands fa-whatsapp" aria-hidden="true"></i><span>WhatsApp</span></button>
           </div>
 
@@ -819,6 +819,25 @@
                 </div>
                 <textarea id="postMessages" rows="4" placeholder="Escreva sua mensagem aqui..."></textarea>
                 <small>Use --- para separar mensagens diferentes.</small>
+
+                <div class="ai-variation-card">
+                  <div class="ai-variation-header">
+                    <label class="ai-switch" for="postAiVariation">
+                      <input type="checkbox" id="postAiVariation" />
+                      <span class="ai-slider"></span>
+                    </label>
+                    <div class="ai-variation-info">
+                      <div class="ai-variation-title-row">
+                        <span class="ai-sparkle-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg>
+                        </span>
+                        <strong>Variação Inteligente com IA</strong>
+                        <span class="ai-status-badge is-inactive" id="postAiBadge">Desativada</span>
+                      </div>
+                      <p class="ai-variation-desc">A cada grupo, a IA reescreve a mensagem mantendo o mesmo sentido e links, evitando que o Facebook bloqueie por texto idêntico.</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="field-group post-media-field-group">
@@ -1136,6 +1155,25 @@
                 </div>
                 <textarea id="dmMessages" rows="4" placeholder="Olá {nome}, tudo bem?"></textarea>
                 <small>Use {nome} para personalizar automaticamente com o nome do perfil.</small>
+
+                <div class="ai-variation-card">
+                  <div class="ai-variation-header">
+                    <label class="ai-switch" for="dmAiVariation">
+                      <input type="checkbox" id="dmAiVariation" />
+                      <span class="ai-slider"></span>
+                    </label>
+                    <div class="ai-variation-info">
+                      <div class="ai-variation-title-row">
+                        <span class="ai-sparkle-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg>
+                        </span>
+                        <strong>Variação Inteligente com IA</strong>
+                        <span class="ai-status-badge is-inactive" id="dmAiBadge">Desativada</span>
+                      </div>
+                      <p class="ai-variation-desc">A cada perfil, a IA gera uma variação personalizada mantendo {nome} e o objetivo da conversa.</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="button-row" style="flex-direction:column;gap:8px;margin-top:12px;">
@@ -2046,6 +2084,108 @@
               <p class="checkbox-help">Toca um aviso sonoro quando a tarefa terminar.</p>
             </div>
           </div>
+        </div>
+
+        <div class="panel ai-settings-panel">
+          <div class="ai-settings-head">
+            <div class="ai-settings-badge-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></svg>
+            </div>
+            <div>
+              <h3 style="margin:0;font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px;">
+                Inteligência Artificial (IA)
+                <span class="badge-free">IAs Gratuitas</span>
+              </h3>
+              <p style="margin:2px 0 0;font-size:12px;color:var(--text-soft);">Configure a chave de IA para reescrever mensagens automaticamente com textos únicos.</p>
+            </div>
+          </div>
+
+          <div class="field-group" style="margin-top:14px;">
+            <label for="aiProvider">Provedor de IA</label>
+            <select id="aiProvider">
+              <option value="none">Desativado (Não usar IA)</option>
+              <option value="gemini" selected>Google Gemini 3.6 Flash (Recomendado - Gratuito)</option>
+              <option value="openrouter">OpenRouter (Llama 3.3, DeepSeek, Gemini, etc. - Gratuito)</option>
+              <option value="openai">OpenAI (GPT-4o-mini)</option>
+            </select>
+          </div>
+
+          <div class="field-group" id="openrouterModelGroup" style="margin-top:10px;display:none;">
+            <label for="openrouterModel">Modelo da OpenRouter</label>
+            <select id="openrouterModel">
+              <option value="nvidia/nemotron-3-ultra-550b-a55b:free">NVIDIA: Nemotron 3 Ultra 550B (Grátis)</option>
+              <option value="google/gemini-2.0-flash-exp:free" selected>Google: Gemini 2.0 Flash Experimental (Grátis)</option>
+              <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B Instruct (Grátis)</option>
+              <option value="nvidia/llama-3.1-nemotron-70b-instruct:free">NVIDIA: Llama 3.1 Nemotron 70B (Grátis)</option>
+              <option value="deepseek/deepseek-r1:free">DeepSeek: R1 (Grátis)</option>
+              <option value="deepseek/deepseek-chat:free">DeepSeek: V3 Chat (Grátis)</option>
+              <option value="qwen/qwen-2.5-72b-instruct:free">Qwen: Qwen 2.5 72B Instruct (Grátis)</option>
+              <option value="meta-llama/llama-3.1-8b-instruct:free">Meta: Llama 3.1 8B Instruct (Grátis / Rápido)</option>
+              <option value="custom">Outro modelo (Inserir ID manualmente)...</option>
+            </select>
+            <div id="openrouterCustomModelWrapper" style="margin-top:6px;display:none;">
+              <input type="text" id="openrouterCustomModel" placeholder="Ex: mistralai/mistral-7b-instruct:free" autocomplete="off" spellcheck="false" />
+              <small style="color:var(--text-soft);font-size:11px;margin-top:3px;display:block;">Digite o identificador exato do modelo conforme listado na OpenRouter.</small>
+            </div>
+          </div>
+
+          <div class="field-group" id="aiApiKeyGroup" style="margin-top:10px;">
+            <label for="aiApiKey">Chave de API (API Key)</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="aiApiKey" placeholder="Cole sua chave aqui (ex: AIzaSy... ou sk-or-v1-... ou sk-...)" autocomplete="off" spellcheck="false" />
+              <button type="button" class="btn-toggle-password" id="btnToggleAiApiKey" title="Mostrar/Ocultar chave" aria-label="Mostrar ou ocultar chave">
+                <svg id="aiKeyEyeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <p class="checkbox-help" style="margin-top:4px;">
+              Sua chave fica gravada <strong>exclusivamente no seu computador</strong> (armazenamento local seguro do Chrome) e nunca é enviada aos nossos servidores.
+            </p>
+          </div>
+
+          <div class="ai-provider-tips" id="aiProviderTips">
+            <div class="ai-tip-card" id="geminiTipBox">
+              <div class="ai-tip-header">
+                <span class="ai-tip-tag">Recomendado</span>
+                <strong>Google Gemini 3.6 Flash</strong>
+              </div>
+              <p>O Gemini oferece <strong>cota gratuita de até ~1.500 requisições por dia</strong> sem cobrar nada. Ideal para uso diário.</p>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="ai-tip-link">
+                Obter API Key gratuita no Google AI Studio &rarr;
+              </a>
+            </div>
+            <div class="ai-tip-card" id="openrouterTipBox" style="display:none;">
+              <div class="ai-tip-header">
+                <span class="ai-tip-tag openrouter-tag">OpenRouter</span>
+                <strong>OpenRouter (IAs Gratuitas Disponíveis)</strong>
+              </div>
+              <p>A OpenRouter reúne diversos modelos com cota 100% gratuita terminados em <strong>:free</strong> (como NVIDIA Nemotron Ultra, Llama 3.3 70B, DeepSeek R1 e Gemini). Crie sua conta e gere sua chave em segundos.</p>
+              <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" class="ai-tip-link">
+                Obter API Key gratuita na OpenRouter &rarr;
+              </a>
+            </div>
+            <div class="ai-tip-card" id="openaiTipBox" style="display:none;">
+              <div class="ai-tip-header">
+                <span class="ai-tip-tag openai-tag">OpenAI</span>
+                <strong>OpenAI GPT-4o-mini</strong>
+              </div>
+              <p>Requer saldo de créditos na plataforma OpenAI (custo de ~$0.15 por 1 milhão de tokens).</p>
+              <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" class="ai-tip-link">
+                Criar API Key no painel da OpenAI &rarr;
+              </a>
+            </div>
+          </div>
+
+          <div class="button-row" style="margin-top:14px;gap:8px;">
+            <button class="btn btn-secondary" id="btnTestAiConnection" type="button" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+              <span>Testar Conexão</span>
+            </button>
+            <button class="btn btn-primary" id="btnSaveAiSettings" type="button" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+              <span>Salvar Configuração</span>
+            </button>
+          </div>
+          <div id="aiTestResult" class="ai-test-result" style="display:none;"></div>
         </div>
       </section>
     </main>

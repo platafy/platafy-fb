@@ -16,8 +16,14 @@
     ],
     "host_permissions": [
         "https://www.facebook.com/*",
-        "https://fb.platafy.com/*"
+        "https://fb.platafy.com/*",
+        "https://generativelanguage.googleapis.com/*",
+        "https://api.openai.com/*",
+        "https://openrouter.ai/*"
     ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'none';"
+    },
     "content_scripts": [
         {
             "matches": [

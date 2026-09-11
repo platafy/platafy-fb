@@ -1,4 +1,4 @@
-'use strict';window['addEventListener']('error',_e=>{if(_e&&_e['message']&&_e['message']['includes']('Extension context invalidated')){try{window['close']();}catch(_err){}}});const CONTACT_URL='https://api.whatsapp.com/send?phone=5521967659802',CHANGELOG_URL='https://fb.platafy.com/platafy-fb/changelog/',LICENSE_API_BASE='https://fb.platafy.com/api',LICENSE_DEVICE_KEY='licenseDeviceId',POST_PROGRESS_KEY='platafyFbPostProgressV1',FACEBOOK_GROUP_QUEUE_KEY='platafyFbFacebookGroupPostQueueV1',FACEBOOK_GROUP_REPORTS_KEY='platafyFbFacebookGroupReportsV1',FACEBOOK_GROUP_HISTORY_KEY='platafyFbFacebookGroupHistoryV1',FACEBOOK_DM_HISTORY_KEY='platafyFbFacebookDmHistoryV1',FACEBOOK_JOIN_ACCOUNTS_KEY='platafyFbFacebookJoinAccountsV1',FACEBOOK_JOIN_HISTORY_KEY='platafyFbFacebookJoinHistoryV1',EXTRACT_ITEMS_KEY='platafyFbExtractItemsV1',WHATSAPP_CONTACTS_KEY='platafyFbWhatsappContactsV1',WHATSAPP_CAMPAIGNS_KEY='platafyFbWhatsappCampaignsV1',WHATSAPP_BULK_REPORT_KEY='platafyFbWhatsappBulkReportV1',WHATSAPP_WORKFLOWS_KEY='platafyFbWhatsappWorkflowsV1',WHATSAPP_KANBAN_KEY='platafyFbWhatsappKanbanV1',TRACKED_LINKS_KEY='platafyFbTrackedLinksV1',WHATSAPP_GROUP_LINKS_KEY='platafyFbWhatsappGroupLinksV1',WHATSAPP_GROUP_MEMBERS_KEY='platafyFbWhatsappGroupMembersV1',WHATSAPP_CHATS_KEY='platafyFbWhatsappChatsV1',MESSAGE_TEMPLATES_KEY='platafyFbMessageTemplatesV1',GROUPS_HOME_URL='https://www.facebook.com/groups/joins/?nav_source=tab&ordering=viewer_added',FRIENDS_HOME_URL='https://www.facebook.com/friends/list',ALLOWED_FACEBOOK_HOSTS=new Set(['www.facebook.com','facebook.com']),RESERVED_PROFILE_SEGMENTS=new Set(['groups','pages','events','marketplace','watch','gaming','help','policies','messages','settings','friends','saved','onthisday','memories','professional_dashboard','notifications','bookmarks','fundraisers','ads','privacy','login','recover','photo','photos','videos','stories','permalink','search','me','reel','profile.php','hashtag']),DRAFT_FIELD_IDS=['extractKeyword','extractMinMembers','groupsList','joinGroupsList','joinDelayMin','joinDelayMax','joinRemoveKnownGroups','joinDailyLimitEnabled','joinDailyLimit','joinResumeTime','joinAutoResume','volumeBoostRange','postMessages','beforeDelay','afterDelay','delayMin','delayMax','anonymousPost','groupDailyLimitEnabled','groupDailyLimit','groupResumeTime','groupAutoResume','groupAvoidDuplicates','groupDuplicateDays','profilesList','dmMessages','dmDelayMin','dmDelayMax','dmDailyLimitEnabled','dmDailyLimit','dmResumeTime','dmAutoResume','dmAvoidDuplicates','dmDuplicateDays','humanSimulation','skipErrors','notifySound','campaignName','campaignDateTime','campaignDelay','campaignStatus','campaignContacts','campaignMessage','trackedLinkName','trackedLinkUrl','trackedLinkCampaign','trackedLinkSource','whatsappContactsDefaultChannel','whatsappContactsDefaultOrigin','whatsappContactsInput','whatsappValidatorInput','bulkContacts','bulkMessage','bulkAttachmentType','bulkDelayMin','bulkDelayMax','bulkAllowDuplicates','bulkLinkPreview'],EXTRACT_MODE_CONFIG={'groups':{'title':'Extrair\x20Grupos\x20por\x20Palavra-Chave','subtitle':'Busque\x20novos\x20grupos\x20no\x20Facebook\x20por\x20palavra-chave\x20para\x20extrair\x20e\x20usar\x20no\x20"Entrar\x20em\x20Grupos".','tableTitle':'Lista\x20de\x20Grupos\x20Encontrados','emptyText':'Nenhum\x20grupo\x20coletado\x20ainda.','countLabel':'grupos','navigateUrl':'https://www.facebook.com/search/groups/?q='},'profiles':{'title':'Extrair\x20Perfis','subtitle':'Extraia\x20perfis\x20e\x20contatos\x20visiveis\x20da\x20aba\x20selecionada.','tableTitle':'Lista\x20de\x20Perfis','emptyText':'Nenhum\x20perfil\x20coletado\x20ainda.','countLabel':'perfis','navigateUrl':FRIENDS_HOME_URL},'comments':{'title':'Extrair\x20Comentarios','subtitle':'Abra\x20o\x20post\x20desejado\x20e\x20capture\x20os\x20comentarios\x20visiveis.','tableTitle':'Lista\x20de\x20Comentarios','emptyText':'Nenhum\x20comentario\x20coletado\x20ainda.','countLabel':'comentarios','navigateUrl':''}},MESSAGE_MODE_CONFIG={'messages':{'title':'Enviar\x20Mensagens','subtitle':'Use\x20listas\x20de\x20perfis\x20e\x20personalize\x20com\x20a\x20tag\x20{nome}.'},'profiles':{'title':'Postar\x20em\x20Perfis','subtitle':'Use\x20listas\x20de\x20perfis\x20para\x20abordar\x20contatos\x20com\x20mensagens\x20personalizadas.'}},BACKUP_SCHEMA_VERSION=0x1,BACKUP_FILE_TYPE='platafy-fb-backup',BACKUP_EXCLUDED_KEYS=new Set([LICENSE_DEVICE_KEY,'licenseKey','licenseActive','licenseCustomerName','licenseValidityPeriod','licenseValidityDays','licenseExpiresAt']),BACKUP_CATEGORIES=[{'id':'drafts','label':'Configuracoes\x20e\x20rascunhos','description':'Campos\x20salvos,\x20volume\x20e\x20ajustes\x20locais.','prefixes':['draft:']},{'id':'extracts','label':'Extracoes\x20Facebook','description':'Grupos,\x20perfis\x20e\x20comentarios\x20coletados.','keys':[EXTRACT_ITEMS_KEY]},{'id':'templates','label':'Templates','description':'Modelos\x20prontos\x20de\x20posts\x20e\x20mensagens.','keys':[MESSAGE_TEMPLATES_KEY]},{'id':'progress','label':'Progresso\x20e\x20filas','description':'Postagens,\x20mensagens\x20pausadas\x20e\x20pontos\x20de\x20retomada.','keys':[POST_PROGRESS_KEY,FACEBOOK_GROUP_QUEUE_KEY,FACEBOOK_GROUP_REPORTS_KEY,FACEBOOK_GROUP_HISTORY_KEY,FACEBOOK_JOIN_ACCOUNTS_KEY,FACEBOOK_JOIN_HISTORY_KEY,FACEBOOK_DM_HISTORY_KEY]},{'id':'utilities','label':'Utilitarios','description':'Liberador\x20de\x20clique\x20direito\x20por\x20dominio.','prefixes':['rightClickUnlock:']}],state={'currentView':'dashboard','activeExtractMode':'groups','activeMessageMode':'messages','licenseActive':![],'licenseDetails':emptyLicenseDetails(),'extractItems':[],'availableTabs':[],'selectedTabIds':{'extract':null,'post':null,'join':null,'messages':null},'mediaFiles':[],'mediaPreviewUrls':[],'postingAbort':![],'postingResumeIndex':0x0,'postingResumePending':![],'postingResumeSignature':'','postingPausedReason':'','postingCompletedUrls':new Set(),'groupQueueStatus':null,'groupReports':[],'groupPostHistory':{},'dmAbort':![],'joinGroupsAbort':![],'whatsappContacts':[],'whatsappValidatorResults':[],'whatsappCampaigns':[],'editingCampaignId':'','bulkQueue':[],'bulkReport':[],'bulkAbort':![],'bulkMediaFiles':[],'whatsappWorkflows':[],'editingWorkflowId':'','kanbanColumns':[],'kanbanLeads':[],'trackedLinks':[],'whatsappGroupLinks':[],'whatsappGroupMembers':[],'whatsappChats':[],'editingKanbanLeadId':'','editingKanbanColumnId':'','draggingKanbanLeadId':'','messageTemplates':[],'editingTemplateId':'','editingTemplateMedia':null,'zoom':0x1,'pendingBackupImport':null};function emptyLicenseDetails(){return{'customerName':'','validityPeriod':'','validityDays':0x0,'expiresAt':''};}function $(_0x1f5786){return document['getElementById'](_0x1f5786);}function storageGet(_0x503b9b){
+'use strict';window['addEventListener']('error',_e=>{if(_e&&_e['message']&&_e['message']['includes']('Extension context invalidated')){try{window['close']();}catch(_err){}}});const CONTACT_URL='https://api.whatsapp.com/send?phone=5521967659802',CHANGELOG_URL='https://fb.platafy.com/platafy-fb/changelog/',LICENSE_API_BASE='https://fb.platafy.com/api',LICENSE_DEVICE_KEY='licenseDeviceId',POST_PROGRESS_KEY='platafyFbPostProgressV1',FACEBOOK_GROUP_QUEUE_KEY='platafyFbFacebookGroupPostQueueV1',FACEBOOK_GROUP_REPORTS_KEY='platafyFbFacebookGroupReportsV1',FACEBOOK_GROUP_HISTORY_KEY='platafyFbFacebookGroupHistoryV1',FACEBOOK_DM_HISTORY_KEY='platafyFbFacebookDmHistoryV1',FACEBOOK_JOIN_ACCOUNTS_KEY='platafyFbFacebookJoinAccountsV1',FACEBOOK_JOIN_HISTORY_KEY='platafyFbFacebookJoinHistoryV1',EXTRACT_ITEMS_KEY='platafyFbExtractItemsV1',WHATSAPP_CONTACTS_KEY='platafyFbWhatsappContactsV1',WHATSAPP_CAMPAIGNS_KEY='platafyFbWhatsappCampaignsV1',WHATSAPP_BULK_REPORT_KEY='platafyFbWhatsappBulkReportV1',WHATSAPP_WORKFLOWS_KEY='platafyFbWhatsappWorkflowsV1',WHATSAPP_KANBAN_KEY='platafyFbWhatsappKanbanV1',TRACKED_LINKS_KEY='platafyFbTrackedLinksV1',WHATSAPP_GROUP_LINKS_KEY='platafyFbWhatsappGroupLinksV1',WHATSAPP_GROUP_MEMBERS_KEY='platafyFbWhatsappGroupMembersV1',WHATSAPP_CHATS_KEY='platafyFbWhatsappChatsV1',MESSAGE_TEMPLATES_KEY='platafyFbMessageTemplatesV1',GROUPS_HOME_URL='https://www.facebook.com/groups/joins/?nav_source=tab&ordering=viewer_added',FRIENDS_HOME_URL='https://www.facebook.com/friends/list',ALLOWED_FACEBOOK_HOSTS=new Set(['www.facebook.com','facebook.com']),RESERVED_PROFILE_SEGMENTS=new Set(['groups','pages','events','marketplace','watch','gaming','help','policies','messages','settings','friends','saved','onthisday','memories','professional_dashboard','notifications','bookmarks','fundraisers','ads','privacy','login','recover','photo','photos','videos','stories','permalink','search','me','reel','profile.php','hashtag']),DRAFT_FIELD_IDS=['extractKeyword','extractMinMembers','groupsList','joinGroupsList','joinDelayMin','joinDelayMax','joinRemoveKnownGroups','joinDailyLimitEnabled','joinDailyLimit','joinResumeTime','joinAutoResume','volumeBoostRange','postMessages','beforeDelay','afterDelay','delayMin','delayMax','anonymousPost','groupDailyLimitEnabled','groupDailyLimit','groupResumeTime','groupAutoResume','groupAvoidDuplicates','groupDuplicateDays','profilesList','dmMessages','dmDelayMin','dmDelayMax','dmDailyLimitEnabled','dmDailyLimit','dmResumeTime','dmAutoResume','dmAvoidDuplicates','dmDuplicateDays','humanSimulation','skipErrors','notifySound','postAiVariation','dmAiVariation','aiProvider','aiApiKey','openrouterModel','openrouterCustomModel','campaignName','campaignDateTime','campaignDelay','campaignStatus','campaignContacts','campaignMessage','trackedLinkName','trackedLinkUrl','trackedLinkCampaign','trackedLinkSource','whatsappContactsDefaultChannel','whatsappContactsDefaultOrigin','whatsappContactsInput','whatsappValidatorInput','bulkContacts','bulkMessage','bulkAttachmentType','bulkDelayMin','bulkDelayMax','bulkAllowDuplicates','bulkLinkPreview'],EXTRACT_MODE_CONFIG={'groups':{'title':'Extrair\x20Grupos\x20por\x20Palavra-Chave','subtitle':'Busque\x20novos\x20grupos\x20no\x20Facebook\x20por\x20palavra-chave\x20para\x20extrair\x20e\x20usar\x20no\x20"Entrar\x20em\x20Grupos".','tableTitle':'Lista\x20de\x20Grupos\x20Encontrados','emptyText':'Nenhum\x20grupo\x20coletado\x20ainda.','countLabel':'grupos','navigateUrl':'https://www.facebook.com/search/groups/?q='},'profiles':{'title':'Extrair\x20Perfis','subtitle':'Extraia\x20perfis\x20e\x20contatos\x20visiveis\x20da\x20aba\x20selecionada.','tableTitle':'Lista\x20de\x20Perfis','emptyText':'Nenhum\x20perfil\x20coletado\x20ainda.','countLabel':'perfis','navigateUrl':FRIENDS_HOME_URL},'comments':{'title':'Extrair\x20Comentarios','subtitle':'Abra\x20o\x20post\x20desejado\x20e\x20capture\x20os\x20comentarios\x20visiveis.','tableTitle':'Lista\x20de\x20Comentarios','emptyText':'Nenhum\x20comentario\x20coletado\x20ainda.','countLabel':'comentarios','navigateUrl':''}},MESSAGE_MODE_CONFIG={'messages':{'title':'Enviar\x20Mensagens','subtitle':'Use\x20listas\x20de\x20perfis\x20e\x20personalize\x20com\x20a\x20tag\x20{nome}.'},'profiles':{'title':'Postar\x20em\x20Perfis','subtitle':'Use\x20listas\x20de\x20perfis\x20para\x20abordar\x20contatos\x20com\x20mensagens\x20personalizadas.'}},BACKUP_SCHEMA_VERSION=0x1,BACKUP_FILE_TYPE='platafy-fb-backup',BACKUP_EXCLUDED_KEYS=new Set([LICENSE_DEVICE_KEY,'licenseKey','licenseActive','licenseCustomerName','licenseValidityPeriod','licenseValidityDays','licenseExpiresAt']),BACKUP_CATEGORIES=[{'id':'drafts','label':'Configuracoes\x20e\x20rascunhos','description':'Campos\x20salvos,\x20volume\x20e\x20ajustes\x20locais.','prefixes':['draft:']},{'id':'extracts','label':'Extracoes\x20Facebook','description':'Grupos,\x20perfis\x20e\x20comentarios\x20coletados.','keys':[EXTRACT_ITEMS_KEY]},{'id':'templates','label':'Templates','description':'Modelos\x20prontos\x20de\x20posts\x20e\x20mensagens.','keys':[MESSAGE_TEMPLATES_KEY]},{'id':'progress','label':'Progresso\x20e\x20filas','description':'Postagens,\x20mensagens\x20pausadas\x20e\x20pontos\x20de\x20retomada.','keys':[POST_PROGRESS_KEY,FACEBOOK_GROUP_QUEUE_KEY,FACEBOOK_GROUP_REPORTS_KEY,FACEBOOK_GROUP_HISTORY_KEY,FACEBOOK_JOIN_ACCOUNTS_KEY,FACEBOOK_JOIN_HISTORY_KEY,FACEBOOK_DM_HISTORY_KEY]},{'id':'utilities','label':'Utilitarios','description':'Liberador\x20de\x20clique\x20direito\x20por\x20dominio.','prefixes':['rightClickUnlock:']}],state={'currentView':'dashboard','activeExtractMode':'groups','activeMessageMode':'messages','licenseActive':![],'licenseDetails':emptyLicenseDetails(),'extractItems':[],'availableTabs':[],'selectedTabIds':{'extract':null,'post':null,'join':null,'messages':null},'mediaFiles':[],'mediaPreviewUrls':[],'postingAbort':![],'postingResumeIndex':0x0,'postingResumePending':![],'postingResumeSignature':'','postingPausedReason':'','postingCompletedUrls':new Set(),'groupQueueStatus':null,'groupReports':[],'groupPostHistory':{},'dmAbort':![],'joinGroupsAbort':![],'whatsappContacts':[],'whatsappValidatorResults':[],'whatsappCampaigns':[],'editingCampaignId':'','bulkQueue':[],'bulkReport':[],'bulkAbort':![],'bulkMediaFiles':[],'whatsappWorkflows':[],'editingWorkflowId':'','kanbanColumns':[],'kanbanLeads':[],'trackedLinks':[],'whatsappGroupLinks':[],'whatsappGroupMembers':[],'whatsappChats':[],'editingKanbanLeadId':'','editingKanbanColumnId':'','draggingKanbanLeadId':'','messageTemplates':[],'editingTemplateId':'','editingTemplateMedia':null,'zoom':0x1,'pendingBackupImport':null};function emptyLicenseDetails(){return{'customerName':'','validityPeriod':'','validityDays':0x0,'expiresAt':''};}function $(_0x1f5786){return document['getElementById'](_0x1f5786);}function storageGet(_0x503b9b){
   return new Promise(_0x1b3ede=>{
     let settled = false;
     const finish = (result) => {
@@ -139,7 +139,71 @@ function storageRemove(_0xd2e0ca){
       _0x2168b9(false);
     }
   });
-}function timestamp(){const _0x47f289=new Date();return String(_0x47f289['getHours']())['padStart'](0x2,'0')+':'+String(_0x47f289['getMinutes']())['padStart'](0x2,'0')+':'+String(_0x47f289['getSeconds']())['padStart'](0x2,'0');}function writeLog(_0x375839,_0x314c19,_0x30a8d6,_0x499636='',_0x59a013='info'){const _0xf32600=$(_0x375839);if(!_0xf32600)return;const _0x403e6d=formatLogDetails(_0x499636),_0x33cd81=document['createElement']('div');_0x33cd81['className']='log-entry\x20'+_0x59a013,_0x33cd81['textContent']=('['+timestamp()+']\x20['+_0x314c19+']\x20['+_0x30a8d6+']\x20'+_0x403e6d)['trim'](),_0xf32600['appendChild'](_0x33cd81),_0xf32600['scrollTop']=_0xf32600['scrollHeight'];}function formatLogDetails(_0x704105){let _0x2ae828=String(_0x704105||'')['replace'](/\s+/g,'\x20')['replace'](/Grupo pulado\.\s*/gi,'')['replace'](/Perfil pulado\.\s*/gi,'')['trim']();return _0x2ae828['length']>0xdc&&(_0x2ae828=_0x2ae828['slice'](0x0,0xd9)+'...'),_0x2ae828;}function playNotificationTone(){if(!$('notifySound')['checked'])return;try{const _0x4edf05=new AudioContext(),_0x4a37cc=_0x4edf05['createOscillator']();_0x4a37cc['connect'](_0x4edf05['destination']),_0x4a37cc['frequency']['value']=0x370,_0x4a37cc['start'](),_0x4a37cc['stop'](_0x4edf05['currentTime']+0.25);}catch{}}function showChromeNotification(_0x35cb11,_0x47de81){try{if(!chrome['notifications']?.['create'])return;chrome['notifications']['create']('platafy-fb-'+Date['now'](),{'type':'basic','iconUrl':'icons/icon128.png','title':String(_0x35cb11||'PLATAFY\x20FB'),'message':String(_0x47de81||'')});}catch{}}function openExternalUrl(_0x177dfe){chrome['tabs']['create']({'url':_0x177dfe})['catch'](()=>window['open'](_0x177dfe,'_blank','noopener'));}function openLicenseConfig(){navigateToView('config'),window['setTimeout'](()=>{$('licenseKey')?.['focus']();},0x32);}function normalizeLicenseKey(_0x3e0749){return _0x3e0749['toUpperCase']()['replace'](/\s+/g,'')['replace'](/[^A-Z0-9-]/g,'');}function looksLikeLicenseKey(_0x46a611){if(!_0x46a611)return false;const _n=normalizeLicenseKey(_0x46a611);return _n.length>=4;}function generateDeviceId(){if(typeof crypto!=='undefined'&&typeof crypto['randomUUID']==='function')return crypto['randomUUID']();return'platafyFb-'+Date['now']()+'-'+Math['random']()['toString'](0x24)['slice'](0x2,0xa);}async function getOrCreateDeviceId(){const _0x605606=await storageGet([LICENSE_DEVICE_KEY]);if(_0x605606[LICENSE_DEVICE_KEY])return _0x605606[LICENSE_DEVICE_KEY];const _0x3cac12=generateDeviceId();return await storageSet({[LICENSE_DEVICE_KEY]:_0x3cac12}),_0x3cac12;}async function postLicenseRequest(_0x52502e,_0x3833c4){const _0x438a6a=await fetch(''+LICENSE_API_BASE+_0x52502e,{'method':'POST','headers':{'Content-Type':'application/json'},'body':JSON['stringify'](_0x3833c4)});let _0x5b030a={};try{_0x5b030a=await _0x438a6a['json']();}catch{_0x5b030a={};}return!_0x438a6a['ok']&&!_0x5b030a['message']&&(_0x5b030a['message']='Falha\x20ao\x20consultar\x20o\x20servidor\x20de\x20licenca.'),_0x5b030a;}function extractLicenseDetails(_0x314edf = {}) {
+}function timestamp(){const _0x47f289=new Date();return String(_0x47f289['getHours']())['padStart'](0x2,'0')+':'+String(_0x47f289['getMinutes']())['padStart'](0x2,'0')+':'+String(_0x47f289['getSeconds']())['padStart'](0x2,'0');}function writeLog(_0x375839,_0x314c19,_0x30a8d6,_0x499636='',_0x59a013='info'){const _0xf32600=$(_0x375839);if(!_0xf32600)return;const _0x403e6d=formatLogDetails(_0x499636),_0x33cd81=document['createElement']('div');_0x33cd81['className']='log-entry\x20'+_0x59a013,_0x33cd81['textContent']=('['+timestamp()+']\x20['+_0x314c19+']\x20['+_0x30a8d6+']\x20'+_0x403e6d)['trim'](),_0xf32600['appendChild'](_0x33cd81),_0xf32600['scrollTop']=_0xf32600['scrollHeight'];}function formatLogDetails(_0x704105){let _0x2ae828=String(_0x704105||'')['replace'](/\s+/g,'\x20')['replace'](/Grupo pulado\.\s*/gi,'')['replace'](/Perfil pulado\.\s*/gi,'')['trim']();return _0x2ae828['length']>0xdc&&(_0x2ae828=_0x2ae828['slice'](0x0,0xd9)+'...'),_0x2ae828;}function playNotificationTone(){if(!$('notifySound')['checked'])return;try{const _0x4edf05=new AudioContext(),_0x4a37cc=_0x4edf05['createOscillator']();_0x4a37cc['connect'](_0x4edf05['destination']),_0x4a37cc['frequency']['value']=0x370,_0x4a37cc['start'](),_0x4a37cc['stop'](_0x4edf05['currentTime']+0.25);}catch{}}function showChromeNotification(_0x35cb11,_0x47de81){try{if(!chrome['notifications']?.['create'])return;chrome['notifications']['create']('platafy-fb-'+Date['now'](),{'type':'basic','iconUrl':'icons/icon128.png','title':String(_0x35cb11||'PLATAFY\x20FB'),'message':String(_0x47de81||'')});}catch{}}function openExternalUrl(_0x177dfe){chrome['tabs']['create']({'url':_0x177dfe})['catch'](()=>window['open'](_0x177dfe,'_blank','noopener'));}function openLicenseConfig(){navigateToView('config'),window['setTimeout'](()=>{$('licenseKey')?.['focus']();},0x32);}function normalizeLicenseKey(_0x3e0749){return _0x3e0749['toUpperCase']()['replace'](/\s+/g,'')['replace'](/[^A-Z0-9-]/g,'');}function looksLikeLicenseKey(_0x46a611){if(!_0x46a611)return false;const _n=normalizeLicenseKey(_0x46a611);return _n.length>=4;}function generateDeviceId(){if(typeof crypto!=='undefined'&&typeof crypto['randomUUID']==='function')return crypto['randomUUID']();return'platafyFb-'+Date['now']()+'-'+Math['random']()['toString'](0x24)['slice'](0x2,0xa);}async function getOrCreateDeviceId(){const _0x605606=await storageGet([LICENSE_DEVICE_KEY]);if(_0x605606[LICENSE_DEVICE_KEY])return _0x605606[LICENSE_DEVICE_KEY];const _0x3cac12=generateDeviceId();return await storageSet({[LICENSE_DEVICE_KEY]:_0x3cac12}),_0x3cac12;}
+const SECURITY_PEPPER = 'PFB_SEC_v4_92a7e4b81c';
+
+async function computeLicenseSignature(licenseKey, deviceId, expiresAt) {
+    const raw = `${String(licenseKey || '').trim().toUpperCase()}#${String(deviceId || '').trim()}#${String(expiresAt || 'lifetime').trim()}#${SECURITY_PEPPER}`;
+    const encoder = new TextEncoder();
+    const data = encoder.encode(raw);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function verifyLicenseIntegrity(storedData, deviceId) {
+    if (!storedData) return false;
+    const key = normalizeLicenseKey(storedData['licenseKey'] || '');
+    const active = (storedData['licenseActive'] === true || storedData['licenseActive'] === 'true');
+    const signature = storedData['licenseSignature'] || '';
+    const expiresAt = storedData['licenseExpiresAt'] || '';
+    const dId = String(deviceId || storedData['licenseDeviceId'] || '').trim();
+
+    if (!key || !active || !signature || !dId) {
+        return false;
+    }
+
+    if (expiresAt && expiresAt !== 'lifetime') {
+        const expTime = new Date(expiresAt).getTime();
+        if (!isNaN(expTime) && expTime < Date.now()) {
+            return false;
+        }
+    }
+
+    const expectedSig = await computeLicenseSignature(key, dId, expiresAt);
+    return signature === expectedSig;
+}
+
+function maskSecret(str, salt) {
+    if (!str || typeof str !== 'string') return '';
+    try {
+        const key = String(salt || SECURITY_PEPPER);
+        let out = '';
+        for (let i = 0; i < str.length; i++) {
+            out += String.fromCharCode(str.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+        }
+        return 'enc:' + btoa(out);
+    } catch {
+        return str;
+    }
+}
+
+function unmaskSecret(str, salt) {
+    if (!str || typeof str !== 'string' || !str.startsWith('enc:')) return str;
+    try {
+        const b64 = str.slice(4);
+        const decoded = atob(b64);
+        const key = String(salt || SECURITY_PEPPER);
+        let out = '';
+        for (let i = 0; i < decoded.length; i++) {
+            out += String.fromCharCode(decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+        }
+        return out;
+    } catch {
+        return str;
+    }
+}
+async function postLicenseRequest(_0x52502e,_0x3833c4){const _0x438a6a=await fetch(''+LICENSE_API_BASE+_0x52502e,{'method':'POST','headers':{'Content-Type':'application/json'},'body':JSON['stringify'](_0x3833c4)});let _0x5b030a={};try{_0x5b030a=await _0x438a6a['json']();}catch{_0x5b030a={};}return!_0x438a6a['ok']&&!_0x5b030a['message']&&(_0x5b030a['message']='Falha\x20ao\x20consultar\x20o\x20servidor\x20de\x20licenca.'),_0x5b030a;}function extractLicenseDetails(_0x314edf = {}) {
     const customerName = String(
         _0x314edf['customer_name'] ||
         _0x314edf['customerName'] ||
@@ -178,19 +242,43 @@ function storageRemove(_0xd2e0ca){
     };
 }
 
-function licenseStoragePayload(_0x394bb7, _0x1fb64f) {
+async function licenseStoragePayload(_0x394bb7, _0x1fb64f) {
+    const deviceId = await getOrCreateDeviceId();
+    const expiresAt = String(_0x1fb64f['expiresAt'] || '').trim();
+    const signature = await computeLicenseSignature(_0x394bb7, deviceId, expiresAt);
     return {
         'licenseKey': _0x394bb7,
         'licenseActive': true,
+        'licenseDeviceId': deviceId,
+        'licenseSignature': signature,
         'licenseCustomerName': _0x1fb64f['customerName'] || '',
         'licenseValidityPeriod': _0x1fb64f['validityPeriod'] || '',
         'licenseValidityDays': _0x1fb64f['validityDays'] || 0,
-        'licenseExpiresAt': _0x1fb64f['expiresAt'] || ''
+        'licenseExpiresAt': expiresAt
     };
 }
 
 async function clearStoredLicenseData() {
-    await storageRemove(['licenseKey', 'licenseActive', 'licenseCustomerName', 'licenseValidityPeriod', 'licenseValidityDays', 'licenseExpiresAt']);
+    await storageRemove([
+        'licenseKey',
+        'licenseActive',
+        'licenseDeviceId',
+        'licenseSignature',
+        'licenseCustomerName',
+        'licenseValidityPeriod',
+        'licenseValidityDays',
+        'licenseExpiresAt'
+    ]);
+    try {
+        localStorage.removeItem('platafy_licenseKey');
+        localStorage.removeItem('platafy_licenseActive');
+        localStorage.removeItem('platafy_licenseDeviceId');
+        localStorage.removeItem('platafy_licenseSignature');
+        localStorage.removeItem('platafy_licenseCustomerName');
+        localStorage.removeItem('platafy_licenseValidityPeriod');
+        localStorage.removeItem('platafy_licenseValidityDays');
+        localStorage.removeItem('platafy_licenseExpiresAt');
+    } catch {}
 }
 
 function getLicensePlanLabel(_0x539082 = {}) {
@@ -367,8 +455,21 @@ function setLicenseBadge(_0x4f2c6e) {
 }
 
 function requireActiveLicense() {
-    if (state['licenseActive']) return true;
-    alert('Adicione e ative uma licenca valida para usar a PLATAFY FB.');
+    if (state['licenseActive']) {
+        const exp = state['licenseDetails']?.expiresAt;
+        if (exp && exp !== 'lifetime') {
+            const expTime = new Date(exp).getTime();
+            if (!isNaN(expTime) && expTime < Date.now()) {
+                state['licenseActive'] = false;
+                setLicenseBadge('inactive');
+                alert('Sua licença expirou em ' + new Date(exp).toLocaleDateString('pt-BR') + '. Renove seu acesso para continuar.');
+                openLicenseConfig();
+                return false;
+            }
+        }
+        return true;
+    }
+    alert('Adicione e ative uma licença válida para usar a PLATAFY FB.');
     openLicenseConfig();
     return false;
 }
@@ -1491,7 +1592,7 @@ async function useExtractedGroupsForJoin(){const _0x1a185f=await getStoredExtrac
             await saveFacebookJoinHistoryEntry(_0x2ec340, 'sucesso', _0x2add7c?.['confirmation'] || 'Solicitacao enviada.');
             updateJoinDailyStatus(joinedToday, joinLimitEnabled, joinDailyLimit, joinResumeTime);
             writeLog('joinLogBody','Entrar','Sucesso','Grupo '+(_0x2059c8+0x1)+'/'+_0x4039cb['length']+': '+(_0x2add7c?.['confirmation']||'Solicitacao enviada.'),'success');
-        }else{if(_0x2add7c?.['shouldSkip'])_0x2b4333+=0x1,_0x1de6ae&&_0x2add7c['removeFromList']?(removeJoinGroupFromList(_0x2ec340),writeLog('joinLogBody','Entrar','Removido','Grupo\x20'+(_0x2059c8+0x1)+'/'+_0x4039cb['length']+':\x20'+(_0x2add7c?.['error']||'Esta\x20conta\x20ja\x20participa.'),'success')):writeLog('joinLogBody','Entrar','Pulado','Grupo\x20'+(_0x2059c8+0x1)+'/'+_0x4039cb['length']+':\x20'+(_0x2add7c?.['error']||'Entrada\x20manual\x20necessaria.'),'warn');else{_0x1a2fd2+=0x1,writeLog('joinLogBody','Entrar','Erro','Grupo\x20'+(_0x2059c8+0x1)+'/'+_0x4039cb['length']+':\x20'+(_0x2add7c?.['error']||_0x2ec340),'error');if(!$('skipErrors')['checked'])break;}}}catch(_0x27becf){_0x1a2fd2+=0x1,writeLog('joinLogBody','Entrar','Erro','Grupo\x20'+(_0x2059c8+0x1)+'/'+_0x4039cb['length']+':\x20'+_0x27becf['message'],'error');if(!$('skipErrors')['checked'])break;}if(_0x2059c8<_0x4039cb['length']-0x1&&!state['joinGroupsAbort']){const _0x195a56=humanizeDelay(randomInt(_0x2a495e['delayMinMs'],_0x2a495e['delayMaxMs']));writeLog('joinLogBody','Delay','Aguardando',Math['round'](_0x195a56/0x3e8)+'s\x20antes\x20do\x20proximo\x20grupo.','warn');const _0x3e5894=await interruptibleDelay(_0x195a56,()=>state['joinGroupsAbort']);if(!_0x3e5894){writeLog('joinLogBody','Entrar','Parado','Parada\x20confirmada\x20durante\x20o\x20intervalo\x20entre\x20grupos.','warn');break;}}}$('btnStartJoinGroups')['disabled']=![],$('btnStopJoinGroups')['disabled']=![],$('btnStopJoinGroups')['querySelector']('strong')['textContent']='Parar',$('btnStopJoinGroups')['querySelector']('span:last-child')['textContent']='Parar\x20antes\x20do\x20proximo\x20grupo.';if(_0x225ca0){$('joinProgressText')['textContent']='Pausado:\x20a\x20conta\x20ativa\x20mudou.',playNotificationTone();return;}if(state['joinGroupsAbort']){$('joinProgressText')['textContent']='Parado\x20pelo\x20usuario.',writeLog('joinLogBody','Entrar','Parado','Execucao\x20interrompida\x20pelo\x20usuario.','warn'),playNotificationTone();return;}updateJoinDailyStatus(joinedToday, joinLimitEnabled, joinDailyLimit, joinResumeTime),writeLog('joinLogBody','Entrar','Fim',_0x49079d+'\x20sucesso(s),\x20'+_0x2b4333+'\x20pulado(s)\x20e\x20'+_0x1a2fd2+'\x20erro(s).',_0x49079d>0x0?'success':'warn'),playNotificationTone();}async function startPosting(){const _0x36cbd3=parsePostingConfig();if(!validatePostingConfig(_0x36cbd3))return;const _0x330e12=await chrome['runtime']['sendMessage']({'action':'getFacebookGroupQueueStatus'})['catch'](()=>null),_0x57c1c9=_0x330e12?.['queue'];if(_0x57c1c9&&['paused','waiting_daily']['includes'](_0x57c1c9['status'])&&_0x57c1c9['index']<_0x57c1c9['groups']['length']){const _0x18e2cc=_0x57c1c9['status']==='waiting_daily'&&_0x57c1c9['autoResume'];if(!_0x18e2cc&&confirm('Existe\x20uma\x20fila\x20salva\x20no\x20grupo\x20'+(_0x57c1c9['index']+0x1)+'\x20de\x20'+_0x57c1c9['groups']['length']+'.\x20Deseja\x20continuar\x20de\x20onde\x20parou?')){const _0x41b188=await chrome['runtime']['sendMessage']({'action':'resumeFacebookGroupQueueNow'})['catch'](_0x457b32=>({'success':![],'error':_0x457b32?.['message']||'Falha\x20ao\x20continuar.'}));_0x41b188?.['success']?(renderFacebookGroupQueueStatus(_0x41b188['queue']),loadGroupReports()['catch'](()=>{})):writeLog('postLogBody','Postar','Aviso',_0x41b188?.['error']||'A\x20fila\x20nao\x20pode\x20continuar\x20agora.','warn');return;}}if(_0x57c1c9&&['running','waiting_daily']['includes'](_0x57c1c9['status'])){if(!confirm('Ja\x20existe\x20uma\x20fila\x20de\x20grupos\x20salva.\x20Deseja\x20substituir\x20pela\x20lista\x20atual?'))return;}const _0x302643=Boolean($('groupDailyLimitEnabled')?.['checked']),_0x2fa09b=Math['min'](0x32,Math['max'](0x1,Number($('groupDailyLimit')?.['value'])||0x32));if(_0x302643&&(_0x2fa09b<0x1||_0x2fa09b>0x32)){alert('Escolha\x20um\x20limite\x20diario\x20entre\x201\x20e\x2050\x20grupos.');return;}$('progressContainer')['style']['display']='block',$('btnStartPost')['disabled']=!![],writeLog('postLogBody','Postar','Salvando','Criando\x20fila\x20com\x20'+_0x36cbd3['groupsResult']['valid']['length']+'\x20grupo(s).','info');try{const _0x4be118=await buildMediaPayload(state['mediaFiles']),_0x28d199=await chrome['runtime']['sendMessage']({'action':'startFacebookGroupQueue','tabId':getSelectedTabId('postTabSelect','post'),'groups':_0x36cbd3['groupsResult']['valid'],'messages':_0x36cbd3['messages'],'mediaFiles':_0x4be118,'anonymous':Boolean($('anonymousPost')?.['checked']),'beforeDelayMs':humanizeDelay(_0x36cbd3['beforeDelayMs']),'afterDelayMs':humanizeDelay(_0x36cbd3['afterDelayMs']),'delayMinMs':_0x36cbd3['delayMinMs'],'delayMaxMs':_0x36cbd3['delayMaxMs'],'limitEnabled':_0x302643,'dailyLimit':_0x2fa09b,'resumeTime':String($('groupResumeTime')?.['value']||'09:00'),'autoResume':Boolean($('groupAutoResume')?.['checked']),'avoidDuplicates':_0x36cbd3['avoidDuplicates'],'duplicateDays':_0x36cbd3['duplicateDays'],'skipErrors':Boolean($('skipErrors')?.['checked'])});if(!_0x28d199?.['success'])throw new Error(_0x28d199?.['error']||'Nao\x20foi\x20possivel\x20iniciar\x20a\x20fila\x20de\x20grupos.');await clearPostingProgress(),renderFacebookGroupQueueStatus(_0x28d199['queue']),loadGroupReports()['catch'](()=>{});}catch(_0x415684){$('btnStartPost')['disabled']=![];const _0x358f8a=/quota|storage/i['test'](String(_0x415684?.['message']||''))?'Os\x20anexos\x20sao\x20grandes\x20demais\x20para\x20o\x20salvamento\x20automatico.\x20Reduza\x20os\x20arquivos\x20e\x20tente\x20novamente.':_0x415684?.['message']||'Nao\x20foi\x20possivel\x20iniciar\x20a\x20fila.';writeLog('postLogBody','Postar','Erro',_0x358f8a,'error');}}function formatGroupQueueNextRun(_0xd2e802){const _0x70ff9=new Date(Number(_0xd2e802||0x0));if(!Number(_0xd2e802)||Number['isNaN'](_0x70ff9['getTime']()))return'';return _0x70ff9['toLocaleString']('pt-BR',{'day':'2-digit','month':'2-digit','hour':'2-digit','minute':'2-digit'});}function renderFacebookGroupQueueStatus(_0x4fea2a){const _0x1828b7=$('progressContainer'),_0x5f5523=$('progressBar'),_0x169fa8=$('progressText'),_0x14676c=$('groupDailyStatus');if(!_0x1828b7||!_0x5f5523||!_0x169fa8||!_0x14676c)return;state['groupQueueStatus']=_0x4fea2a||null;if(!_0x4fea2a){_0x1828b7['style']['display']='none',$('btnStartPost')['disabled']=![],$('btnStopPost')['disabled']=!![],syncPostStartButton();return;}const _0x4c1e23=Array['isArray'](_0x4fea2a['groups'])?_0x4fea2a['groups']['length']:0x0,_0x1ecb91=Math['max'](_0x4c1e23,Number(_0x4fea2a['requestedTotal']||0x0)),_0x1eeeba=Math['min'](_0x4c1e23,Math['max'](0x0,Number(_0x4fea2a['index']||0x0))),_0x31797d=Array['isArray'](_0x4fea2a['results'])?_0x4fea2a['results']['length']:0x0,_0xf7175d=Math['min'](_0x1ecb91||_0x4c1e23,Math['max'](_0x31797d,_0x1eeeba+Number(_0x4fea2a['duplicateCount']||0x0))),_0x430516=_0x1ecb91?_0xf7175d/_0x1ecb91*0x64:0x0;_0x1828b7['style']['display']='block',_0x5f5523['style']['width']=_0x430516+'%',_0x169fa8['textContent']=_0xf7175d+'\x20/\x20'+(_0x1ecb91||_0x4c1e23)+'\x20grupos\x20processados';const _0x145dcc=_0x4fea2a['limitEnabled']?Number(_0x4fea2a['postedToday']||0x0)+'\x20de\x20'+Number(_0x4fea2a['dailyLimit']||0x32)+'\x20grupos\x20publicados\x20hoje':Number(_0x4fea2a['postedToday']||0x0)+'\x20grupos\x20publicados\x20hoje\x20-\x20sem\x20limite\x20diario',_0x432670=formatGroupQueueNextRun(_0x4fea2a['nextRunAt']),_0x271e88={'running':'Fila\x20em\x20andamento.\x20'+_0x145dcc+(_0x432670?'.\x20Proxima\x20etapa:\x20'+_0x432670:'')+'.','waiting_daily':_0x4fea2a['autoResume']?'Limite\x20diario\x20atingido.\x20'+_0x145dcc+'.\x20Retomada\x20automatica:\x20'+(_0x432670||_0x4fea2a['resumeTime'])+'.':'Limite\x20diario\x20atingido.\x20O\x20proximo\x20grupo\x20esta\x20salvo\x20e\x20aguarda\x20inicio\x20manual.','paused':'Fila\x20pausada\x20no\x20grupo\x20'+Math['min'](_0x4c1e23,_0x1eeeba+0x1)+'\x20de\x20'+_0x4c1e23+'.\x20O\x20progresso\x20esta\x20salvo.','completed':'Fila\x20concluida.\x20'+Number(_0x4fea2a['successCount']||0x0)+'\x20sucesso(s),\x20'+Number(_0x4fea2a['skippedCount']||0x0)+'\x20pulado(s)\x20e\x20'+Number(_0x4fea2a['errorCount']||0x0)+'\x20erro(s).'};_0x14676c['textContent']=_0x271e88[_0x4fea2a['status']]||'Fila\x20salva.\x20'+_0x145dcc+'.';const _0x57d6ab=_0x4fea2a['status']==='waiting_daily'&&_0x4fea2a['autoResume'];$('btnStartPost')['disabled']=_0x4fea2a['status']==='running'||_0x57d6ab,$('btnStopPost')['disabled']=!['running','waiting_daily']['includes'](_0x4fea2a['status']);const _0x576cab=$('btnStartPost')['querySelector']('strong'),_0x39e887=$('btnStartPost')['querySelector']('span:last-child');_0x576cab&&(_0x576cab['textContent']=['paused','waiting_daily']['includes'](_0x4fea2a['status'])&&!_0x57d6ab?'Continuar':_0x4fea2a['status']==='running'||_0x57d6ab?'Fila\x20Ativa':'Postar');_0x39e887&&(_0x39e887['textContent']=_0x4fea2a['status']==='completed'?'Iniciar\x20uma\x20nova\x20fila\x20de\x20grupos.':'Proximo\x20grupo:\x20'+Math['min'](_0x4c1e23,_0x1eeeba+0x1)+'\x20de\x20'+_0x4c1e23+'.');const _0x16575f=$('postLogBody');_0x16575f&&Array['isArray'](_0x4fea2a['history'])&&(_0x16575f['textContent']='',_0x4fea2a['history']['slice'](-0x1e)['forEach'](_0xa26328=>{const _0x6993fe=document['createElement']('div');_0x6993fe['className']='log-entry\x20'+(_0xa26328['status']==='sucesso'||_0xa26328['status']==='concluido'?'success':_0xa26328['status']==='erro'?'error':_0xa26328['status']==='limite'||_0xa26328['status']==='pausado'?'warn':'info');const _0x19d472=new Date(_0xa26328['at']),_0x5851b6=Number['isNaN'](_0x19d472['getTime']())?'':_0x19d472['toLocaleTimeString']('pt-BR');_0x6993fe['textContent']='['+_0x5851b6+']\x20['+_0xa26328['status']+']\x20'+_0xa26328['details'],_0x16575f['appendChild'](_0x6993fe);}),_0x16575f['scrollTop']=_0x16575f['scrollHeight']);}function formatReportDate(_0x58ac35){const _0x4e6b5b=new Date(_0x58ac35);if(!_0x58ac35||Number['isNaN'](_0x4e6b5b['getTime']()))return'Sem\x20data';return _0x4e6b5b['toLocaleString']('pt-BR',{'day':'2-digit','month':'2-digit','year':'2-digit','hour':'2-digit','minute':'2-digit'});}function groupReportStatusLabel(_0x476082){const _0x455404={'running':'Em\x20andamento','waiting_daily':'Aguardando','paused':'Pausado','completed':'Concluido','sucesso':'Sucesso','pulado':'Pulado','duplicado':'Duplicado','recuperado':'Recuperado','pausado':'Pausado','erro':'Erro'};return _0x455404[String(_0x476082||'')]||'Salvo';}function groupReportTone(_0x14cb24){const _0x2bd4e2=String(_0x14cb24||'');if(['completed','sucesso','concluido']['includes'](_0x2bd4e2))return'success';if(['erro']['includes'](_0x2bd4e2))return'error';if(['paused','pausado','waiting_daily']['includes'](_0x2bd4e2))return'warn';if(['pulado','duplicado','recuperado']['includes'](_0x2bd4e2))return'info';return'neutral';}function computeReportStats(report) {
+        }else{if(_0x2add7c?.['shouldSkip'])_0x2b4333+=0x1,_0x1de6ae&&_0x2add7c['removeFromList']?(removeJoinGroupFromList(_0x2ec340),writeLog('joinLogBody','Entrar','Removido','Grupo\x20'+(_0x2059c8+0x1)+'/'+_0x4039cb['length']+':\x20'+(_0x2add7c?.['error']||'Esta\x20conta\x20ja\x20participa.'),'success')):writeLog('joinLogBody','Entrar','Pulado','Grupo\x20'+(_0x2059c8+0x1)+'/'+_0x4039cb['length']+':\x20'+(_0x2add7c?.['error']||'Entrada\x20manual\x20necessaria.'),'warn');else{_0x1a2fd2+=0x1,writeLog('joinLogBody','Entrar','Erro','Grupo\x20'+(_0x2059c8+0x1)+'/'+_0x4039cb['length']+':\x20'+(_0x2add7c?.['error']||_0x2ec340),'error');if(!$('skipErrors')['checked'])break;}}}catch(_0x27becf){_0x1a2fd2+=0x1,writeLog('joinLogBody','Entrar','Erro','Grupo\x20'+(_0x2059c8+0x1)+'/'+_0x4039cb['length']+':\x20'+_0x27becf['message'],'error');if(!$('skipErrors')['checked'])break;}if(_0x2059c8<_0x4039cb['length']-0x1&&!state['joinGroupsAbort']){const _0x195a56=humanizeDelay(randomInt(_0x2a495e['delayMinMs'],_0x2a495e['delayMaxMs']));writeLog('joinLogBody','Delay','Aguardando',Math['round'](_0x195a56/0x3e8)+'s\x20antes\x20do\x20proximo\x20grupo.','warn');const _0x3e5894=await interruptibleDelay(_0x195a56,()=>state['joinGroupsAbort']);if(!_0x3e5894){writeLog('joinLogBody','Entrar','Parado','Parada\x20confirmada\x20durante\x20o\x20intervalo\x20entre\x20grupos.','warn');break;}}}$('btnStartJoinGroups')['disabled']=![],$('btnStopJoinGroups')['disabled']=![],$('btnStopJoinGroups')['querySelector']('strong')['textContent']='Parar',$('btnStopJoinGroups')['querySelector']('span:last-child')['textContent']='Parar\x20antes\x20do\x20proximo\x20grupo.';if(_0x225ca0){$('joinProgressText')['textContent']='Pausado:\x20a\x20conta\x20ativa\x20mudou.',playNotificationTone();return;}if(state['joinGroupsAbort']){$('joinProgressText')['textContent']='Parado\x20pelo\x20usuario.',writeLog('joinLogBody','Entrar','Parado','Execucao\x20interrompida\x20pelo\x20usuario.','warn'),playNotificationTone();return;}updateJoinDailyStatus(joinedToday, joinLimitEnabled, joinDailyLimit, joinResumeTime),writeLog('joinLogBody','Entrar','Fim',_0x49079d+'\x20sucesso(s),\x20'+_0x2b4333+'\x20pulado(s)\x20e\x20'+_0x1a2fd2+'\x20erro(s).',_0x49079d>0x0?'success':'warn'),playNotificationTone();}async function startPosting(){const _0x36cbd3=parsePostingConfig();if(!validatePostingConfig(_0x36cbd3))return;if($('postAiVariation')?.checked){const _aiD=await storageGet(['aiProvider','aiApiKey']),_aiP=String(_aiD['aiProvider']||'none').toLowerCase().trim(),_aiK=String(_aiD['aiApiKey']||'').trim();if(_aiP==='none'||!_aiK){if(!confirm('A opcao "Variacao com IA" esta ativada, mas voce ainda nao configurou uma API Key nas Configuracoes.\n\nDeseja continuar usando as mensagens normais sem IA?'))return;}}const _0x330e12=await chrome['runtime']['sendMessage']({'action':'getFacebookGroupQueueStatus'})['catch'](()=>null),_0x57c1c9=_0x330e12?.['queue'];if(_0x57c1c9&&['paused','waiting_daily']['includes'](_0x57c1c9['status'])&&_0x57c1c9['index']<_0x57c1c9['groups']['length']){const _0x18e2cc=_0x57c1c9['status']==='waiting_daily'&&_0x57c1c9['autoResume'];if(!_0x18e2cc&&confirm('Existe\x20uma\x20fila\x20salva\x20no\x20grupo\x20'+(_0x57c1c9['index']+0x1)+'\x20de\x20'+_0x57c1c9['groups']['length']+'.\x20Deseja\x20continuar\x20de\x20onde\x20parou?')){const _0x41b188=await chrome['runtime']['sendMessage']({'action':'resumeFacebookGroupQueueNow'})['catch'](_0x457b32=>({'success':![],'error':_0x457b32?.['message']||'Falha\x20ao\x20continuar.'}));_0x41b188?.['success']?(renderFacebookGroupQueueStatus(_0x41b188['queue']),loadGroupReports()['catch'](()=>{})):writeLog('postLogBody','Postar','Aviso',_0x41b188?.['error']||'A\x20fila\x20nao\x20pode\x20continuar\x20agora.','warn');return;}}if(_0x57c1c9&&['running','waiting_daily']['includes'](_0x57c1c9['status'])){if(!confirm('Ja\x20existe\x20uma\x20fila\x20de\x20grupos\x20salva.\x20Deseja\x20substituir\x20pela\x20lista\x20atual?'))return;}const _0x302643=Boolean($('groupDailyLimitEnabled')?.['checked']),_0x2fa09b=Math['min'](0x32,Math['max'](0x1,Number($('groupDailyLimit')?.['value'])||0x32));if(_0x302643&&(_0x2fa09b<0x1||_0x2fa09b>0x32)){alert('Escolha\x20um\x20limite\x20diario\x20entre\x201\x20e\x2050\x20grupos.');return;}$('progressContainer')['style']['display']='block',$('btnStartPost')['disabled']=!![],writeLog('postLogBody','Postar','Salvando','Criando\x20fila\x20com\x20'+_0x36cbd3['groupsResult']['valid']['length']+'\x20grupo(s).','info');try{const _0x4be118=await buildMediaPayload(state['mediaFiles']),_0x28d199=await chrome['runtime']['sendMessage']({'action':'startFacebookGroupQueue','tabId':getSelectedTabId('postTabSelect','post'),'groups':_0x36cbd3['groupsResult']['valid'],'messages':_0x36cbd3['messages'],'mediaFiles':_0x4be118,'anonymous':Boolean($('anonymousPost')?.['checked']),'beforeDelayMs':humanizeDelay(_0x36cbd3['beforeDelayMs']),'afterDelayMs':humanizeDelay(_0x36cbd3['afterDelayMs']),'delayMinMs':_0x36cbd3['delayMinMs'],'delayMaxMs':_0x36cbd3['delayMaxMs'],'limitEnabled':_0x302643,'dailyLimit':_0x2fa09b,'resumeTime':String($('groupResumeTime')?.['value']||'09:00'),'autoResume':Boolean($('groupAutoResume')?.['checked']),'avoidDuplicates':_0x36cbd3['avoidDuplicates'],'duplicateDays':_0x36cbd3['duplicateDays'],'skipErrors':Boolean($('skipErrors')?.['checked']),'aiVariation':Boolean($('postAiVariation')?.['checked'])});if(!_0x28d199?.['success'])throw new Error(_0x28d199?.['error']||'Nao\x20foi\x20possivel\x20iniciar\x20a\x20fila\x20de\x20grupos.');await clearPostingProgress(),renderFacebookGroupQueueStatus(_0x28d199['queue']),loadGroupReports()['catch'](()=>{});}catch(_0x415684){$('btnStartPost')['disabled']=![];const _0x358f8a=/quota|storage/i['test'](String(_0x415684?.['message']||''))?'Os\x20anexos\x20sao\x20grandes\x20demais\x20para\x20o\x20salvamento\x20automatico.\x20Reduza\x20os\x20arquivos\x20e\x20tente\x20novamente.':_0x415684?.['message']||'Nao\x20foi\x20possivel\x20iniciar\x20a\x20fila.';writeLog('postLogBody','Postar','Erro',_0x358f8a,'error');}}function formatGroupQueueNextRun(_0xd2e802){const _0x70ff9=new Date(Number(_0xd2e802||0x0));if(!Number(_0xd2e802)||Number['isNaN'](_0x70ff9['getTime']()))return'';return _0x70ff9['toLocaleString']('pt-BR',{'day':'2-digit','month':'2-digit','hour':'2-digit','minute':'2-digit'});}function renderFacebookGroupQueueStatus(_0x4fea2a){const _0x1828b7=$('progressContainer'),_0x5f5523=$('progressBar'),_0x169fa8=$('progressText'),_0x14676c=$('groupDailyStatus');if(!_0x1828b7||!_0x5f5523||!_0x169fa8||!_0x14676c)return;state['groupQueueStatus']=_0x4fea2a||null;if(!_0x4fea2a){_0x1828b7['style']['display']='none',$('btnStartPost')['disabled']=![],$('btnStopPost')['disabled']=!![],syncPostStartButton();return;}const _0x4c1e23=Array['isArray'](_0x4fea2a['groups'])?_0x4fea2a['groups']['length']:0x0,_0x1ecb91=Math['max'](_0x4c1e23,Number(_0x4fea2a['requestedTotal']||0x0)),_0x1eeeba=Math['min'](_0x4c1e23,Math['max'](0x0,Number(_0x4fea2a['index']||0x0))),_0x31797d=Array['isArray'](_0x4fea2a['results'])?_0x4fea2a['results']['length']:0x0,_0xf7175d=Math['min'](_0x1ecb91||_0x4c1e23,Math['max'](_0x31797d,_0x1eeeba+Number(_0x4fea2a['duplicateCount']||0x0))),_0x430516=_0x1ecb91?_0xf7175d/_0x1ecb91*0x64:0x0;_0x1828b7['style']['display']='block',_0x5f5523['style']['width']=_0x430516+'%',_0x169fa8['textContent']=_0xf7175d+'\x20/\x20'+(_0x1ecb91||_0x4c1e23)+'\x20grupos\x20processados';const _0x145dcc=_0x4fea2a['limitEnabled']?Number(_0x4fea2a['postedToday']||0x0)+'\x20de\x20'+Number(_0x4fea2a['dailyLimit']||0x32)+'\x20grupos\x20publicados\x20hoje':Number(_0x4fea2a['postedToday']||0x0)+'\x20grupos\x20publicados\x20hoje\x20-\x20sem\x20limite\x20diario',_0x432670=formatGroupQueueNextRun(_0x4fea2a['nextRunAt']),_0x271e88={'running':'Fila\x20em\x20andamento.\x20'+_0x145dcc+(_0x432670?'.\x20Proxima\x20etapa:\x20'+_0x432670:'')+'.','waiting_daily':_0x4fea2a['autoResume']?'Limite\x20diario\x20atingido.\x20'+_0x145dcc+'.\x20Retomada\x20automatica:\x20'+(_0x432670||_0x4fea2a['resumeTime'])+'.':'Limite\x20diario\x20atingido.\x20O\x20proximo\x20grupo\x20esta\x20salvo\x20e\x20aguarda\x20inicio\x20manual.','paused':'Fila\x20pausada\x20no\x20grupo\x20'+Math['min'](_0x4c1e23,_0x1eeeba+0x1)+'\x20de\x20'+_0x4c1e23+'.\x20O\x20progresso\x20esta\x20salvo.','completed':'Fila\x20concluida.\x20'+Number(_0x4fea2a['successCount']||0x0)+'\x20sucesso(s),\x20'+Number(_0x4fea2a['skippedCount']||0x0)+'\x20pulado(s)\x20e\x20'+Number(_0x4fea2a['errorCount']||0x0)+'\x20erro(s).'};_0x14676c['textContent']=_0x271e88[_0x4fea2a['status']]||'Fila\x20salva.\x20'+_0x145dcc+'.';const _0x57d6ab=_0x4fea2a['status']==='waiting_daily'&&_0x4fea2a['autoResume'];$('btnStartPost')['disabled']=_0x4fea2a['status']==='running'||_0x57d6ab,$('btnStopPost')['disabled']=!['running','waiting_daily']['includes'](_0x4fea2a['status']);const _0x576cab=$('btnStartPost')['querySelector']('strong'),_0x39e887=$('btnStartPost')['querySelector']('span:last-child');_0x576cab&&(_0x576cab['textContent']=['paused','waiting_daily']['includes'](_0x4fea2a['status'])&&!_0x57d6ab?'Continuar':_0x4fea2a['status']==='running'||_0x57d6ab?'Fila\x20Ativa':'Postar');_0x39e887&&(_0x39e887['textContent']=_0x4fea2a['status']==='completed'?'Iniciar\x20uma\x20nova\x20fila\x20de\x20grupos.':'Proximo\x20grupo:\x20'+Math['min'](_0x4c1e23,_0x1eeeba+0x1)+'\x20de\x20'+_0x4c1e23+'.');const _0x16575f=$('postLogBody');_0x16575f&&Array['isArray'](_0x4fea2a['history'])&&(_0x16575f['textContent']='',_0x4fea2a['history']['slice'](-0x1e)['forEach'](_0xa26328=>{const _0x6993fe=document['createElement']('div');_0x6993fe['className']='log-entry\x20'+(_0xa26328['status']==='sucesso'||_0xa26328['status']==='concluido'?'success':_0xa26328['status']==='erro'?'error':_0xa26328['status']==='limite'||_0xa26328['status']==='pausado'?'warn':'info');const _0x19d472=new Date(_0xa26328['at']),_0x5851b6=Number['isNaN'](_0x19d472['getTime']())?'':_0x19d472['toLocaleTimeString']('pt-BR');_0x6993fe['textContent']='['+_0x5851b6+']\x20['+_0xa26328['status']+']\x20'+_0xa26328['details'],_0x16575f['appendChild'](_0x6993fe);}),_0x16575f['scrollTop']=_0x16575f['scrollHeight']);}function formatReportDate(_0x58ac35){const _0x4e6b5b=new Date(_0x58ac35);if(!_0x58ac35||Number['isNaN'](_0x4e6b5b['getTime']()))return'Sem\x20data';return _0x4e6b5b['toLocaleString']('pt-BR',{'day':'2-digit','month':'2-digit','year':'2-digit','hour':'2-digit','minute':'2-digit'});}function groupReportStatusLabel(_0x476082){const _0x455404={'running':'Em\x20andamento','waiting_daily':'Aguardando','paused':'Pausado','completed':'Concluido','sucesso':'Sucesso','pulado':'Pulado','duplicado':'Duplicado','recuperado':'Recuperado','pausado':'Pausado','erro':'Erro'};return _0x455404[String(_0x476082||'')]||'Salvo';}function groupReportTone(_0x14cb24){const _0x2bd4e2=String(_0x14cb24||'');if(['completed','sucesso','concluido']['includes'](_0x2bd4e2))return'success';if(['erro']['includes'](_0x2bd4e2))return'error';if(['paused','pausado','waiting_daily']['includes'](_0x2bd4e2))return'warn';if(['pulado','duplicado','recuperado']['includes'](_0x2bd4e2))return'info';return'neutral';}function computeReportStats(report) {
     const results = Array.isArray(report?.results) ? report.results : [];
     let success = Number(report?.successCount || 0);
     let skipped = Number(report?.skippedCount || 0);
@@ -1872,6 +1973,18 @@ async function startDmFlow() {
         return;
     }
 
+    if ($('dmAiVariation')?.checked) {
+        const _aiData = await storageGet(['aiProvider', 'aiApiKey']);
+        const _aiProv = String(_aiData['aiProvider'] || 'none').toLowerCase().trim();
+        const _devId = await getOrCreateDeviceId();
+        const _aiKey = unmaskSecret(String(_aiData['aiApiKey'] || '').trim(), _devId);
+        if (_aiProv === 'none' || !_aiKey) {
+            if (!confirm('A opção "Variação Inteligente com IA" está ativada, mas você ainda não configurou uma API Key nas Configurações da extensão.\n\nDeseja continuar o envio usando as mensagens normais sem IA?')) {
+                return;
+            }
+        }
+    }
+
     state['dmAbort'] = false;
     $('dmProgressContainer')['style']['display'] = 'block';
     $('btnStartDM')['disabled'] = true;
@@ -1915,13 +2028,31 @@ async function startDmFlow() {
             break;
         }
 
+        // Variação Inteligente com IA para DM
+        let finalMessage = message;
+        if ($('dmAiVariation')?.checked) {
+            try {
+                writeLog('dmLogBody', 'IA', 'Gerando', 'Gerando texto único com IA para ' + profileSlug + '...', 'info');
+                const aiRes = await chrome.runtime.sendMessage({
+                    action: 'generateAIVariation',
+                    message: message,
+                    context: { type: 'dm', recipient: profileSlug }
+                });
+                if (aiRes?.success && aiRes?.variation && typeof aiRes.variation === 'string' && aiRes.variation.trim()) {
+                    finalMessage = aiRes.variation.trim();
+                }
+            } catch (_aiErr) {
+                console.warn('Falha na IA para DM:', _aiErr);
+            }
+        }
+
         // 3. Envio da Mensagem
         try {
             const res = await chrome.runtime.sendMessage({
                 action: 'sendDM',
                 tabId: getSelectedTabId('messagesTabSelect', 'messages'),
                 profileUrl: profileUrl,
-                message: message
+                message: finalMessage
             });
 
             if (res?.success) {
@@ -1998,53 +2129,32 @@ async function releaseLicenseWithServer(licenseKey) {
 
 async function loadLicenseStatus() {
     showLicenseNotice('');
-
-    // Fast synchronous pre-hydration from localStorage to eliminate F5 badge flicker
-    try {
-        const preKey = normalizeLicenseKey(localStorage.getItem('platafy_licenseKey') || '');
-        const preActive = localStorage.getItem('platafy_licenseActive') === 'true';
-        if (preKey && preActive) {
-            state['licenseKey'] = preKey;
-            state['licenseActive'] = true;
-            state['licenseDetails'] = {
-                customerName: localStorage.getItem('platafy_licenseCustomerName') || '',
-                validityPeriod: localStorage.getItem('platafy_licenseValidityPeriod') || '',
-                validityDays: parseInt(localStorage.getItem('platafy_licenseValidityDays') || '0', 10),
-                expiresAt: localStorage.getItem('platafy_licenseExpiresAt') || ''
-            };
-            if ($('licenseKey')) {
-                $('licenseKey').value = preKey;
-                $('licenseKey').readOnly = true;
-            }
-            setLicenseBadge('active');
-        }
-    } catch(e) {}
+    const deviceId = await getOrCreateDeviceId();
 
     const data = await storageGet([
         'licenseKey',
         'licenseActive',
+        'licenseDeviceId',
+        'licenseSignature',
         'licenseCustomerName',
         'licenseValidityPeriod',
         'licenseValidityDays',
         'licenseExpiresAt'
     ]);
     const key = normalizeLicenseKey(data['licenseKey'] || '');
-    const isActive = (data['licenseActive'] === true || data['licenseActive'] === 'true');
+    const isIntegrityValid = await verifyLicenseIntegrity(data, deviceId);
 
-    if (!key || !isActive) {
-        const lsKey = normalizeLicenseKey(localStorage.getItem('platafy_licenseKey') || '');
-        const lsActive = localStorage.getItem('platafy_licenseActive') === 'true';
-        if (!lsKey || !lsActive) {
-            state['licenseActive'] = false;
-            state['licenseKey'] = '';
-            state['licenseDetails'] = emptyLicenseDetails();
-            if ($('licenseKey')) {
-                $('licenseKey').value = '';
-                $('licenseKey').readOnly = false;
-            }
-            setLicenseBadge('inactive');
-            return;
+    if (!key || !isIntegrityValid) {
+        state['licenseActive'] = false;
+        state['licenseKey'] = '';
+        state['licenseDetails'] = emptyLicenseDetails();
+        if ($('licenseKey')) {
+            $('licenseKey').value = '';
+            $('licenseKey').readOnly = false;
         }
+        setLicenseBadge('inactive');
+        await clearStoredLicenseData();
+        return;
     }
 
     state['licenseKey'] = key;
@@ -2056,14 +2166,15 @@ async function loadLicenseStatus() {
     }
     setLicenseBadge('active');
 
-    // Passive background recheck (does NOT de-activate if server is unreachable / network offline)
+    // Validação passiva de segundo plano com o servidor
     validateLicenseWithServer(key).then(async (res) => {
         if (res && res.valid) {
             const updated = extractLicenseDetails(res);
             state['licenseDetails'] = updated;
-            await storageSet(licenseStoragePayload(key, updated));
+            const payload = await licenseStoragePayload(key, updated);
+            await storageSet(payload);
             setLicenseBadge('active');
-        } else if (res && res.valid === false && res.message && (res.message.includes('revogada') || res.message.includes('expirou'))) {
+        } else if (res && res.valid === false) {
             await clearStoredLicenseData();
             state['licenseActive'] = false;
             state['licenseKey'] = '';
@@ -2073,11 +2184,21 @@ async function loadLicenseStatus() {
                 $('licenseKey').readOnly = false;
             }
             setLicenseBadge('inactive');
-            showLicenseNotice(res.message, 'error');
+            showLicenseNotice(res.message || 'Sua licença foi revogada ou expirou.', 'error');
         }
-    }).catch(() => {
-        state['licenseActive'] = true;
-        setLicenseBadge('active');
+    }).catch(async () => {
+        // Falha de rede ou offline: mantém ativo SOMENTE se a assinatura local estiver íntegra e não expirada
+        const stillValid = await verifyLicenseIntegrity(data, deviceId);
+        if (stillValid) {
+            state['licenseActive'] = true;
+            setLicenseBadge('active');
+        } else {
+            await clearStoredLicenseData();
+            state['licenseActive'] = false;
+            state['licenseKey'] = '';
+            state['licenseDetails'] = emptyLicenseDetails();
+            setLicenseBadge('inactive');
+        }
     });
 }
 
@@ -2111,8 +2232,9 @@ async function activateLicense() {
             state['licenseActive'] = false;
             state['licenseKey'] = '';
             setLicenseBadge('inactive');
+            await clearStoredLicenseData();
             if ($('licenseKey')) {
-                $('licenseKey').value = key; // Preserve typed key so user can edit if typo
+                $('licenseKey').value = key;
                 $('licenseKey').readOnly = false;
                 $('licenseKey').focus();
             }
@@ -2124,7 +2246,8 @@ async function activateLicense() {
         state['licenseDetails'] = details;
         state['licenseActive'] = true;
         state['licenseKey'] = key;
-        await storageSet(licenseStoragePayload(key, details));
+        const payload = await licenseStoragePayload(key, details);
+        await storageSet(payload);
         setLicenseBadge('active');
         showLicenseNotice('✓ Licença ativada com sucesso!', 'success');
     } catch (err) {
@@ -2132,6 +2255,7 @@ async function activateLicense() {
         state['licenseActive'] = false;
         state['licenseKey'] = '';
         setLicenseBadge('inactive');
+        await clearStoredLicenseData();
         if ($('licenseKey')) {
             $('licenseKey').value = key;
             $('licenseKey').readOnly = false;
@@ -2168,7 +2292,264 @@ async function removeLicense() {
     alert('Licença removida com sucesso. Para ativar novamente, cole sua chave e clique em Ativar.');
 }
 
-function applyZoom(){document['body']['style']['zoom']=String(state['zoom']),$('zoomValue')['textContent']=Math['round'](state['zoom']*0x64)+'%';}function registerToolFilters(){const _0x4047c7=Array['from'](document['querySelectorAll']('[data-tool-filter]')),_0x38f93c=Array['from'](document['querySelectorAll']('.tool-category[data-category]'));_0x4047c7['forEach'](_0x48d08a=>{_0x48d08a['addEventListener']('click',()=>{const _0x275467=_0x48d08a['dataset']['toolFilter'];_0x4047c7['forEach'](_0x3899d9=>{const _0x98e4bf=_0x3899d9===_0x48d08a;_0x3899d9['classList']['toggle']('is-active',_0x98e4bf),_0x3899d9['setAttribute']('aria-pressed',String(_0x98e4bf));}),_0x38f93c['forEach'](_0xbcfe3d=>{_0xbcfe3d['classList']['toggle']('is-active',_0xbcfe3d['dataset']['category']===_0x275467);});});});}function registerRoutes(){document['querySelectorAll']('[data-route]')['forEach'](_0x612d00=>{_0x612d00['addEventListener']('click',()=>{const _0x3c2b78=_0x612d00['dataset']['route'];if(['extract','messages','post-groups','join-groups','templates','reports']['includes'](_0x3c2b78)&&!requireActiveLicense())return;if(_0x3c2b78==='extract'){navigateToView('extract',{'extractMode':_0x612d00['dataset']['extractMode']||'groups'});return;}if(_0x3c2b78==='messages'){navigateToView('messages',{'messageMode':_0x612d00['dataset']['messageMode']||'messages'});return;}navigateToView(_0x3c2b78);});});}function enforceFacebookOnlyUi(){document['querySelector']('[data-tool-filter=\x22whatsapp\x22]')?.['remove'](),document['querySelector']('[data-category=\x22whatsapp\x22]')?.['remove'](),document['querySelector']('.traffic-panel')?.['remove'](),document['querySelectorAll']('[id^=\x22view-whatsapp-\x22]')['forEach'](_0x3b951b=>_0x3b951b['remove']()),$('btnCommentsToLeads')?.['remove']();}function registerEvents(){registerToolFilters(),registerRoutes(),registerTemplateEvents(),registerBackupEvents(),$('btnZoomOut')['addEventListener']('click',()=>{state['zoom']=Math['max'](0.7,Number((state['zoom']-0.1)['toFixed'](0x1))),applyZoom();}),$('btnZoomIn')['addEventListener']('click',()=>{state['zoom']=Math['min'](1.6,Number((state['zoom']+0.1)['toFixed'](0x1))),applyZoom();}),$('btnAcquireLicense')['addEventListener']('click',()=>openExternalUrl(CHANGELOG_URL)),$('btnManageLicenseDashboard')['addEventListener']('click',openLicenseConfig),$('btnAcquireLicenseConfig')['addEventListener']('click',()=>openExternalUrl(CONTACT_URL)),$('btnOpenLicenseView')?.['addEventListener']('click',()=>navigateToView('config')),$('btnRemoveLicenseDashboard')['addEventListener']('click',removeLicense),$('btnActivate')['addEventListener']('click',activateLicense),$('licenseKey')?.['addEventListener']('keydown',e=>{if(e.key==='Enter'){e.preventDefault();activateLicense();}}),$('btnRemoveLicense')['addEventListener']('click',removeLicense),$('volumeBoostRange')['addEventListener']('input',()=>{updateVolumeBoostLabel(),persistDraftField('volumeBoostRange');}),$('btnApplyVolumeBoost')['addEventListener']('click',()=>applyVolumeBoost(![])),$('btnResetVolumeBoost')['addEventListener']('click',()=>applyVolumeBoost(!![])),$('btnClearVolumeLog')['addEventListener']('click',()=>{$('volumeLogBody')['textContent']='';}),$('btnRightClickOn')?.['addEventListener']('click',()=>setRightClickUnlock(!![])),$('btnRightClickOff')?.['addEventListener']('click',()=>setRightClickUnlock(![])),$('btnClearRightClickLog')?.['addEventListener']('click',()=>{$('rightClickLogBody')['textContent']='';}),$('extractTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['extract']=getSelectedTabId('extractTabSelect','extract');}),$('postTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['post']=getSelectedTabId('postTabSelect','post');}),$('joinTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['join']=getSelectedTabId('joinTabSelect','join');}),$('btnExtractRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('extractLogBody','Janela')['catch'](_0x26b156=>{writeLog('extractLogBody','Janela','Erro',_0x26b156['message'],'error');});}),$('btnExtractNavigate')['addEventListener']('click',navigateExtractTab),$('btnOpenPostUrl')?.['addEventListener']('click',navigateToPostUrl),$('btnExtractSearch')['addEventListener']('click',runExtractSearch),$('btnExtractMembers')?.['addEventListener']('click',enrichExtractedGroupMembers),$('btnStopExtractMembers')?.['addEventListener']('click',stopExtractMembers),$('btnFilterByMembers')?.['addEventListener']('click',filterExtractItemsByMinimumMembers),$('btnExtractDeduplicate')['addEventListener']('click',deduplicateExtractItems),$('btnExtractSave')['addEventListener']('click',saveExtractItemsJson),$('btnExtractClear')['addEventListener']('click',clearExtractItems),$('btnHeaderClearExtract')?.['addEventListener']('click',clearExtractItems),$('btnClearExtractLog')['addEventListener']('click',()=>{$('extractLogBody')['textContent']='';}),$('btnSelectMedia')['addEventListener']('click',()=>$('mediaInput')['click']()),$('mediaUploadArea')['addEventListener']('click',()=>$('mediaInput')['click']()),$('mediaUploadArea')['addEventListener']('dragover',_0x3c8eb3=>{_0x3c8eb3['preventDefault'](),$('mediaUploadArea')['style']['borderColor']='rgba(59,\x20130,\x20246,\x200.72)';}),$('mediaUploadArea')['addEventListener']('dragleave',()=>{$('mediaUploadArea')['style']['borderColor']='#bfdbfe';}),$('mediaUploadArea')['addEventListener']('drop',_0x5aa90a=>{_0x5aa90a['preventDefault'](),$('mediaUploadArea')['style']['borderColor']='#bfdbfe',handleMediaFiles(Array['from'](_0x5aa90a['dataTransfer']['files']));}),$('mediaInput')['addEventListener']('change',_0xd9cedc=>{handleMediaFiles(Array['from'](_0xd9cedc['target']['files'])),_0xd9cedc['target']['value']='';}),$('btnAddMessageLine')['addEventListener']('click',()=>{const _0x3f10c7=$('postMessages');_0x3f10c7['value']=_0x3f10c7['value']['trim']()?_0x3f10c7['value']['trim']()+'\x0a---\x0a':'',_0x3f10c7['focus'](),updateMessageCount(),persistDraftField('postMessages');}),$('btnResetPosting')?.['addEventListener']('click',resetPostingForm),$('btnPostRefreshTabs')?.['addEventListener']('click',()=>{refreshAndLogTabs('postLogBody','Janela')['catch'](_0x2c8e14=>{writeLog('postLogBody','Janela','Erro',_0x2c8e14['message'],'error');});}),$('btnUseJoinedGroups')?.['addEventListener']('click',loadJoinedGroupsIntoPostList);$('btnUseJoinedGroupsAlt')?.['addEventListener']('click',loadJoinedGroupsIntoPostList);$('btnImportGroupsJson')?.['addEventListener']('click',()=>$('fileGroupsInput')['click']());$('btnExportPostGroups')?.['addEventListener']('click',exportGroupList);$('btnClearPostGroups')?.['addEventListener']('click',clearPostGroupsList);$('btnClearPostGroupsTable')?.['addEventListener']('click',clearPostGroupsList);$('groupsList')?.['addEventListener']('input',()=>{updatePostGroupsData(parseList($('groupsList')['value']));});['groupsList','joinGroupsList'].forEach(id=>{const el=$(id);if(!el)return;el.addEventListener('dragover',e=>e.preventDefault());el.addEventListener('drop',async e=>{e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f){if(id==='groupsList')await importGroupFile(f);else if(id==='joinGroupsList')await importJoinGroupFile(f);}});}),$('fileGroupsInput')['addEventListener']('change',async _0x2cee9e=>{const _0x535290=_0x2cee9e['target']['files'][0x0];_0x535290&&await importGroupFile(_0x535290),_0x2cee9e['target']['value']='';}),$('btnStartPost')['addEventListener']('click',startPosting),$('btnStopPost')['addEventListener']('click',async()=>{$('progressContainer')['style']['display']='block',$('progressText')['textContent']='Pedido\x20de\x20parada\x20recebido.\x20Finalizando\x20a\x20etapa\x20atual...',$('btnStopPost')['querySelector']('strong')['textContent']='Parando...',$('btnStopPost')['querySelector']('span:last-child')['textContent']='Aguarde\x20a\x20etapa\x20atual\x20encerrar.',$('btnStopPost')['disabled']=!![];const _0x2b17f3=await chrome['runtime']['sendMessage']({'action':'stopFacebookGroupQueue'})['catch'](_0x55ba0c=>({'success':![],'error':_0x55ba0c?.['message']||'Falha\x20ao\x20parar.'}));_0x2b17f3?.['success']?(renderFacebookGroupQueueStatus(_0x2b17f3['queue']),loadGroupReports()['catch'](()=>{}),writeLog('postLogBody','Postar','Parado','Fila\x20pausada.\x20O\x20proximo\x20grupo\x20ficou\x20salvo.','warn')):($('btnStopPost')['disabled']=![],writeLog('postLogBody','Postar','Erro',_0x2b17f3?.['error']||'Falha\x20ao\x20parar\x20a\x20fila.','error'));}),$('btnManualNavigate')?.['addEventListener']('click',manualNavigateToFirstGroup),$('btnManualOpenComposer')?.['addEventListener']('click',manualOpenComposer),$('btnManualPasteText')?.['addEventListener']('click',manualPasteDraft),$('btnManualPublish')?.['addEventListener']('click',manualPublishDraft),$('btnClearPostLog')['addEventListener']('click',()=>{$('postLogBody')['textContent']='';}),$('btnJoinRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('joinLogBody','Janela')['catch'](_0x383b8d=>{writeLog('joinLogBody','Janela','Erro',_0x383b8d['message'],'error');});}),$('btnFetchMyFriends')?.['addEventListener']('click',loadFriendsIntoProfileList),$('messagesTabSelect')?.['addEventListener']('change',()=>{state['selectedTabIds']['messages']=getSelectedTabId('messagesTabSelect','messages');}),$('btnJoinUseExtracted')['addEventListener']('click',()=>{useExtractedGroupsForJoin()['catch'](_0x58e39d=>{writeLog('joinLogBody','Lista','Erro',_0x58e39d['message'],'error');});}),$('btnImportJoinGroupsJson')?.['addEventListener']('click',()=>$('fileJoinGroupsInput')['click']()),$('fileJoinGroupsInput')['addEventListener']('change',async _0x4924ef=>{const _0x137ad7=_0x4924ef['target']['files'][0x0];_0x137ad7&&await importJoinGroupFile(_0x137ad7),_0x4924ef['target']['value']='';}),
+function updateAiBadges() {
+    const postCb = $('postAiVariation');
+    const postBadge = $('postAiBadge');
+    if (postBadge && postCb) {
+        postBadge.textContent = postCb.checked ? 'IA Ativada' : 'Desativada';
+        postBadge.className = 'ai-status-badge ' + (postCb.checked ? 'is-active' : 'is-inactive');
+    }
+    const dmCb = $('dmAiVariation');
+    const dmBadge = $('dmAiBadge');
+    if (dmBadge && dmCb) {
+        dmBadge.textContent = dmCb.checked ? 'IA Ativada' : 'Desativada';
+        dmBadge.className = 'ai-status-badge ' + (dmCb.checked ? 'is-active' : 'is-inactive');
+    }
+}
+
+function getEffectiveOpenRouterModel() {
+    const selectVal = $('openrouterModel')?.value || 'google/gemini-2.0-flash-exp:free';
+    if (selectVal === 'custom') {
+        const customVal = ($('openrouterCustomModel')?.value || '').trim();
+        return customVal || 'google/gemini-2.0-flash-exp:free';
+    }
+    return selectVal;
+}
+
+function syncAiProviderTips() {
+    const provider = $('aiProvider')?.value || 'gemini';
+    const geminiBox = $('geminiTipBox');
+    const openrouterBox = $('openrouterTipBox');
+    const openaiBox = $('openaiTipBox');
+    const keyGroup = $('aiApiKeyGroup');
+    const orModelGroup = $('openrouterModelGroup');
+    const orCustomWrapper = $('openrouterCustomModelWrapper');
+
+    if (geminiBox) geminiBox.style.display = provider === 'gemini' ? 'block' : 'none';
+    if (openrouterBox) openrouterBox.style.display = provider === 'openrouter' ? 'block' : 'none';
+    if (openaiBox) openaiBox.style.display = provider === 'openai' ? 'block' : 'none';
+    if (keyGroup) keyGroup.style.display = provider !== 'none' ? 'block' : 'none';
+    if (orModelGroup) orModelGroup.style.display = provider === 'openrouter' ? 'block' : 'none';
+    if (orCustomWrapper) {
+        const isCustom = $('openrouterModel')?.value === 'custom';
+        orCustomWrapper.style.display = (provider === 'openrouter' && isCustom) ? 'block' : 'none';
+    }
+}
+
+async function loadAiSettings() {
+    const data = await storageGet(['aiProvider', 'aiApiKey', 'postAiVariation', 'dmAiVariation', 'openrouterModel', 'openrouterCustomModel']);
+    const provider = data['aiProvider'] || 'gemini';
+    const devId = await getOrCreateDeviceId();
+    const apiKey = unmaskSecret(data['aiApiKey'] || '', devId);
+    const orModel = data['openrouterModel'] || 'google/gemini-2.0-flash-exp:free';
+    const orCustomModel = data['openrouterCustomModel'] || '';
+
+    if ($('aiProvider')) $('aiProvider').value = provider;
+    if ($('aiApiKey')) $('aiApiKey').value = apiKey;
+
+    const orSelect = $('openrouterModel');
+    if (orSelect) {
+        const hasOption = Array.from(orSelect.options).some(o => o.value === orModel);
+        if (hasOption) {
+            orSelect.value = orModel;
+        } else if (orModel) {
+            orSelect.value = 'custom';
+            if ($('openrouterCustomModel')) $('openrouterCustomModel').value = orModel;
+        }
+    }
+    if ($('openrouterCustomModel') && orCustomModel) {
+        $('openrouterCustomModel').value = orCustomModel;
+    }
+
+    if ($('postAiVariation') && typeof data['postAiVariation'] === 'boolean') {
+        $('postAiVariation').checked = data['postAiVariation'];
+    }
+    if ($('dmAiVariation') && typeof data['dmAiVariation'] === 'boolean') {
+        $('dmAiVariation').checked = data['dmAiVariation'];
+    }
+
+    syncAiProviderTips();
+    updateAiBadges();
+}
+
+function registerAiEvents() {
+    $('postAiVariation')?.addEventListener('change', () => {
+        updateAiBadges();
+        chrome.storage.local.set({ postAiVariation: Boolean($('postAiVariation')?.checked) });
+    });
+
+    $('dmAiVariation')?.addEventListener('change', () => {
+        updateAiBadges();
+        chrome.storage.local.set({ dmAiVariation: Boolean($('dmAiVariation')?.checked) });
+    });
+
+    $('aiProvider')?.addEventListener('change', () => {
+        syncAiProviderTips();
+        chrome.storage.local.set({ aiProvider: $('aiProvider')?.value });
+    });
+
+    $('openrouterModel')?.addEventListener('change', () => {
+        syncAiProviderTips();
+        const val = $('openrouterModel')?.value;
+        const effectiveModel = val === 'custom' ? ($('openrouterCustomModel')?.value?.trim() || '') : val;
+        chrome.storage.local.set({ openrouterModel: effectiveModel });
+    });
+
+    $('openrouterCustomModel')?.addEventListener('input', () => {
+        const customVal = $('openrouterCustomModel')?.value?.trim() || '';
+        chrome.storage.local.set({ openrouterCustomModel: customVal, openrouterModel: customVal });
+    });
+
+    $('aiApiKey')?.addEventListener('input', () => {
+        getOrCreateDeviceId().then(devId => { chrome.storage.local.set({ aiApiKey: maskSecret($('aiApiKey')?.value?.trim() || '', devId) }); });
+    });
+
+    $('btnToggleAiApiKey')?.addEventListener('click', () => {
+        const input = $('aiApiKey');
+        if (!input) return;
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        const eyeIcon = $('aiKeyEyeIcon');
+        if (eyeIcon) {
+            eyeIcon.innerHTML = isPassword
+                ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>'
+                : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+        }
+    });
+
+    $('btnSaveAiSettings')?.addEventListener('click', async () => {
+        const provider = $('aiProvider')?.value || 'none';
+        const apiKey = ($('aiApiKey')?.value || '').trim();
+        const orModel = getEffectiveOpenRouterModel();
+        const orCustom = ($('openrouterCustomModel')?.value || '').trim();
+        await chrome.storage.local.set({
+            aiProvider: provider,
+            aiApiKey: maskSecret(apiKey, await getOrCreateDeviceId()),
+            openrouterModel: orModel,
+            openrouterCustomModel: orCustom
+        });
+
+        const resEl = $('aiTestResult');
+        if (resEl) {
+            resEl.className = 'ai-test-result is-success';
+            resEl.textContent = 'Configurações de IA salvas com sucesso no seu navegador!';
+            resEl.style.display = 'block';
+            setTimeout(() => { if (resEl) resEl.style.display = 'none'; }, 4000);
+        }
+    });
+
+    $('btnTestAiConnection')?.addEventListener('click', async () => {
+        const btn = $('btnTestAiConnection');
+        const resEl = $('aiTestResult');
+        const provider = $('aiProvider')?.value || 'none';
+        const apiKey = ($('aiApiKey')?.value || '').trim();
+        const orModel = getEffectiveOpenRouterModel();
+
+        if (provider === 'none') {
+            if (resEl) {
+                resEl.className = 'ai-test-result is-error';
+                resEl.textContent = 'Selecione um provedor de IA (Google Gemini, OpenRouter ou OpenAI) para testar.';
+                resEl.style.display = 'block';
+            }
+            return;
+        }
+
+        if (!apiKey) {
+            if (resEl) {
+                resEl.className = 'ai-test-result is-error';
+                resEl.textContent = 'Por favor, informe a Chave de API (API Key) antes de testar a conexão.';
+                resEl.style.display = 'block';
+            }
+            return;
+        }
+
+        btn.disabled = true;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span>Testando conexão...</span>';
+        if (resEl) resEl.style.display = 'none';
+
+        try {
+            const res = await chrome.runtime.sendMessage({
+                action: 'testAiConnection',
+                provider: provider,
+                apiKey: apiKey,
+                model: orModel
+            });
+
+            if (res?.success) {
+                if (resEl) {
+                    resEl.className = 'ai-test-result is-success';
+                    resEl.textContent = (res.message || 'Conexão validada com sucesso!') + ' (' + (res.provider || provider) + (res.model ? ' - ' + res.model : '') + ')';
+                    resEl.style.display = 'block';
+                }
+                await chrome.storage.local.set({
+                    aiProvider: provider,
+                    aiApiKey: apiKey,
+                    openrouterModel: orModel,
+                    openrouterCustomModel: ($('openrouterCustomModel')?.value || '').trim()
+                });
+            } else {
+                if (resEl) {
+                    resEl.className = 'ai-test-result is-error';
+                    resEl.textContent = 'Falha no teste: ' + (res?.error || 'Erro de autenticação ou limite.');
+                    resEl.style.display = 'block';
+                }
+            }
+        } catch (err) {
+            if (resEl) {
+                resEl.className = 'ai-test-result is-error';
+                resEl.textContent = 'Erro ao testar: ' + (err?.message || 'Erro inesperado.');
+                resEl.style.display = 'block';
+            }
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    });
+}
+
+function applyZoom(){document['body']['style']['zoom']=String(state['zoom']),$('zoomValue')['textContent']=Math['round'](state['zoom']*0x64)+'%';}let _openingFacebookLock = false;
+async function openFacebookHome() {
+    if (_openingFacebookLock) return;
+    _openingFacebookLock = true;
+    try {
+        let foundTab = null;
+        try {
+            const allTabs = await chrome.tabs.query({});
+            foundTab = allTabs.find(t => isFacebookTab(t) || (t.url && t.url.toLowerCase().includes('fb.com')));
+        } catch (_qErr) {
+            console.warn('Erro ao consultar abas:', _qErr);
+        }
+
+        if (foundTab && typeof foundTab.id === 'number') {
+            await chrome.tabs.update(foundTab.id, { active: true });
+            if (typeof foundTab.windowId === 'number') {
+                try {
+                    await chrome.windows.update(foundTab.windowId, { focused: true });
+                } catch (_wErr) {}
+            }
+        } else {
+            await chrome.tabs.create({ url: 'https://www.facebook.com/', active: true });
+        }
+
+        setTimeout(() => {
+            refreshFacebookTabs().catch(() => {});
+        }, 800);
+    } catch (err) {
+        console.warn('Falha ao abrir Facebook:', err);
+        try {
+            chrome.tabs.create({ url: 'https://www.facebook.com/', active: true });
+        } catch (_fallbackErr) {
+            window.open('https://www.facebook.com/', '_blank', 'noopener');
+        }
+    } finally {
+        setTimeout(() => {
+            _openingFacebookLock = false;
+        }, 600);
+    }
+}
+
+function registerToolFilters(){const _0x4047c7=Array['from'](document['querySelectorAll']('[data-tool-filter]')),_0x38f93c=Array['from'](document['querySelectorAll']('.tool-category[data-category]'));_0x4047c7['forEach'](_0x48d08a=>{_0x48d08a['addEventListener']('click',()=>{const _0x275467=_0x48d08a['dataset']['toolFilter'];_0x4047c7['forEach'](_0x3899d9=>{const _0x98e4bf=_0x3899d9===_0x48d08a;_0x3899d9['classList']['toggle']('is-active',_0x98e4bf),_0x3899d9['setAttribute']('aria-pressed',String(_0x98e4bf));}),_0x38f93c['forEach'](_0xbcfe3d=>{_0xbcfe3d['classList']['toggle']('is-active',_0xbcfe3d['dataset']['category']===_0x275467);});if(_0x275467==='facebook'){openFacebookHome();}});});}function registerRoutes(){document['querySelectorAll']('[data-route]')['forEach'](_0x612d00=>{_0x612d00['addEventListener']('click',()=>{const _0x3c2b78=_0x612d00['dataset']['route'];if(['extract','messages','post-groups','join-groups','templates','reports']['includes'](_0x3c2b78)&&!requireActiveLicense())return;if(_0x3c2b78==='extract'){navigateToView('extract',{'extractMode':_0x612d00['dataset']['extractMode']||'groups'});return;}if(_0x3c2b78==='messages'){navigateToView('messages',{'messageMode':_0x612d00['dataset']['messageMode']||'messages'});return;}navigateToView(_0x3c2b78);});});}function enforceFacebookOnlyUi(){document['querySelector']('[data-tool-filter=\x22whatsapp\x22]')?.['remove'](),document['querySelector']('[data-category=\x22whatsapp\x22]')?.['remove'](),document['querySelector']('.traffic-panel')?.['remove'](),document['querySelectorAll']('[id^=\x22view-whatsapp-\x22]')['forEach'](_0x3b951b=>_0x3b951b['remove']()),$('btnCommentsToLeads')?.['remove']();}function registerEvents(){registerAiEvents(),registerToolFilters(),registerRoutes(),registerTemplateEvents(),registerBackupEvents(),$('btnZoomOut')['addEventListener']('click',()=>{state['zoom']=Math['max'](0.7,Number((state['zoom']-0.1)['toFixed'](0x1))),applyZoom();}),$('btnZoomIn')['addEventListener']('click',()=>{state['zoom']=Math['min'](1.6,Number((state['zoom']+0.1)['toFixed'](0x1))),applyZoom();}),$('btnAcquireLicense')['addEventListener']('click',()=>openExternalUrl(CHANGELOG_URL)),$('btnManageLicenseDashboard')['addEventListener']('click',openLicenseConfig),$('btnAcquireLicenseConfig')['addEventListener']('click',()=>openExternalUrl(CONTACT_URL)),$('btnOpenLicenseView')?.['addEventListener']('click',()=>navigateToView('config')),$('btnRemoveLicenseDashboard')['addEventListener']('click',removeLicense),$('btnActivate')['addEventListener']('click',activateLicense),$('licenseKey')?.['addEventListener']('keydown',e=>{if(e.key==='Enter'){e.preventDefault();activateLicense();}}),$('btnRemoveLicense')['addEventListener']('click',removeLicense),$('volumeBoostRange')['addEventListener']('input',()=>{updateVolumeBoostLabel(),persistDraftField('volumeBoostRange');}),$('btnApplyVolumeBoost')['addEventListener']('click',()=>applyVolumeBoost(![])),$('btnResetVolumeBoost')['addEventListener']('click',()=>applyVolumeBoost(!![])),$('btnClearVolumeLog')['addEventListener']('click',()=>{$('volumeLogBody')['textContent']='';}),$('btnRightClickOn')?.['addEventListener']('click',()=>setRightClickUnlock(!![])),$('btnRightClickOff')?.['addEventListener']('click',()=>setRightClickUnlock(![])),$('btnClearRightClickLog')?.['addEventListener']('click',()=>{$('rightClickLogBody')['textContent']='';}),$('extractTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['extract']=getSelectedTabId('extractTabSelect','extract');}),$('postTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['post']=getSelectedTabId('postTabSelect','post');}),$('joinTabSelect')['addEventListener']('change',()=>{state['selectedTabIds']['join']=getSelectedTabId('joinTabSelect','join');}),$('btnExtractRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('extractLogBody','Janela')['catch'](_0x26b156=>{writeLog('extractLogBody','Janela','Erro',_0x26b156['message'],'error');});}),$('btnExtractNavigate')['addEventListener']('click',navigateExtractTab),$('btnOpenPostUrl')?.['addEventListener']('click',navigateToPostUrl),$('btnExtractSearch')['addEventListener']('click',runExtractSearch),$('btnExtractMembers')?.['addEventListener']('click',enrichExtractedGroupMembers),$('btnStopExtractMembers')?.['addEventListener']('click',stopExtractMembers),$('btnFilterByMembers')?.['addEventListener']('click',filterExtractItemsByMinimumMembers),$('btnExtractDeduplicate')['addEventListener']('click',deduplicateExtractItems),$('btnExtractSave')['addEventListener']('click',saveExtractItemsJson),$('btnExtractClear')['addEventListener']('click',clearExtractItems),$('btnHeaderClearExtract')?.['addEventListener']('click',clearExtractItems),$('btnClearExtractLog')['addEventListener']('click',()=>{$('extractLogBody')['textContent']='';}),$('btnSelectMedia')['addEventListener']('click',()=>$('mediaInput')['click']()),$('mediaUploadArea')['addEventListener']('click',()=>$('mediaInput')['click']()),$('mediaUploadArea')['addEventListener']('dragover',_0x3c8eb3=>{_0x3c8eb3['preventDefault'](),$('mediaUploadArea')['style']['borderColor']='rgba(59,\x20130,\x20246,\x200.72)';}),$('mediaUploadArea')['addEventListener']('dragleave',()=>{$('mediaUploadArea')['style']['borderColor']='#bfdbfe';}),$('mediaUploadArea')['addEventListener']('drop',_0x5aa90a=>{_0x5aa90a['preventDefault'](),$('mediaUploadArea')['style']['borderColor']='#bfdbfe',handleMediaFiles(Array['from'](_0x5aa90a['dataTransfer']['files']));}),$('mediaInput')['addEventListener']('change',_0xd9cedc=>{handleMediaFiles(Array['from'](_0xd9cedc['target']['files'])),_0xd9cedc['target']['value']='';}),$('btnAddMessageLine')['addEventListener']('click',()=>{const _0x3f10c7=$('postMessages');_0x3f10c7['value']=_0x3f10c7['value']['trim']()?_0x3f10c7['value']['trim']()+'\x0a---\x0a':'',_0x3f10c7['focus'](),updateMessageCount(),persistDraftField('postMessages');}),$('btnResetPosting')?.['addEventListener']('click',resetPostingForm),$('btnPostRefreshTabs')?.['addEventListener']('click',()=>{refreshAndLogTabs('postLogBody','Janela')['catch'](_0x2c8e14=>{writeLog('postLogBody','Janela','Erro',_0x2c8e14['message'],'error');});}),$('btnUseJoinedGroups')?.['addEventListener']('click',loadJoinedGroupsIntoPostList);$('btnUseJoinedGroupsAlt')?.['addEventListener']('click',loadJoinedGroupsIntoPostList);$('btnImportGroupsJson')?.['addEventListener']('click',()=>$('fileGroupsInput')['click']());$('btnExportPostGroups')?.['addEventListener']('click',exportGroupList);$('btnClearPostGroups')?.['addEventListener']('click',clearPostGroupsList);$('btnClearPostGroupsTable')?.['addEventListener']('click',clearPostGroupsList);$('groupsList')?.['addEventListener']('input',()=>{updatePostGroupsData(parseList($('groupsList')['value']));});['groupsList','joinGroupsList'].forEach(id=>{const el=$(id);if(!el)return;el.addEventListener('dragover',e=>e.preventDefault());el.addEventListener('drop',async e=>{e.preventDefault();const f=e.dataTransfer?.files?.[0];if(f){if(id==='groupsList')await importGroupFile(f);else if(id==='joinGroupsList')await importJoinGroupFile(f);}});}),$('fileGroupsInput')['addEventListener']('change',async _0x2cee9e=>{const _0x535290=_0x2cee9e['target']['files'][0x0];_0x535290&&await importGroupFile(_0x535290),_0x2cee9e['target']['value']='';}),$('btnStartPost')['addEventListener']('click',startPosting),$('btnStopPost')['addEventListener']('click',async()=>{$('progressContainer')['style']['display']='block',$('progressText')['textContent']='Pedido\x20de\x20parada\x20recebido.\x20Finalizando\x20a\x20etapa\x20atual...',$('btnStopPost')['querySelector']('strong')['textContent']='Parando...',$('btnStopPost')['querySelector']('span:last-child')['textContent']='Aguarde\x20a\x20etapa\x20atual\x20encerrar.',$('btnStopPost')['disabled']=!![];const _0x2b17f3=await chrome['runtime']['sendMessage']({'action':'stopFacebookGroupQueue'})['catch'](_0x55ba0c=>({'success':![],'error':_0x55ba0c?.['message']||'Falha\x20ao\x20parar.'}));_0x2b17f3?.['success']?(renderFacebookGroupQueueStatus(_0x2b17f3['queue']),loadGroupReports()['catch'](()=>{}),writeLog('postLogBody','Postar','Parado','Fila\x20pausada.\x20O\x20proximo\x20grupo\x20ficou\x20salvo.','warn')):($('btnStopPost')['disabled']=![],writeLog('postLogBody','Postar','Erro',_0x2b17f3?.['error']||'Falha\x20ao\x20parar\x20a\x20fila.','error'));}),$('btnManualNavigate')?.['addEventListener']('click',manualNavigateToFirstGroup),$('btnManualOpenComposer')?.['addEventListener']('click',manualOpenComposer),$('btnManualPasteText')?.['addEventListener']('click',manualPasteDraft),$('btnManualPublish')?.['addEventListener']('click',manualPublishDraft),$('btnClearPostLog')['addEventListener']('click',()=>{$('postLogBody')['textContent']='';}),$('btnJoinRefreshTabs')['addEventListener']('click',()=>{refreshAndLogTabs('joinLogBody','Janela')['catch'](_0x383b8d=>{writeLog('joinLogBody','Janela','Erro',_0x383b8d['message'],'error');});}),$('btnFetchMyFriends')?.['addEventListener']('click',loadFriendsIntoProfileList),$('messagesTabSelect')?.['addEventListener']('change',()=>{state['selectedTabIds']['messages']=getSelectedTabId('messagesTabSelect','messages');}),$('btnJoinUseExtracted')['addEventListener']('click',()=>{useExtractedGroupsForJoin()['catch'](_0x58e39d=>{writeLog('joinLogBody','Lista','Erro',_0x58e39d['message'],'error');});}),$('btnImportJoinGroupsJson')?.['addEventListener']('click',()=>$('fileJoinGroupsInput')['click']()),$('fileJoinGroupsInput')['addEventListener']('change',async _0x4924ef=>{const _0x137ad7=_0x4924ef['target']['files'][0x0];_0x137ad7&&await importJoinGroupFile(_0x137ad7),_0x4924ef['target']['value']='';}),
     $('joinDailyLimitEnabled')?.addEventListener('change', () => {
         syncJoinDailyLimitFields();
         persistDraftField('joinDailyLimitEnabled');
@@ -2197,6 +2578,7 @@ $('btnStartJoinGroups')['addEventListener']('click',startJoinGroups),$('btnStopJ
     try { registerEvents(); } catch (_e) {}
     try { bindDraftPersistence(); } catch (_e) {}
     try { loadDraftFields(); } catch (_e) {}
+    try { loadAiSettings().catch(() => {}); } catch (_e) {}
     try { renderPostGroupsTable(); } catch (_e) {}
     try { renderProfilesTable(); } catch (_e) {}
     try { renderJoinGroupsTable(); } catch (_e) {}
