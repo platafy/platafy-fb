@@ -5,18 +5,33 @@ $siteLogo = getSetting('site_logo', '');
 $siteFavicon = getSetting('site_favicon', '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user = $_POST['username'] ?? '';
-    $pass = $_POST['password'] ?? '';
+    $user = trim($_POST['username'] ?? '');
+    $pass = trim($_POST['password'] ?? '');
     
     if (loginAdmin($user, $pass)) {
         header('Location: /dashboard.php');
         exit;
     }
-    $error = 'Usuário ou senha incorretos.';
+
+    // Tentar autenticação de Parceiro White Label
+    $partnerAuth = loginPartner($user, $pass);
+    if ($partnerAuth['success']) {
+        header('Location: /parceiro/dashboard.php');
+        exit;
+    } elseif (!empty($partnerAuth['message']) && $partnerAuth['message'] !== 'Usuário ou senha incorretos.') {
+        $error = $partnerAuth['message'];
+    } else {
+        $error = 'Usuário ou senha incorretos.';
+    }
 }
 
 if (isAdminLogged()) {
     header('Location: /dashboard.php');
+    exit;
+}
+
+if (isPartnerLogged()) {
+    header('Location: /parceiro/dashboard.php');
     exit;
 }
 ?>

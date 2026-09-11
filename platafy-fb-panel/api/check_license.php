@@ -72,6 +72,17 @@ try {
         echo json_encode(['status' => false, 'active' => false, 'code' => 'INACTIVE', 'message' => 'Sua licença está inativa.']);
         exit;
     }
+
+    // Se pertence a um parceiro, verificar se o parceiro está ativo
+    if (!empty($license['partner_id'])) {
+        $partnerStmt = $pdo->prepare("SELECT status, expires_at FROM partners WHERE id = ?");
+        $partnerStmt->execute([$license['partner_id']]);
+        $p = $partnerStmt->fetch();
+        if (!$p || $p['status'] !== 'active' || (!empty($p['expires_at']) && strtotime($p['expires_at']) < time())) {
+            echo json_encode(['status' => false, 'active' => false, 'code' => 'PARTNER_SUSPENDED', 'message' => 'Esta licença foi temporariamente suspensa pelo parceiro.']);
+            exit;
+        }
+    }
     
     // Verificar conflito de HWID (se a licença foi ativada em outro dispositivo)
     if (!empty($license['hwid']) && !empty($hwid) && $license['hwid'] !== $hwid) {

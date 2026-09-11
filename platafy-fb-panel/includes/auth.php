@@ -114,3 +114,86 @@ function logoutAdmin() {
     @session_destroy();
 }
 
+/**
+ * Autenticação de Parceiro White Label
+ */
+function loginPartner($username, $password) {
+    try {
+        require_once __DIR__ . '/db.php';
+        $pdo = db();
+        $stmt = $pdo->prepare("SELECT * FROM partners WHERE username = ?");
+        $stmt->execute([$username]);
+        $partner = $stmt->fetch();
+        if ($partner && password_verify($password, $partner['password_hash'])) {
+            if ($partner['status'] !== 'active') {
+                return ['success' => false, 'message' => 'Conta de parceiro inativa ou suspensa. Contate o suporte.'];
+            }
+            if (!empty($partner['expires_at']) && strtotime($partner['expires_at']) < time()) {
+                return ['success' => false, 'message' => 'Sua assinatura White Label expirou. Renove seu plano.'];
+            }
+            startSecureSession();
+            $_SESSION['partner_logged'] = true;
+            $_SESSION['partner_id'] = (int)$partner['id'];
+            $_SESSION['partner_user'] = $partner['username'];
+            $_SESSION['partner_name'] = $partner['partner_name'];
+            $_SESSION['partner_brand'] = $partner['brand_name'];
+            $_SESSION['partner_logo'] = $partner['brand_logo_url'] ?? '';
+            $_SESSION['login_time'] = time();
+            $_SESSION['last_activity'] = time();
+            return ['success' => true];
+        }
+    } catch (Exception $e) {
+        error_log("[PLATAFY Partner Auth] Error: " . $e->getMessage());
+    }
+    return ['success' => false, 'message' => 'Usuário ou senha incorretos.'];
+}
+
+function isPartnerLogged() {
+    startSecureSession();
+    if (!isset($_SESSION['partner_logged']) || $_SESSION['partner_logged'] !== true || empty($_SESSION['partner_id'])) {
+        return false;
+    }
+    $lastActivity = $_SESSION['last_activity'] ?? $_SESSION['login_time'] ?? 0;
+    if ($lastActivity > 0 && (time() - $lastActivity) > 28800) {
+        logoutPartner();
+        return false;
+    }
+    $_SESSION['last_activity'] = time();
+    return true;
+}
+
+function getPartnerSession() {
+    if (!isPartnerLogged()) return null;
+    return [
+        'id' => $_SESSION['partner_id'],
+        'username' => $_SESSION['partner_user'] ?? '',
+        'name' => $_SESSION['partner_name'] ?? '',
+        'brand' => $_SESSION['partner_brand'] ?? '',
+        'logo' => $_SESSION['partner_logo'] ?? '',
+    ];
+}
+
+function requirePartner() {
+    if (!isPartnerLogged()) {
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+        $isApi = (strpos($uri, '/api') !== false) || (strpos($accept, 'application/json') !== false);
+        if ($isApi) {
+            http_response_code(401);
+            header('Content-Type: application/json');
+            die(json_encode([
+                'error' => 'Não autorizado',
+                'message' => 'Sessão de parceiro expirada ou inválida.',
+                'auth_required' => true
+            ]));
+        }
+        header('Location: /parceiro/index.php');
+        exit;
+    }
+}
+
+function logoutPartner() {
+    startSecureSession();
+    unset($_SESSION['partner_logged'], $_SESSION['partner_id'], $_SESSION['partner_user'], $_SESSION['partner_name'], $_SESSION['partner_brand'], $_SESSION['partner_logo']);
+}
+

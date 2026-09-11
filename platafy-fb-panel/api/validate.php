@@ -85,6 +85,52 @@ try {
     // Log
     logActivity($license['id'], 'validated', "Licença validada | Device: {$deviceId} | IP: {$clientIp}", $clientIp);
 
+    // Verificar se a licença pertence a um Parceiro White Label
+    $brandData = [
+        'is_white_label'   => false,
+        'brand_name'       => 'PLATAFY FB',
+        'brand_logo'       => null,
+        'support_whatsapp' => '5521967659802',
+        'support_url'      => 'https://api.whatsapp.com/send?phone=5521967659802'
+    ];
+
+    if (!empty($license['partner_id'])) {
+        try {
+            $stmtPartner = $pdo->prepare("SELECT * FROM partners WHERE id = ?");
+            $stmtPartner->execute([$license['partner_id']]);
+            $partner = $stmtPartner->fetch();
+
+            if ($partner) {
+                if ($partner['status'] !== 'active') {
+                    echo json_encode([
+                        'valid' => false,
+                        'message' => 'Esta licença foi temporariamente suspensa pelo parceiro responsável.'
+                    ]);
+                    exit;
+                }
+
+                if (!empty($partner['expires_at']) && strtotime($partner['expires_at']) < time()) {
+                    echo json_encode([
+                        'valid' => false,
+                        'message' => 'A assinatura do parceiro expirou. Entre em contato com o suporte.'
+                    ]);
+                    exit;
+                }
+
+                $brandData = [
+                    'is_white_label'   => true,
+                    'brand_name'       => $partner['brand_name'] ?: 'PLATAFY FB',
+                    'brand_logo'       => $partner['brand_logo_url'] ?: null,
+                    'support_whatsapp' => $partner['support_whatsapp'] ?: null,
+                    'support_url'      => $partner['support_url'] ?: ($partner['support_whatsapp'] ? 'https://api.whatsapp.com/send?phone=' . preg_replace('/\D/', '', $partner['support_whatsapp']) : null)
+                ];
+            }
+        } catch (Exception $pe) {
+            // Em caso de falha de consulta ao parceiro, não derruba a validação
+            error_log("[PLATAFY Validate] Partner check error: " . $pe->getMessage());
+        }
+    }
+
     // Mapear plan_type do banco para o validity_period que a extensão espera
     $validityPeriod = mapPlanToValidityPeriod($license['plan_type']);
     $validityDays   = calculateValidityDays($license['expires_at']);
@@ -95,7 +141,8 @@ try {
         'customer_name'   => $license['client_name'] ?? '',
         'validity_period' => $validityPeriod,
         'validity_days'   => $validityDays,
-        'expires_at'      => $license['expires_at'] ?? ''
+        'expires_at'      => $license['expires_at'] ?? '',
+        'brand'           => $brandData
     ]);
 
 } catch (Exception $e) {

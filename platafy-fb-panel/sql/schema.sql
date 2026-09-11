@@ -15,8 +15,29 @@ INSERT INTO admins (username, password_hash) VALUES
 ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
 ON DUPLICATE KEY UPDATE username = username;
 
+CREATE TABLE IF NOT EXISTS partners (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    partner_name VARCHAR(100) NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    brand_name VARCHAR(100) NOT NULL,
+    brand_logo_url TEXT DEFAULT NULL,
+    support_whatsapp VARCHAR(30) DEFAULT NULL,
+    support_url TEXT DEFAULT NULL,
+    plan_name VARCHAR(100) DEFAULT 'White Label Pro',
+    max_licenses INT DEFAULT 50,
+    status ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
+    expires_at TIMESTAMP NULL DEFAULT NULL,
+    notes TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_partner_username (username),
+    INDEX idx_partner_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS licenses (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    partner_id INT DEFAULT NULL,
     license_key VARCHAR(19) UNIQUE NOT NULL,
     client_name VARCHAR(100) DEFAULT NULL,
     client_email VARCHAR(150) DEFAULT NULL,
@@ -34,8 +55,10 @@ CREATE TABLE IF NOT EXISTS licenses (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_license_key (license_key),
+    INDEX idx_partner_id (partner_id),
     INDEX idx_status (status),
-    INDEX idx_mp_subscription (mp_subscription_id)
+    INDEX idx_mp_subscription (mp_subscription_id),
+    FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS payments (

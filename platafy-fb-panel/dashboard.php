@@ -49,6 +49,7 @@ $siteFavicon = getSetting('site_favicon', '');
         <div class="navbar-links">
             <a href="#" class="nav-link active" data-view="dashboard">Dashboard</a>
             <a href="#" class="nav-link" data-view="licenses">Licenças</a>
+            <a href="#" class="nav-link" data-view="partners">Parceiros White Label</a>
             <a href="#" class="nav-link" data-view="updates">Atualizações & Backups</a>
             <a href="#" class="nav-link" data-view="settings">Configurações</a>
         </div>
@@ -609,6 +610,105 @@ $siteFavicon = getSetting('site_favicon', '');
         </div>
     </main>
 
+    <!-- PARTNERS VIEW -->
+    <main class="main-content" id="view-partners" style="display:none;">
+        <div class="settings-header">
+            <div class="settings-title-area">
+                <h1>
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--neon);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    Parceiros White Label
+                </h1>
+                <p>Gerencie agências e revendedores parceiros com marcas personalizadas na extensão e cotas de licenças.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-primary" onclick="openPartnerModal()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Novo Parceiro
+                </button>
+            </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-partner-total">0</span>
+                    <span class="stat-label">Total de Parceiros</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-partner-active">0</span>
+                    <span class="stat-label">Parceiros Ativos</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon gold">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-partner-licenses">0</span>
+                    <span class="stat-label">Licenças Distribuídas</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon red">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="stat-partner-quota">0</span>
+                    <span class="stat-label">Cota Total Contratada</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTROS & BUSCA -->
+        <div class="filters-bar" style="margin-top:20px;">
+            <div class="search-box">
+                <input type="text" id="partner-search-input" placeholder="Buscar por marca, parceiro ou usuário..." oninput="debouncePartnerSearch()">
+            </div>
+            <select id="partner-filter-status" class="filter-select" onchange="loadPartners(1)">
+                <option value="">Todos os Status</option>
+                <option value="active">Ativos</option>
+                <option value="suspended">Suspensos</option>
+                <option value="inactive">Inativos</option>
+            </select>
+        </div>
+
+        <!-- TABELA DE PARCEIROS -->
+        <div class="table-container" style="margin-top:15px;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Marca / Logo</th>
+                        <th>Parceiro (Agência)</th>
+                        <th>Login (Usuário)</th>
+                        <th>Plano</th>
+                        <th>Cota / Consumo</th>
+                        <th>Status</th>
+                        <th>Validade</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="partners-tbody">
+                    <tr><td colspan="8" style="text-align:center; padding:30px; color:var(--muted);">Carregando parceiros...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGINAÇÃO -->
+        <div class="pagination" id="partner-pagination" style="display:none;"></div>
+    </main>
+
 
     <!-- CREATE LICENSE MODAL -->
     <div class="modal-overlay" id="modal-create" style="display:none;">
@@ -662,6 +762,13 @@ $siteFavicon = getSetting('site_favicon', '');
                         <option value="vitalicio">Vitalício</option>
                     </select>
                 </div>
+
+                <div class="form-group-custom">
+                    <label>Vincular a Parceiro White Label (Opcional)</label>
+                    <select id="create-partner" class="filter-select" style="width:100%; padding:12px 16px;">
+                        <option value="">Nenhum (PLATAFY FB Direto)</option>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-outline" onclick="closeModal('modal-create')">Cancelar</button>
@@ -694,6 +801,133 @@ $siteFavicon = getSetting('site_favicon', '');
                     <div id="wa-btn-container"></div>
                 </div>
                 <p id="key-expiry" style="color:var(--muted); font-size:12px; margin-top:15px;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PARTNER MODAL (CREATE / EDIT) -->
+    <div class="modal-overlay" id="modal-partner" style="display:none;">
+        <div class="modal-card" style="max-width:580px;">
+            <div class="modal-header">
+                <h3 style="display:flex; align-items:center; gap:8px;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--neon);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                    <span id="partner-modal-title">Novo Parceiro White Label</span>
+                </h3>
+                <button class="modal-close" onclick="closeModal('modal-partner')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="partner-id" value="">
+
+                <div class="form-group-custom">
+                    <label>Nome do Parceiro / Agência *</label>
+                    <div class="input-relative">
+                        <span class="field-icon-left">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </span>
+                        <input type="text" id="partner-name" placeholder="Ex: Agência Alfa Marketing">
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div class="form-group-custom">
+                        <label>Usuário de Login *</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left" style="font-size:14px; font-weight:700;">@</span>
+                            <input type="text" id="partner-username" placeholder="ex: agenciaalfa">
+                        </div>
+                    </div>
+                    <div class="form-group-custom" id="group-partner-password">
+                        <label>Senha de Acesso *</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left">🔒</span>
+                            <input type="password" id="partner-password" placeholder="Senha do painel">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div class="form-group-custom">
+                        <label>Nome da Marca (Na Extensão) *</label>
+                        <input type="text" id="partner-brand-name" placeholder="Ex: Alfa FB Pro">
+                    </div>
+                    <div class="form-group-custom">
+                        <label>Cota de Licenças *</label>
+                        <input type="number" id="partner-max-licenses" value="50" min="1" max="10000">
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label>URL da Logomarca (PNG/SVG transparente)</label>
+                    <input type="url" id="partner-logo-url" placeholder="https://seusite.com/logo.png">
+                    <small style="color:var(--muted); font-size:11px; margin-top:3px; display:block;">Será exibida no cabeçalho da extensão e no painel do parceiro.</small>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div class="form-group-custom">
+                        <label>WhatsApp de Suporte do Parceiro</label>
+                        <input type="text" id="partner-whatsapp" placeholder="Ex: 5511999999999" oninput="formatPhoneInput(this)">
+                    </div>
+                    <div class="form-group-custom">
+                        <label>Link de Suporte / Site</label>
+                        <input type="url" id="partner-url" placeholder="https://wa.me/5511999999999">
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;">
+                    <div class="form-group-custom">
+                        <label>Nome do Plano</label>
+                        <input type="text" id="partner-plan-name" value="White Label Pro">
+                    </div>
+                    <div class="form-group-custom">
+                        <label>Validade da Parceria</label>
+                        <input type="date" id="partner-expires-at">
+                    </div>
+                    <div class="form-group-custom">
+                        <label>Status</label>
+                        <select id="partner-status" class="filter-select" style="width:100%; padding:10px;">
+                            <option value="active">Ativo</option>
+                            <option value="suspended">Suspenso</option>
+                            <option value="inactive">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label>Notas Internas</label>
+                    <textarea id="partner-notes" rows="2" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:8px 12px; font-family:inherit;" placeholder="Anotações internas sobre o contrato do parceiro..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" onclick="closeModal('modal-partner')">Cancelar</button>
+                <button class="btn-primary" onclick="savePartner()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Salvar Parceiro
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESET PARTNER PASSWORD MODAL -->
+    <div class="modal-overlay" id="modal-partner-pass" style="display:none;">
+        <div class="modal-card" style="max-width:440px;">
+            <div class="modal-header">
+                <h3 style="display:flex; align-items:center; gap:8px;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--neon);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    Redefinir Senha do Parceiro
+                </h3>
+                <button class="modal-close" onclick="closeModal('modal-partner-pass')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="partner-pass-id" value="">
+                <p id="partner-pass-name" style="color:var(--muted); font-size:13px; margin-bottom:14px;"></p>
+                <div class="form-group-custom">
+                    <label>Nova Senha *</label>
+                    <input type="password" id="partner-pass-new" placeholder="Digite a nova senha para o parceiro" style="width:100%; padding:10px 14px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; color:#fff;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" onclick="closeModal('modal-partner-pass')">Cancelar</button>
+                <button class="btn-primary" onclick="confirmResetPartnerPassword()">Salvar Nova Senha</button>
             </div>
         </div>
     </div>

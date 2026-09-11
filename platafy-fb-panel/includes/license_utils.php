@@ -22,7 +22,7 @@ function calculateExpiryDate($planType) {
     return date('Y-m-d H:i:s', strtotime('+30 days'));
 }
 
-function generateWhatsAppLink($phone, $clientName, $licenseKey, $planType, $expiresAt = null) {
+function generateWhatsAppLink($phone, $clientName, $licenseKey, $planType, $expiresAt = null, $brandName = null) {
     if (empty($phone)) return null;
     
     // Remover caracteres não numéricos
@@ -39,21 +39,22 @@ function generateWhatsAppLink($phone, $clientName, $licenseKey, $planType, $expi
     $formattedExpiry = $expiresAt ? date('d/m/Y H:i', strtotime($expiresAt)) : 'Vitalício';
     
     $name = !empty($clientName) ? $clientName : 'Cliente';
+    $appBrand = !empty($brandName) ? $brandName : 'PLATAFY FB';
     
     $message = "Olá, *{$name}*! 👋\n\n";
-    $message .= "Sua licença do *PLATAFY FB* foi gerada com sucesso! 🎉\n\n";
+    $message .= "Sua licença do *{$appBrand}* foi gerada com sucesso! 🎉\n\n";
     $message .= "🔑 *Chave de Ativação:* `{$licenseKey}`\n";
     $message .= "📦 *Plano:* {$planName}\n";
     $message .= "📅 *Validade:* {$formattedExpiry}\n\n";
     $message .= "*Como Ativar:*\n";
-    $message .= "1. Abra a Extensão PLATAFY FB no Google Chrome\n";
+    $message .= "1. Abra a Extensão no Google Chrome\n";
     $message .= "2. Cole a chave de ativação quando solicitado\n\n";
     $message .= "Em caso de dúvidas, responda esta mensagem. Bons negócios! 🚀";
     
     return "https://api.whatsapp.com/send?phone={$cleanPhone}&text=" . urlencode($message);
 }
 
-function createLicense($clientName, $clientEmail, $planType, $mpSubscriptionId = null, $clientPhone = null) {
+function createLicense($clientName, $clientEmail, $planType, $mpSubscriptionId = null, $clientPhone = null, $partnerId = null, $brandName = null) {
     $pdo = db();
     $key = generateLicenseKey();
     
@@ -69,19 +70,21 @@ function createLicense($clientName, $clientEmail, $planType, $mpSubscriptionId =
     $expiresAt = calculateExpiryDate($planType);
     
     $stmt = $pdo->prepare("
-        INSERT INTO licenses (license_key, client_name, client_email, client_phone, plan_type, status, expires_at, mp_subscription_id, activated_at)
-        VALUES (?, ?, ?, ?, ?, 'active', ?, ?, NOW())
+        INSERT INTO licenses (partner_id, license_key, client_name, client_email, client_phone, plan_type, status, expires_at, mp_subscription_id, activated_at)
+        VALUES (?, ?, ?, ?, ?, ?, 'active', ?, ?, NOW())
     ");
-    $stmt->execute([$key, $clientName, $clientEmail, $clientPhone, $planType, $expiresAt, $mpSubscriptionId]);
+    $stmt->execute([$partnerId ?: null, $key, $clientName, $clientEmail, $clientPhone, $planType, $expiresAt, $mpSubscriptionId]);
     
     $licenseId = $pdo->lastInsertId();
     
-    logActivity($licenseId, 'created', "Licença criada: {$key} | Plano: {$planType}" . ($clientPhone ? " | WhatsApp: {$clientPhone}" : ""));
+    $partnerLog = $partnerId ? " | Parceiro ID: {$partnerId}" : "";
+    logActivity($licenseId, 'created', "Licença criada: {$key} | Plano: {$planType}" . ($clientPhone ? " | WhatsApp: {$clientPhone}" : "") . $partnerLog);
     
-    $waLink = generateWhatsAppLink($clientPhone, $clientName, $key, $planType, $expiresAt);
+    $waLink = generateWhatsAppLink($clientPhone, $clientName, $key, $planType, $expiresAt, $brandName);
     
     return [
         'id' => $licenseId,
+        'partner_id' => $partnerId,
         'key' => $key,
         'expires_at' => $expiresAt,
         'plan_type' => $planType,

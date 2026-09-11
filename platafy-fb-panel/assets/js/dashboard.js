@@ -16,6 +16,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
         document.querySelectorAll('.main-content').forEach(v => v.style.display = 'none');
         document.getElementById('view-' + view).style.display = 'block';
         if (view === 'licenses') loadLicenses();
+        if (view === 'partners') loadPartners();
         if (view === 'updates') loadUpdatesInfo();
         if (view === 'settings') loadSettingsInfo();
     });
@@ -221,8 +222,10 @@ async function loadLicenses(page = 1) {
                             📋 Copiar
                         </button>
                     </div>
+                <td>
+                    <strong style="color:var(--text);">${l.client_name || '<span style="color:var(--muted)">—</span>'}</strong>
+                    ${l.partner_brand ? `<span class="badge" style="background:rgba(255,170,0,0.15); color:var(--neon); font-size:10px; margin-left:6px; font-weight:600;" title="Parceiro: ${l.partner_name || ''}">WL: ${escapeHtml(l.partner_brand)}</span>` : ''}
                 </td>
-                <td><strong style="color:var(--text);">${l.client_name || '<span style="color:var(--muted)">—</span>'}</strong></td>
                 <td>
                     ${l.client_phone ? `
                         <div style="display:flex; align-items:center; gap:8px;">
@@ -287,6 +290,7 @@ function openCreateModal() {
     document.getElementById('create-email').value = '';
     if (document.getElementById('create-phone')) document.getElementById('create-phone').value = '';
     document.getElementById('create-plan').value = 'manual';
+    loadPartnerSelectOptions();
 }
 
 async function createLicense() {
@@ -294,12 +298,13 @@ async function createLicense() {
     const email = document.getElementById('create-email').value.trim();
     const phone = document.getElementById('create-phone')?.value.trim() || '';
     const plan = document.getElementById('create-plan').value;
+    const partnerId = document.getElementById('create-partner')?.value || null;
     
     try {
         const data = await apiFetch('api/admin/licenses.php?action=create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ client_name: name, client_email: email, client_phone: phone, plan_type: plan })
+            body: JSON.stringify({ client_name: name, client_email: email, client_phone: phone, plan_type: plan, partner_id: partnerId })
         });
         
         if (data.success) {
@@ -1038,5 +1043,431 @@ function setupFaviconDropzone() {
     const btnUpload = document.getElementById('btnUploadFavicon');
     if (btnUpload) {
         btnUpload.addEventListener('click', handleFaviconUpload);
+    }
+}
+
+// ============================================================
+// WHITE LABEL PARTNERS MANAGEMENT
+// ============================================================
+let partnerCurrentPage = 1;
+let partnerSearchTimeout = null;
+let cachedPartnersList = [];
+
+function debouncePartnerSearch() {
+    clearTimeout(partnerSearchTimeout);
+    partnerSearchTimeout = setTimeout(() => {
+        loadPartners(1);
+    }, 300);
+}
+
+async function loadPartners(page = 1) {
+    partnerCurrentPage = page;
+    const search = document.getElementById('partner-search-input')?.value || '';
+    const status = document.getElementById('partner-filter-status')?.value || '';
+
+    try {
+        const params = new URLSearchParams({ action: 'list', search, status, page });
+        const data = await apiFetch('api/admin/partners.php?' + params);
+
+        if (!data.success) {
+            showToast('Erro ao carregar parceiros: ' + (data.error || 'Falha de conexão'), 'error');
+            return;
+        }
+
+        cachedPartnersList = data.partners || [];
+
+        let totalLicensesCount = 0;
+        let totalQuotaCount = 0;
+        let activePartnersCount = 0;
+
+        cachedPartnersList.forEach(p => {
+            totalLicensesCount += parseInt(p.total_licenses || 0);
+            totalQuotaCount += parseInt(p.max_licenses || 0);
+            if (p.status === 'active' && !p.is_expired) activePartnersCount++;
+        });
+
+        const elTotal = document.getElementById('stat-partner-total');
+        if (elTotal) elTotal.textContent = data.total || 0;
+        const elActive = document.getElementById('stat-partner-active');
+        if (elActive) elActive.textContent = activePartnersCount;
+        const elLic = document.getElementById('stat-partner-licenses');
+        if (elLic) elLic.textContent = totalLicensesCount;
+        const elQuota = document.getElementById('stat-partner-quota');
+        if (elQuota) elQuota.textContent = totalQuotaCount;
+
+        const tbody = document.getElementById('partners-tbody');
+        if (!tbody) return;
+
+        if (!data.partners || data.partners.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="empty-state" style="text-align:center; padding:30px; color:var(--muted);">Nenhum parceiro cadastrado ainda. Clique em "Novo Parceiro" acima.</td></tr>';
+            const pagEl = document.getElementById('partner-pagination');
+            if (pagEl) pagEl.style.display = 'none';
+            return;
+        }
+
+        tbody.innerHTML = data.partners.map(p => {
+            const used = parseInt(p.total_licenses || 0);
+            const maxL = parseInt(p.max_licenses || 50);
+            const usagePercent = Math.min(100, Math.round((used / maxL) * 100));
+            const isNearFull = usagePercent >= 90;
+
+            const statusClass = p.is_expired ? 'expired' : p.status;
+            const statusLabel = p.is_expired ? 'Expirado' : (p.status === 'active' ? 'Ativo' : (p.status === 'suspended' ? 'Suspenso' : 'Inativo'));
+
+            const logoHtml = p.brand_logo_url 
+                ? `<img src="${escapeHtml(p.brand_logo_url)}" alt="${escapeHtml(p.brand_name)}" style="max-height:28px; max-width:80px; vertical-align:middle; border-radius:4px; margin-right:8px; object-fit:contain;">` 
+                : `<span style="display:inline-flex; width:28px; height:28px; background:rgba(255,170,0,0.15); border-radius:6px; align-items:center; justify-content:center; color:var(--neon); font-size:12px; font-weight:700; margin-right:8px;">WL</span>`;
+
+            return `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center;">
+                            ${logoHtml}
+                            <strong style="color:var(--text); font-size:13px;">${escapeHtml(p.brand_name)}</strong>
+                        </div>
+                    </td>
+                    <td>
+                        <strong style="color:var(--text);">${escapeHtml(p.partner_name)}</strong>
+                        ${p.support_whatsapp ? `<br><small style="color:var(--muted); font-size:11px;">📱 ${escapeHtml(p.support_whatsapp)}</small>` : ''}
+                    </td>
+                    <td><code style="color:var(--neon); background:rgba(255,170,0,0.08); padding:2px 6px; border-radius:4px;">@${escapeHtml(p.username)}</code></td>
+                    <td><span style="font-weight:600; color:var(--muted);">${escapeHtml(p.plan_name || 'White Label Pro')}</span></td>
+                    <td style="min-width:140px;">
+                        <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                            <span>${used} de ${maxL}</span>
+                            <span style="color:${isNearFull ? 'var(--danger, #ef4444)' : 'var(--neon)'}">${usagePercent}%</span>
+                        </div>
+                        <div style="height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;">
+                            <div style="height:100%; width:${usagePercent}%; background:${isNearFull ? '#ef4444' : 'var(--neon)'}; border-radius:3px;"></div>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-${statusClass}">${statusLabel}</span></td>
+                    <td>${p.expires_at ? formatDate(p.expires_at) : '∞ Sem expiração'}</td>
+                    <td style="text-align:right;">
+                        <div class="action-btn-group" style="justify-content:flex-end;">
+                            <button class="btn-sm" onclick="filterLicensesByPartner(${p.id}, '${escapeHtml(p.brand_name)}')" title="Ver Licenças deste Parceiro">
+                                Licenças (${used})
+                            </button>
+                            <button class="btn-sm" onclick="openEditPartnerModal(${p.id})" title="Editar Parceiro">
+                                ✏️
+                            </button>
+                            <button class="btn-sm" onclick="openResetPartnerPassModal(${p.id}, '${escapeHtml(p.partner_name)}')" title="Redefinir Senha">
+                                🔑
+                            </button>
+                            ${p.status === 'active' ? `
+                                <button class="btn-sm danger" onclick="togglePartnerStatus(${p.id}, 'suspended')" title="Suspender Parceiro">
+                                    Suspender
+                                </button>
+                            ` : `
+                                <button class="btn-sm success" onclick="togglePartnerStatus(${p.id}, 'active')" title="Ativar Parceiro">
+                                    Ativar
+                                </button>
+                            `}
+                            <button class="btn-sm danger" onclick="deletePartner(${p.id})" title="Excluir Parceiro">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        renderPartnerPagination(data.page, data.pages);
+    } catch (err) {
+        console.error('loadPartners error:', err);
+    }
+}
+
+function renderPartnerPagination(current, total) {
+    const container = document.getElementById('partner-pagination');
+    if (!container) return;
+    if (total <= 1) { container.style.display = 'none'; return; }
+
+    let html = '';
+    for (let i = 1; i <= total; i++) {
+        html += `<button class="page-btn ${i === current ? 'active' : ''}" onclick="loadPartners(${i})">${i}</button>`;
+    }
+    container.innerHTML = html;
+    container.style.display = 'flex';
+}
+
+function openPartnerModal(partner = null) {
+    const modal = document.getElementById('modal-partner');
+    if (!modal) return;
+
+    document.getElementById('partner-id').value = partner?.id || '';
+    document.getElementById('partner-name').value = partner?.partner_name || '';
+    document.getElementById('partner-username').value = partner?.username || '';
+    document.getElementById('partner-username').readOnly = !!partner;
+    document.getElementById('partner-brand-name').value = partner?.brand_name || '';
+    document.getElementById('partner-logo-url').value = partner?.brand_logo_url || '';
+    document.getElementById('partner-whatsapp').value = partner?.support_whatsapp || '';
+    document.getElementById('partner-url').value = partner?.support_url || '';
+    document.getElementById('partner-plan-name').value = partner?.plan_name || 'White Label Pro';
+    document.getElementById('partner-max-licenses').value = partner?.max_licenses || 50;
+    document.getElementById('partner-status').value = partner?.status || 'active';
+    document.getElementById('partner-notes').value = partner?.notes || '';
+
+    if (partner?.expires_at) {
+        document.getElementById('partner-expires-at').value = partner.expires_at.split(' ')[0];
+    } else {
+        document.getElementById('partner-expires-at').value = '';
+    }
+
+    const passGroup = document.getElementById('group-partner-password');
+    if (passGroup) {
+        passGroup.style.display = partner ? 'none' : 'block';
+    }
+    if (document.getElementById('partner-password')) {
+        document.getElementById('partner-password').value = '';
+    }
+
+    const titleEl = document.getElementById('partner-modal-title');
+    if (titleEl) {
+        titleEl.textContent = partner ? 'Editar Parceiro White Label' : 'Novo Parceiro White Label';
+    }
+
+    modal.style.display = 'flex';
+}
+
+function openEditPartnerModal(id) {
+    const partner = cachedPartnersList.find(p => p.id == id);
+    if (partner) {
+        openPartnerModal(partner);
+    }
+}
+
+async function savePartner() {
+    const id = document.getElementById('partner-id').value;
+    const partnerName = document.getElementById('partner-name').value.trim();
+    const username = document.getElementById('partner-username').value.trim();
+    const password = document.getElementById('partner-password')?.value.trim();
+    const brandName = document.getElementById('partner-brand-name').value.trim();
+    const brandLogoUrl = document.getElementById('partner-logo-url').value.trim();
+    const supportWhatsapp = document.getElementById('partner-whatsapp').value.trim();
+    const supportUrl = document.getElementById('partner-url').value.trim();
+    const planName = document.getElementById('partner-plan-name').value.trim();
+    const maxLicenses = parseInt(document.getElementById('partner-max-licenses').value) || 50;
+    const expiresAt = document.getElementById('partner-expires-at').value;
+    const status = document.getElementById('partner-status').value;
+    const notes = document.getElementById('partner-notes').value.trim();
+
+    if (!partnerName || !username || (!id && !password) || !brandName) {
+        showToast('Preencha os campos obrigatórios (*).', 'error');
+        return;
+    }
+
+    const payload = {
+        id,
+        partner_name: partnerName,
+        username,
+        brand_name: brandName,
+        brand_logo_url: brandLogoUrl,
+        support_whatsapp: supportWhatsapp,
+        support_url: supportUrl,
+        plan_name: planName,
+        max_licenses: maxLicenses,
+        expires_at: expiresAt || null,
+        status,
+        notes
+    };
+    if (!id && password) {
+        payload.password = password;
+    }
+
+    const action = id ? 'update' : 'create';
+
+    try {
+        const res = await apiFetch(`api/admin/partners.php?action=${action}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (res.success) {
+            closeModal('modal-partner');
+            showToast(res.message || 'Parceiro salvo com sucesso!');
+            loadPartners(partnerCurrentPage);
+            loadPartnerSelectOptions();
+        } else {
+            showToast('Erro: ' + (res.error || 'Falha ao salvar parceiro'), 'error');
+        }
+    } catch (e) {
+        showToast('Erro de conexão ao salvar parceiro', 'error');
+    }
+}
+
+async function togglePartnerStatus(id, newStatus) {
+    const actionLabel = newStatus === 'active' ? 'ativar' : 'suspender';
+    if (!confirm(`Deseja realmente ${actionLabel} este parceiro?`)) return;
+
+    try {
+        const res = await apiFetch('api/admin/partners.php?action=toggle_status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status: newStatus })
+        });
+
+        if (res.success) {
+            showToast(`Parceiro ${newStatus === 'active' ? 'ativado' : 'suspenso'} com sucesso!`);
+            loadPartners(partnerCurrentPage);
+        } else {
+            showToast('Erro: ' + (res.error || 'Falha ao alterar status'), 'error');
+        }
+    } catch (e) {
+        showToast('Erro ao atualizar status', 'error');
+    }
+}
+
+function openResetPartnerPassModal(id, name) {
+    document.getElementById('partner-pass-id').value = id;
+    document.getElementById('partner-pass-name').textContent = `Defina uma nova senha para: ${name}`;
+    document.getElementById('partner-pass-new').value = '';
+    document.getElementById('modal-partner-pass').style.display = 'flex';
+}
+
+async function confirmResetPartnerPassword() {
+    const id = document.getElementById('partner-pass-id').value;
+    const password = document.getElementById('partner-pass-new').value.trim();
+
+    if (!password || password.length < 4) {
+        showToast('A senha deve ter pelo menos 4 caracteres.', 'error');
+        return;
+    }
+
+    try {
+        const res = await apiFetch('api/admin/partners.php?action=reset_password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, password })
+        });
+
+        if (res.success) {
+            closeModal('modal-partner-pass');
+            showToast(res.message || 'Senha redefinida com sucesso!');
+        } else {
+            showToast('Erro: ' + (res.error || 'Falha ao redefinir senha'), 'error');
+        }
+    } catch (e) {
+        showToast('Erro ao redefinir senha', 'error');
+    }
+}
+
+async function deletePartner(id) {
+    if (!confirm('Deseja realmente excluir este parceiro? Suas licenças serão desvinculadas mas continuarão no sistema.')) return;
+
+    try {
+        const res = await apiFetch('api/admin/partners.php?action=delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+        });
+
+        if (res.success) {
+            showToast(res.message || 'Parceiro excluído com sucesso!');
+            loadPartners(1);
+            loadPartnerSelectOptions();
+        } else {
+            showToast('Erro: ' + (res.error || 'Falha ao excluir'), 'error');
+        }
+    } catch (e) {
+        showToast('Erro ao excluir parceiro', 'error');
+    }
+}
+
+function filterLicensesByPartner(partnerId, brandName) {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    const licLink = document.querySelector('.nav-link[data-view="licenses"]');
+    if (licLink) licLink.classList.add('active');
+
+    document.querySelectorAll('.main-content').forEach(v => v.style.display = 'none');
+    document.getElementById('view-licenses').style.display = 'block';
+
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) searchInput.value = '';
+
+    loadLicensesWithPartnerFilter(partnerId, brandName);
+}
+
+async function loadLicensesWithPartnerFilter(partnerId, brandName, page = 1) {
+    currentPage = page;
+    try {
+        const params = new URLSearchParams({ action: 'list', partner_id: partnerId, page });
+        const data = await apiFetch('api/admin/licenses.php?' + params);
+
+        const tbody = document.getElementById('licenses-tbody');
+        if (!tbody) return;
+
+        if (!data.licenses || data.licenses.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Nenhuma licença encontrada para o parceiro ${brandName}.</td></tr>`;
+            document.getElementById('pagination').innerHTML = '';
+            return;
+        }
+
+        tbody.innerHTML = data.licenses.map(l => `
+            <tr>
+                <td style="font-family:'Orbitron',sans-serif; font-size:12px; color:var(--neon); letter-spacing:1px; font-weight:600;">
+                    <div style="display:inline-flex; align-items:center; gap:8px;">
+                        <span>${l.license_key}</span>
+                        <button type="button" class="btn-sm btn-secondary" onclick="copyLicenseKey(this, '${l.license_key}')" title="Copiar Chave da Licença" style="padding:2px 7px; font-size:10px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; font-family:sans-serif; text-transform:none;">
+                            📋 Copiar
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <strong style="color:var(--text);">${l.client_name || '<span style="color:var(--muted)">—</span>'}</strong>
+                    <span class="badge" style="background:rgba(255,170,0,0.15); color:var(--neon); font-size:10px; margin-left:6px; font-weight:600;">WL: ${escapeHtml(l.partner_brand || brandName)}</span>
+                </td>
+                <td>
+                    ${l.client_phone ? `
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span>${l.client_phone}</span>
+                            ${l.whatsapp_link ? `
+                                <a href="${l.whatsapp_link}" target="_blank" class="btn-sm btn-whatsapp" title="Enviar Licença pelo WhatsApp" style="text-decoration:none; padding:3px 7px;">
+                                    💬 Zap
+                                </a>
+                            ` : ''}
+                        </div>
+                    ` : '<span style="color:var(--muted)">—</span>'}
+                </td>
+                <td style="text-transform:capitalize; font-weight:600; color:var(--muted);">${l.plan_type}</td>
+                <td><span class="badge badge-${l.status}">${l.status}</span></td>
+                <td>${l.expires_at ? formatDate(l.expires_at) : '∞ (Vitalício)'}</td>
+                <td style="font-size:11px; color:var(--muted); max-width:110px; overflow:hidden; text-overflow:ellipsis;" title="${l.hwid || ''}">${l.hwid || '—'}</td>
+                <td style="text-align:right;">
+                    <div class="action-btn-group" style="justify-content:flex-end;">
+                        <button class="btn-sm" onclick="viewDetail(${l.id})" title="Ver Detalhes">Ver</button>
+                        ${l.status === 'active' ? `
+                            <button class="btn-sm danger" onclick="quickAction('deactivate',${l.id})">Desativar</button>
+                        ` : `
+                            <button class="btn-sm success" onclick="quickAction('activate',${l.id})">Ativar</button>
+                        `}
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+
+        renderPagination(data.page, data.pages);
+        showToast(`Exibindo licenças do parceiro ${brandName}`, 'info');
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function loadPartnerSelectOptions() {
+    const select = document.getElementById('create-partner');
+    if (!select) return;
+
+    try {
+        const res = await apiFetch('api/admin/partners.php?action=list&status=active');
+        if (res.success && Array.isArray(res.partners)) {
+            let html = '<option value="">Nenhum (PLATAFY FB Direto)</option>';
+            res.partners.forEach(p => {
+                html += `<option value="${p.id}">${escapeHtml(p.brand_name)} (@${escapeHtml(p.username)} - Cota: ${p.total_licenses}/${p.max_licenses})</option>`;
+            });
+            select.innerHTML = html;
+        }
+    } catch (e) {
+        console.error('loadPartnerSelectOptions error:', e);
     }
 }

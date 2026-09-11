@@ -27,33 +27,47 @@ try {
             $perPage = 20;
             $offset = ($page - 1) * $perPage;
             
+            $partnerFilter = intval($_GET['partner_id'] ?? 0);
+
             $where = "1=1";
             $params = [];
             
             if ($search) {
-                $where .= " AND (license_key LIKE ? OR client_name LIKE ? OR client_email LIKE ? OR client_phone LIKE ?)";
+                $where .= " AND (l.license_key LIKE ? OR l.client_name LIKE ? OR l.client_email LIKE ? OR l.client_phone LIKE ?)";
                 $searchTerm = "%{$search}%";
                 $params = [$searchTerm, $searchTerm, $searchTerm, $searchTerm];
             }
             
             if ($status && in_array($status, ['active','inactive','expired','revoked','pending'])) {
-                $where .= " AND status = ?";
+                $where .= " AND l.status = ?";
                 $params[] = $status;
+            }
+
+            if ($partnerFilter > 0) {
+                $where .= " AND l.partner_id = ?";
+                $params[] = $partnerFilter;
             }
             
             // Count
-            $countStmt = $pdo->prepare("SELECT COUNT(*) FROM licenses WHERE {$where}");
+            $countStmt = $pdo->prepare("SELECT COUNT(*) FROM licenses l WHERE {$where}");
             $countStmt->execute($params);
             $total = $countStmt->fetchColumn();
             
             // Fetch
-            $stmt = $pdo->prepare("SELECT * FROM licenses WHERE {$where} ORDER BY created_at DESC LIMIT {$perPage} OFFSET {$offset}");
+            $stmt = $pdo->prepare("
+                SELECT l.*, p.partner_name, p.brand_name AS partner_brand 
+                FROM licenses l 
+                LEFT JOIN partners p ON l.partner_id = p.id 
+                WHERE {$where} 
+                ORDER BY l.created_at DESC 
+                LIMIT {$perPage} OFFSET {$offset}
+            ");
             $stmt->execute($params);
             $licenses = $stmt->fetchAll();
             
             foreach ($licenses as &$lic) {
                 if (!empty($lic['client_phone'])) {
-                    $lic['whatsapp_link'] = generateWhatsAppLink($lic['client_phone'], $lic['client_name'], $lic['license_key'], $lic['plan_type'], $lic['expires_at']);
+                    $lic['whatsapp_link'] = generateWhatsAppLink($lic['client_phone'], $lic['client_name'], $lic['license_key'], $lic['plan_type'], $lic['expires_at'], $lic['partner_brand'] ?? null);
                 } else {
                     $lic['whatsapp_link'] = null;
                 }
@@ -76,9 +90,15 @@ try {
             $name = $input['client_name'] ?? '';
             $email = $input['client_email'] ?? '';
             $phone = $input['client_phone'] ?? '';
-            $plan = $input['plan_type'] ?? 'manual';
+            $partnerId = !empty($input['partner_id']) ? intval($input['partner_id']) : null;
+            $brandName = null;
+            if ($partnerId) {
+                $pStmt = $pdo->prepare("SELECT brand_name FROM partners WHERE id = ?");
+                $pStmt->execute([$partnerId]);
+                $brandName = $pStmt->fetchColumn() ?: null;
+            }
             
-            $result = createLicense($name, $email, $plan, null, $phone);
+            $result = createLicense($name, $email, $plan, null, $phone, $partnerId, $brandName);
             
             echo json_encode(['success' => true, 'license' => $result]);
             break;
