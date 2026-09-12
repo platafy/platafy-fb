@@ -181,18 +181,29 @@ $partnerSession = getPartnerSession();
             </div>
         </div>
 
-        <!-- FILTROS & BUSCA -->
-        <div class="filters-bar" style="margin-top:25px;">
-            <div class="search-box">
-                <input type="text" id="partner-license-search" placeholder="Buscar por chave, cliente ou telefone..." oninput="debouncePartnerLicenseSearch()">
+        <!-- FILTROS & BUSCA ULTRA MODERNA -->
+        <div class="filter-bar" style="margin-top:24px;">
+            <div class="search-input-wrapper">
+                <input type="text" id="partner-license-search" placeholder="Buscar por chave, nome do cliente ou telefone..." oninput="debouncePartnerLicenseSearch()" onkeyup="if(event.key==='Enter') loadPartnerLicenses(1)">
+                <span class="search-input-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
             </div>
-            <select id="partner-license-status" class="filter-select" onchange="loadPartnerLicenses(1)">
-                <option value="">Todos os Status</option>
-                <option value="active">Ativas</option>
-                <option value="inactive">Inativas</option>
-                <option value="expired">Expiradas</option>
-                <option value="revoked">Revogadas</option>
-            </select>
+
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <select id="partner-license-status" class="filter-select" onchange="loadPartnerLicenses(1)">
+                    <option value="">⚡ Todos os Status</option>
+                    <option value="active">🟢 Ativas</option>
+                    <option value="inactive">⚪ Inativas</option>
+                    <option value="expired">🔴 Expiradas</option>
+                    <option value="revoked">⛔ Revogadas</option>
+                </select>
+
+                <button class="btn-outline" onclick="loadPartnerLicenses(1)" title="Atualizar lista" style="height:42px; padding:0 18px; border-radius:10px; display:inline-flex; align-items:center; gap:8px;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    <span>Atualizar</span>
+                </button>
+            </div>
         </div>
 
         <!-- TABELA DE LICENÇAS DO PARCEIRO -->

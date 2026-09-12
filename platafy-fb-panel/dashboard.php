@@ -671,17 +671,28 @@ $siteFavicon = getSetting('site_favicon', '');
             </div>
         </div>
 
-        <!-- FILTROS & BUSCA -->
-        <div class="filters-bar" style="margin-top:20px;">
-            <div class="search-box">
-                <input type="text" id="partner-search-input" placeholder="Buscar por marca, parceiro ou usuário..." oninput="debouncePartnerSearch()">
+        <!-- FILTROS & BUSCA ULTRA MODERNA -->
+        <div class="filter-bar" style="margin-top:24px;">
+            <div class="search-input-wrapper">
+                <input type="text" id="partner-search-input" placeholder="Buscar por marca, parceiro, login ou WhatsApp..." oninput="debouncePartnerSearch()" onkeyup="if(event.key==='Enter') loadPartners(1)">
+                <span class="search-input-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
             </div>
-            <select id="partner-filter-status" class="filter-select" onchange="loadPartners(1)">
-                <option value="">Todos os Status</option>
-                <option value="active">Ativos</option>
-                <option value="suspended">Suspensos</option>
-                <option value="inactive">Inativos</option>
-            </select>
+
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <select id="partner-filter-status" class="filter-select" onchange="loadPartners(1)">
+                    <option value="">⚡ Todos os Status</option>
+                    <option value="active">🟢 Ativos</option>
+                    <option value="suspended">🟡 Suspensos</option>
+                    <option value="inactive">🔴 Inativos</option>
+                </select>
+
+                <button class="btn-outline" onclick="loadPartners(1)" title="Atualizar lista" style="height:42px; padding:0 18px; border-radius:10px; display:inline-flex; align-items:center; gap:8px;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    <span>Atualizar</span>
+                </button>
+            </div>
         </div>
 
         <!-- TABELA DE PARCEIROS -->
