@@ -2,6 +2,8 @@
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/settings_utils.php';
 
+sendSecurityHeaders();
+
 $siteLogo = getSetting('site_logo', '');
 $siteFavicon = getSetting('site_favicon', '');
 $error = null;
@@ -11,22 +13,55 @@ if (isPartnerLogged()) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = trim($_POST['password'] ?? '');
+$clientIp = getClientIp();
+$rateLimit = checkRateLimit($clientIp);
 
-    if (empty($username) || empty($password)) {
-        $error = 'Por favor, informe seu usuário e senha de parceiro.';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1. Honeypot anti-bot invisível
+    $honeypot = trim($_POST['security_hp_token'] ?? '');
+    if (!empty($honeypot)) {
+        sleep(2);
+        $error = 'Usuário ou senha incorretos.';
+    } elseif ($rateLimit['blocked']) {
+        // 2. Proteção contra força bruta por IP
+        $error = $rateLimit['message'];
     } else {
-        $auth = loginPartner($username, $password);
-        if ($auth['success']) {
-            header('Location: /parceiro/dashboard.php');
-            exit;
+        // 3. Validação de CSRF Token
+        $csrfToken = $_POST['csrf_token'] ?? '';
+        if (!verifyCsrfToken($csrfToken)) {
+            $error = 'Sua sessão expirou ou a validação de segurança falhou. Por favor, recarregue a página e tente novamente.';
         } else {
-            $error = $auth['message'] ?? 'Usuário ou senha incorretos.';
+            // Aplicar delay progressivo se o IP atingiu >= 5 falhas
+            if (!empty($rateLimit['delay'])) {
+                sleep((int)$rateLimit['delay']);
+            }
+
+            $username = trim($_POST['username'] ?? '');
+            $password = trim($_POST['password'] ?? '');
+
+            if (empty($username) || empty($password)) {
+                $error = 'Por favor, informe seu usuário e senha de parceiro.';
+            } else {
+                $auth = loginPartner($username, $password);
+                if ($auth['success']) {
+                    recordLoginAttempt($clientIp, $username, true);
+                    header('Location: /parceiro/dashboard.php');
+                    exit;
+                } else {
+                    recordLoginAttempt($clientIp, $username, false);
+                    $error = $auth['message'] ?? 'Usuário ou senha incorretos.';
+
+                    $rateLimit = checkRateLimit($clientIp);
+                    if ($rateLimit['blocked']) {
+                        $error = $rateLimit['message'];
+                    }
+                }
+            }
         }
     }
 }
+
+$csrfToken = getCsrfToken();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -34,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="<?= htmlspecialchars($siteFavicon ?: '/assets/img/favicon.png') ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel do Parceiro White Label - PLATAFY FB</title>
+    <title>Portal do Parceiro - Login Seguro - PLATAFY FB</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -125,13 +160,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         .input-relative {
             position: relative;
+            display: flex;
+            align-items: center;
         }
         .input-relative input {
             width: 100%;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 10px;
-            padding: 14px 16px 14px 44px;
+            padding: 14px 44px 14px 44px;
             color: #fff;
             font-size: 14px;
             font-family: 'Inter', sans-serif;
@@ -151,6 +188,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: var(--neon);
             display: flex;
             align-items: center;
+            pointer-events: none;
+        }
+        .btn-toggle-pwd {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            border-radius: 6px;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .btn-toggle-pwd:hover {
+            color: var(--neon);
+        }
+        .btn-toggle-pwd:active {
+            transform: translateY(-50%) scale(0.95);
         }
         .btn-login {
             width: 100%;
@@ -179,13 +239,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: rgba(239, 68, 68, 0.15);
             border: 1px solid rgba(239, 68, 68, 0.4);
             color: #ff6b6b;
-            padding: 12px;
+            padding: 12px 14px;
             border-radius: 10px;
             font-size: 13px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            line-height: 1.4;
+        }
+        .error-box svg {
+            flex-shrink: 0;
         }
         .login-footer {
             text-align: center;
@@ -223,24 +287,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <form method="POST" action="/parceiro/index.php">
+            <form method="POST" action="/parceiro/index.php" autocomplete="on">
+                <!-- Proteção CSRF -->
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                
+                <!-- Honeypot anti-robô invisível -->
+                <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none; z-index: -1;" aria-hidden="true">
+                    <label for="security_hp_token">Não preencha este campo</label>
+                    <input type="text" id="security_hp_token" name="security_hp_token" tabindex="-1" autocomplete="off" value="">
+                </div>
+
                 <div class="form-group">
-                    <label>Usuário do Parceiro</label>
+                    <label for="username">Usuário do Parceiro</label>
                     <div class="input-relative">
                         <span class="field-icon">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         </span>
-                        <input type="text" name="username" placeholder="Seu usuário de acesso" required autofocus>
+                        <input type="text" id="username" name="username" placeholder="Seu usuário de acesso" required autofocus>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Senha de Acesso</label>
+                    <label for="partnerPassword">Senha de Acesso</label>
                     <div class="input-relative">
                         <span class="field-icon">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         </span>
-                        <input type="password" name="password" placeholder="Sua senha secreta" required>
+                        <input type="password" id="partnerPassword" name="password" placeholder="Sua senha secreta" required>
+                        <button type="button" class="btn-toggle-pwd" onclick="togglePartnerPassword()" title="Mostrar/Ocultar Senha" aria-label="Mostrar/Ocultar Senha">
+                            <svg id="eyeIcon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            <svg id="eyeSlashIcon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                        </button>
                     </div>
                 </div>
 
@@ -255,5 +332,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Problemas para acessar? <a href="https://api.whatsapp.com/send?phone=5521967659802" target="_blank">Fale com o Suporte Master</a>
         </div>
     </div>
+
+    <script>
+        function togglePartnerPassword() {
+            const pwdInput = document.getElementById('partnerPassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const eyeSlashIcon = document.getElementById('eyeSlashIcon');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                eyeIcon.style.display = 'none';
+                eyeSlashIcon.style.display = 'block';
+            } else {
+                pwdInput.type = 'password';
+                eyeIcon.style.display = 'block';
+                eyeSlashIcon.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
