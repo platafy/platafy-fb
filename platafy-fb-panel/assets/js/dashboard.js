@@ -752,6 +752,13 @@ async function uploadSystemLogo() {
         return;
     }
     
+    const btn = document.getElementById('btnUploadLogo');
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Enviando Logomarca...';
+    }
+
     const formData = new FormData();
     formData.append('logo', fileInput.files[0]);
     
@@ -761,14 +768,14 @@ async function uploadSystemLogo() {
             body: formData
         });
         
-        if (data.success) {
+        if (data && data.success) {
             showToast('🖼️ Logomarca atualizada com sucesso!');
             
             // Atualizar preview nas configurações
             const previewBox = document.getElementById('logo-preview-box');
             if (previewBox) {
                 const sep = data.logo_url.startsWith('data:') ? '' : `?t=${Date.now()}`;
-                previewBox.innerHTML = `<img src="${data.logo_url}${sep}" id="settings-logo-preview" style="max-height:55px; max-width:170px;" alt="Logo">`;
+                previewBox.innerHTML = `<img src="${data.logo_url}${sep}" id="settings-logo-preview" style="max-height:48px; max-width:115px; object-fit:contain;" alt="Logo">`;
             }
             
             // Atualizar logo na Navbar
@@ -784,12 +791,25 @@ async function uploadSystemLogo() {
                 fileNameDisplay.style.display = 'none';
                 fileNameDisplay.textContent = '';
             }
+            if (btn) {
+                btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Fazer Upload e Aplicar Nova Logomarca';
+            }
         } else {
-            showToast('Erro: ' + (data.error || 'Falha ao enviar imagem'), 'error');
+            showToast('Erro: ' + (data?.error || 'Falha ao enviar imagem'), 'error');
+            if (btn) {
+                btn.innerHTML = originalText || '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Fazer Upload e Aplicar Nova Logomarca';
+            }
         }
     } catch (err) {
         if (err.message !== 'Não autorizado') {
             showToast('Erro de conexão ao enviar logomarca.', 'error');
+        }
+        if (btn) {
+            btn.innerHTML = originalText || '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Fazer Upload e Aplicar Nova Logomarca';
+        }
+    } finally {
+        if (btn) {
+            btn.disabled = false;
         }
     }
 }
@@ -837,7 +857,7 @@ function togglePasswordVisibility(inputId, btn) {
 // Helper: Handle File Selection Display
 function handleFileSelect(input) {
     const nameDisplay = document.getElementById('logo-file-name');
-    const btn = document.querySelector('.btn-save-custom');
+    const btn = document.getElementById('btnUploadLogo');
     if (!input.files || input.files.length === 0) {
         if (nameDisplay) {
             nameDisplay.style.display = 'none';
@@ -857,7 +877,7 @@ function handleFileSelect(input) {
     reader.onload = function(e) {
         const previewBox = document.getElementById('logo-preview-box');
         if (previewBox) {
-            previewBox.innerHTML = `<img src="${e.target.result}" style="max-height:55px; max-width:170px; object-fit:contain;" alt="Preview Logo">`;
+            previewBox.innerHTML = `<img src="${e.target.result}" style="max-height:48px; max-width:115px; object-fit:contain;" alt="Preview Logo">`;
         }
     };
     reader.readAsDataURL(file);
@@ -993,7 +1013,7 @@ function handleFaviconSelect(input) {
             nameDisplay.style.display = 'none';
             nameDisplay.textContent = '';
         }
-        if (btn) btn.innerHTML = '📌 Fazer Upload e Aplicar Novo Favicon';
+        if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Fazer Upload e Aplicar Novo Favicon';
         return;
     }
 
@@ -1008,13 +1028,13 @@ function handleFaviconSelect(input) {
     reader.onload = function(e) {
         const previewBox = document.getElementById('favicon-preview-box');
         if (previewBox) {
-            previewBox.innerHTML = `<img src="${e.target.result}" style="max-height:36px; max-width:36px; object-fit:contain; border-radius:4px;" alt="Preview Favicon">`;
+            previewBox.innerHTML = `<img src="${e.target.result}" style="max-height:42px; max-width:42px; object-fit:contain; border-radius:6px;" alt="Preview Favicon">`;
         }
     };
     reader.readAsDataURL(file);
 
     if (btn) {
-        btn.innerHTML = `🚀 Salvar e Aplicar Favicon (${file.name})`;
+        btn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Salvar e Aplicar Favicon (${file.name})`;
     }
 }
 
@@ -1046,7 +1066,7 @@ async function handleFaviconUpload() {
             const favPreviewBox = document.getElementById('favicon-preview-box');
             if (favPreviewBox) {
                 const sep = data.favicon_url.startsWith('data:') ? '' : `?t=${Date.now()}`;
-                favPreviewBox.innerHTML = `<img src="${data.favicon_url}${sep}" id="settings-favicon-preview" style="max-height:36px; max-width:36px; object-fit:contain;" alt="Favicon">`;
+                favPreviewBox.innerHTML = `<img src="${data.favicon_url}${sep}" id="settings-favicon-preview" style="max-height:42px; max-width:42px; object-fit:contain; border-radius:6px;" alt="Favicon">`;
             }
             // Atualizar favicon nas abas dinamicamente
             let favLink = document.querySelector('link[rel="icon"]');
@@ -1066,18 +1086,18 @@ async function handleFaviconUpload() {
                 nameDisplay.textContent = '';
             }
             if (btn) {
-                btn.innerHTML = '📌 Fazer Upload e Aplicar Novo Favicon';
+                btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Fazer Upload e Aplicar Novo Favicon';
             }
         } else {
             showToast(data.error || 'Erro ao enviar favicon.', 'error');
             if (btn) {
-                btn.innerHTML = originalText || '📌 Fazer Upload e Aplicar Novo Favicon';
+                btn.innerHTML = originalText || '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Fazer Upload e Aplicar Novo Favicon';
             }
         }
     } catch (err) {
         showToast('Erro de conexão ao enviar favicon.', 'error');
         if (btn) {
-            btn.innerHTML = originalText || '📌 Fazer Upload e Aplicar Novo Favicon';
+            btn.innerHTML = originalText || '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Fazer Upload e Aplicar Novo Favicon';
         }
     } finally {
         if (btn) {
@@ -1101,17 +1121,11 @@ function setupFaviconDropzone() {
     }
 
     ['dragenter', 'dragover'].forEach(eventName => {
-        dropzone.addEventListener(eventName, () => {
-            dropzone.style.borderColor = 'var(--neon)';
-            dropzone.style.background = 'rgba(255, 170, 0, 0.08)';
-        }, false);
+        dropzone.addEventListener(eventName, () => dropzone.classList.add('dragover'), false);
     });
 
     ['dragleave', 'drop'].forEach(eventName => {
-        dropzone.addEventListener(eventName, () => {
-            dropzone.style.borderColor = 'var(--border)';
-            dropzone.style.background = 'rgba(255, 255, 255, 0.02)';
-        }, false);
+        dropzone.addEventListener(eventName, () => dropzone.classList.remove('dragover'), false);
     });
 
     dropzone.addEventListener('drop', (e) => {

@@ -1085,37 +1085,41 @@ input[type="number"]::-webkit-outer-spin-button {
     box-shadow: 0 0 8px var(--neon);
 }
 
-/* DROPZONE LOGO UPLOAD */
+/* DROPZONE LOGO & FAVICON UPLOAD */
+.media-upload-layout,
 .logo-upload-wrapper {
     display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 25px;
-    align-items: center;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    align-items: stretch;
+    margin-bottom: 18px;
 }
 .logo-current-box {
     text-align: center;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 20px 15px;
+    padding: 16px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 140px;
+    height: 100%;
+    box-sizing: border-box;
 }
 .logo-current-label {
     font-size: 11px;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .upload-dropzone {
     border: 2px dashed rgba(255, 170, 0, 0.25);
     border-radius: 14px;
-    padding: 28px 20px;
+    padding: 20px 14px;
     text-align: center;
     background: rgba(0, 0, 0, 0.2);
     cursor: pointer;
@@ -1124,8 +1128,11 @@ input[type="number"]::-webkit-outer-spin-button {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     position: relative;
+    min-height: 140px;
+    height: 100%;
+    box-sizing: border-box;
 }
 .upload-dropzone:hover, .upload-dropzone.dragover {
     border-color: var(--neon);
@@ -1372,7 +1379,7 @@ input[type="number"]::-webkit-outer-spin-button {
     .page-header { flex-direction: column; gap: 15px; align-items: flex-start; }
     .filter-bar { flex-direction: column; }
     .detail-grid { grid-template-columns: 1fr; }
-    .logo-upload-wrapper { grid-template-columns: 1fr; }
+    .logo-upload-wrapper, .media-upload-layout { grid-template-columns: 1fr; }
     .settings-header { flex-direction: column; align-items: flex-start; gap: 12px; }
     .cron-code-box { flex-direction: column; align-items: flex-start; }
 }
@@ -1541,7 +1548,7 @@ input[type="number"]::-webkit-outer-spin-button {
         gap: 16px;
     }
     
-    .logo-upload-wrapper {
+    .logo-upload-wrapper, .media-upload-layout {
         grid-template-columns: 1fr;
     }
     

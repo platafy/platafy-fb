@@ -520,52 +520,7 @@ $siteFavicon = getSetting('site_favicon', '');
             </div>
 
             <!-- UPLOAD E ALTERAÇÃO DE LOGOMARCA -->
-
-            <!-- UPLOAD E ALTERAÇÃO DE FAVICON -->
-            <div class="card" style="margin-top:20px;">
-                <div class="card-header">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="width:40px; height:40px; border-radius:10px; background:rgba(255, 170, 0, 0.15); display:flex; align-items:center; justify-content:center; color:var(--neon); font-size:18px;">
-                            📌
-                        </div>
-                        <div>
-                            <h3 style="margin:0; font-size:16px; font-weight:700;">Favicon do Sistema (Ícone da Aba - PNG)</h3>
-                            <p style="margin:2px 0 0; font-size:12px; color:var(--muted);">Personalize o ícone que aparece nas abas do navegador no Painel, Cliente e Checkout.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div style="display:grid; grid-template-columns: 200px 1fr; gap:20px; align-items:center;">
-                        <!-- Preview do Favicon Atual -->
-                        <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:10px; padding:15px; text-align:center;">
-                            <div style="font-size:11px; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:10px;">Favicon Atual</div>
-                            <div id="favicon-preview-box" style="display:flex; align-items:center; justify-content:center; height:60px; background:rgba(0,0,0,0.2); border-radius:8px; border:1px dashed var(--border);">
-                                <?php if (!empty($siteFavicon)): ?>
-                                    <img src="<?= htmlspecialchars($siteFavicon) ?>" id="settings-favicon-preview" style="max-height:36px; max-width:36px; object-fit:contain;" alt="Favicon">
-                                <?php else: ?>
-                                    <span style="font-size:24px;">📌</span>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-
-                        <!-- Dropzone de Upload do Favicon -->
-                        <form id="form-upload-favicon" enctype="multipart/form-data" onsubmit="return false;">
-                            <input type="file" id="faviconFileInput" name="favicon" accept="image/*,.png,.ico,.jpg,.jpeg,.webp,.svg" style="display:none;" onchange="handleFaviconSelect(this)">
-                            <div id="faviconDropzone" style="border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; background:rgba(255,255,255,0.02); transition:all 0.2s;" onclick="document.getElementById('faviconFileInput').click()">
-                                <div style="font-size:24px; color:var(--neon); margin-bottom:6px;">📌</div>
-                                <span style="font-size:13px; font-weight:600; color:var(--text);">Arraste o novo favicon aqui ou clique para buscar</span>
-                                <div style="font-size:11px; color:var(--muted); margin-top:4px;">Qualquer dimensão (512x512px, 256x256px ou 32x32px em PNG, ICO ou WEBP — Tamanho Máximo: 10MB)</div>
-                                <span class="file-selected-name" id="favicon-file-name" style="display:none; margin-top:8px; color:var(--neon); font-size:12px; font-weight:600;"></span>
-                            </div>
-                            <button type="button" class="btn-primary btn-save-custom" id="btnUploadFavicon" onclick="triggerFaviconUploadOrPicker()" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; margin-top:14px; background:linear-gradient(135deg, var(--neon), #d98200); color:#000; font-weight:700; border:none; padding:12px 20px; border-radius:10px; cursor:pointer; gap:8px;">
-                                📌 Fazer Upload e Aplicar Novo Favicon
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="settings-card full-width">
+            <div class="settings-card">
                 <div>
                     <div class="card-header-custom">
                         <div class="card-icon-box purple">
@@ -577,14 +532,14 @@ $siteFavicon = getSetting('site_favicon', '');
                         </div>
                     </div>
 
-                    <div class="logo-upload-wrapper">
+                    <div class="media-upload-layout">
                         <div class="logo-current-box">
                             <span class="logo-current-label">Logo Atual</span>
-                            <div id="logo-preview-box" style="display:flex; align-items:center; justify-content:center;">
+                            <div id="logo-preview-box" style="display:flex; align-items:center; justify-content:center; width:100%; flex:1;">
                                 <?php if (!empty($siteLogo)): ?>
-                                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" id="settings-logo-preview" style="max-height:55px; max-width:170px;" alt="Logo">
+                                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" id="settings-logo-preview" style="max-height:48px; max-width:115px; object-fit:contain;" alt="Logo">
                                 <?php else: ?>
-                                    <span id="settings-logo-preview-text" style="font-family:'Orbitron',sans-serif; color:var(--neon); font-size:20px; letter-spacing:2px;">PLATAFY</span>
+                                    <span id="settings-logo-preview-text" style="font-family:'Orbitron',sans-serif; color:var(--neon); font-size:16px; font-weight:700; letter-spacing:1px;">PLATAFY</span>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -595,18 +550,65 @@ $siteFavicon = getSetting('site_favicon', '');
                                 <div class="upload-icon-circle">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                                 </div>
-                                <span class="upload-text-main">Arraste a nova logomarca aqui ou clique para buscar</span>
-                                <span class="upload-text-sub">Formatos suportados: PNG, JPG, WEBP, SVG (Tamanho Máximo: 2MB)</span>
-                                <span class="file-selected-name" id="logo-file-name"></span>
+                                <span class="upload-text-main">Arraste a logomarca aqui</span>
+                                <span class="upload-text-sub">PNG, JPG, WEBP, SVG (Máx: 2MB)</span>
+                                <span class="file-selected-name" id="logo-file-name" style="display:none;"></span>
                             </div>
-
-                            <button class="btn-primary btn-save-custom" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; margin-top:16px;" onclick="uploadSystemLogo()">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                                Fazer Upload e Aplicar Nova Logomarca
-                            </button>
                         </div>
                     </div>
                 </div>
+
+                <button class="btn-primary btn-save-custom" id="btnUploadLogo" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%;" onclick="uploadSystemLogo()">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    Fazer Upload e Aplicar Nova Logomarca
+                </button>
+            </div>
+
+            <!-- UPLOAD E ALTERAÇÃO DE FAVICON -->
+            <div class="settings-card">
+                <div>
+                    <div class="card-header-custom">
+                        <div class="card-icon-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><circle cx="6" cy="6" r="1"></circle><circle cx="9" cy="6" r="1"></circle></svg>
+                        </div>
+                        <div class="card-header-titles">
+                            <h3>Favicon do Sistema</h3>
+                            <p>Personalize o ícone que aparece nas abas do navegador no Painel, Cliente e Checkout</p>
+                        </div>
+                    </div>
+
+                    <div class="media-upload-layout">
+                        <div class="logo-current-box">
+                            <span class="logo-current-label">Favicon Atual</span>
+                            <div id="favicon-preview-box" style="display:flex; align-items:center; justify-content:center; width:100%; flex:1;">
+                                <?php if (!empty($siteFavicon)): ?>
+                                    <img src="<?= htmlspecialchars($siteFavicon) ?>" id="settings-favicon-preview" style="max-height:42px; max-width:42px; object-fit:contain; border-radius:6px;" alt="Favicon">
+                                <?php else: ?>
+                                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--neon)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><circle cx="6" cy="6" r="1"></circle></svg>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div>
+                            <form id="form-upload-favicon" enctype="multipart/form-data" onsubmit="return false;" style="margin:0;">
+                                <input type="file" id="faviconFileInput" name="favicon" accept="image/*,.png,.ico,.jpg,.jpeg,.webp,.svg" style="display:none;" onchange="handleFaviconSelect(this)">
+                                <div class="upload-dropzone" id="faviconDropzone" onclick="document.getElementById('faviconFileInput').click()">
+                                    <div class="upload-icon-circle">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                    </div>
+                                    <span class="upload-text-main">Arraste o novo favicon aqui</span>
+                                    <span class="upload-text-sub">PNG, ICO, WEBP ou SVG (Máx: 10MB)</span>
+                                    <span class="file-selected-name" id="favicon-file-name" style="display:none;"></span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-primary btn-save-custom" id="btnUploadFavicon" onclick="triggerFaviconUploadOrPicker()" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    Fazer Upload e Aplicar Novo Favicon
+                </button>
             </div>
         </div>
     </main>
