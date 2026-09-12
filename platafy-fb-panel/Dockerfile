@@ -11,4 +11,4 @@ RUN mkdir -p /run/nginx /var/www/html/uploads     && chmod -R 777 /var/www/html/
 
 EXPOSE 80
 
-CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "mkdir -p /var/www/html/uploads && chmod -R 777 /var/www/html/uploads && php-fpm -D && nginx -g 'daemon off;'"]

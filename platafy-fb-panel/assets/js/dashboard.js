@@ -767,13 +767,15 @@ async function uploadSystemLogo() {
             // Atualizar preview nas configurações
             const previewBox = document.getElementById('logo-preview-box');
             if (previewBox) {
-                previewBox.innerHTML = `<img src="${data.logo_url}?t=${Date.now()}" id="settings-logo-preview" style="max-height:55px; max-width:170px;" alt="Logo">`;
+                const sep = data.logo_url.startsWith('data:') ? '' : `?t=${Date.now()}`;
+                previewBox.innerHTML = `<img src="${data.logo_url}${sep}" id="settings-logo-preview" style="max-height:55px; max-width:170px;" alt="Logo">`;
             }
             
             // Atualizar logo na Navbar
             const navBrand = document.querySelector('.navbar-brand');
             if (navBrand) {
-                navBrand.innerHTML = `<img src="${data.logo_url}?t=${Date.now()}" id="site-logo-img" alt="PLATAFY" style="max-height:38px; vertical-align:middle;">`;
+                const sep = data.logo_url.startsWith('data:') ? '' : `?t=${Date.now()}`;
+                navBrand.innerHTML = `<img src="${data.logo_url}${sep}" id="site-logo-img" alt="PLATAFY" style="max-height:38px; vertical-align:middle;">`;
             }
             
             fileInput.value = '';
@@ -1043,7 +1045,8 @@ async function handleFaviconUpload() {
             showToast('📌 Favicon atualizado com sucesso!');
             const favPreviewBox = document.getElementById('favicon-preview-box');
             if (favPreviewBox) {
-                favPreviewBox.innerHTML = `<img src="${data.favicon_url}?t=${Date.now()}" id="settings-favicon-preview" style="max-height:36px; max-width:36px; object-fit:contain;" alt="Favicon">`;
+                const sep = data.favicon_url.startsWith('data:') ? '' : `?t=${Date.now()}`;
+                favPreviewBox.innerHTML = `<img src="${data.favicon_url}${sep}" id="settings-favicon-preview" style="max-height:36px; max-width:36px; object-fit:contain;" alt="Favicon">`;
             }
             // Atualizar favicon nas abas dinamicamente
             let favLink = document.querySelector('link[rel="icon"]');
@@ -1053,7 +1056,8 @@ async function handleFaviconUpload() {
                 favLink.type = 'image/png';
                 document.head.appendChild(favLink);
             }
-            favLink.href = data.favicon_url + '?t=' + Date.now();
+            const sep = data.favicon_url.startsWith('data:') ? '' : `?t=${Date.now()}`;
+            favLink.href = data.favicon_url + sep;
 
             fileInput.value = '';
             const nameDisplay = document.getElementById('favicon-file-name');
@@ -1066,9 +1070,15 @@ async function handleFaviconUpload() {
             }
         } else {
             showToast(data.error || 'Erro ao enviar favicon.', 'error');
+            if (btn) {
+                btn.innerHTML = originalText || '📌 Fazer Upload e Aplicar Novo Favicon';
+            }
         }
     } catch (err) {
         showToast('Erro de conexão ao enviar favicon.', 'error');
+        if (btn) {
+            btn.innerHTML = originalText || '📌 Fazer Upload e Aplicar Novo Favicon';
+        }
     } finally {
         if (btn) {
             btn.disabled = false;

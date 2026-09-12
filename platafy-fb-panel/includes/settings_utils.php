@@ -12,10 +12,11 @@ function ensureSettingsTable() {
         $pdo->exec("
             CREATE TABLE IF NOT EXISTS system_settings (
                 setting_key VARCHAR(100) PRIMARY KEY,
-                setting_value TEXT DEFAULT NULL,
+                setting_value MEDIUMTEXT DEFAULT NULL,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ");
+        @$pdo->exec("ALTER TABLE system_settings MODIFY setting_value MEDIUMTEXT DEFAULT NULL;");
         $checked = true;
     } catch (Exception $e) {
         error_log("[PLATAFY Settings] Table creation error: " . $e->getMessage());

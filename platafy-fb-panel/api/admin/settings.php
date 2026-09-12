@@ -153,15 +153,34 @@ try {
             // Pasta de destino
             $uploadDir = __DIR__ . '/../../uploads';
             if (!is_dir($uploadDir)) {
-                @mkdir($uploadDir, 0755, true);
+                @mkdir($uploadDir, 0777, true);
             }
+            @chmod($uploadDir, 0777);
 
             $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
             $filename = 'logo_' . time() . '.' . strtolower($ext);
             $targetPath = $uploadDir . '/' . $filename;
+            $savedSuccessfully = false;
+            $logoUrl = '';
 
-            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+            // 1. Tentar salvar como arquivo físico na pasta uploads
+            if (@move_uploaded_file($file['tmp_name'], $targetPath) || @copy($file['tmp_name'], $targetPath)) {
+                @chmod($targetPath, 0666);
                 $logoUrl = '/uploads/' . $filename;
+                $savedSuccessfully = true;
+            } else {
+                // 2. Fallback resiliente: se a pasta uploads estiver bloqueada por permissão do volume Docker,
+                // codifica a imagem em Base64 Data URI e salva no banco sem perder nada!
+                $fileContent = @file_get_contents($file['tmp_name']);
+                if ($fileContent && strlen($fileContent) > 0) {
+                    $base64 = base64_encode($fileContent);
+                    $actualMime = $mimeType ?: 'image/png';
+                    $logoUrl = "data:{$actualMime};base64,{$base64}";
+                    $savedSuccessfully = true;
+                }
+            }
+
+            if ($savedSuccessfully && !empty($logoUrl)) {
                 setSetting('site_logo', $logoUrl);
                 echo json_encode([
                     'success' => true, 
@@ -173,8 +192,7 @@ try {
             }
             break;
 
-        
-                // ========== UPLOAD DE FAVICON DO SISTEMA ==========
+        // ========== UPLOAD DE FAVICON DO SISTEMA ==========
         case 'upload_favicon':
             if ($method !== 'POST') { echo json_encode(['error' => 'Método inválido']); exit; }
 
@@ -207,14 +225,33 @@ try {
 
             $uploadDir = __DIR__ . '/../../uploads';
             if (!is_dir($uploadDir)) {
-                @mkdir($uploadDir, 0755, true);
+                @mkdir($uploadDir, 0777, true);
             }
+            @chmod($uploadDir, 0777);
 
             $filename = 'favicon_' . time() . '.' . ($ext ?: 'png');
             $targetPath = $uploadDir . '/' . $filename;
+            $savedSuccessfully = false;
+            $faviconUrl = '';
 
-            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+            // 1. Tentar salvar como arquivo físico na pasta uploads
+            if (@move_uploaded_file($file['tmp_name'], $targetPath) || @copy($file['tmp_name'], $targetPath)) {
+                @chmod($targetPath, 0666);
                 $faviconUrl = '/uploads/' . $filename;
+                $savedSuccessfully = true;
+            } else {
+                // 2. Fallback resiliente: se a pasta uploads estiver bloqueada por permissão do volume Docker,
+                // codifica o favicon em Base64 Data URI e salva no banco de dados!
+                $fileContent = @file_get_contents($file['tmp_name']);
+                if ($fileContent && strlen($fileContent) > 0) {
+                    $base64 = base64_encode($fileContent);
+                    $actualMime = $mimeType ?: 'image/png';
+                    $faviconUrl = "data:{$actualMime};base64,{$base64}";
+                    $savedSuccessfully = true;
+                }
+            }
+
+            if ($savedSuccessfully && !empty($faviconUrl)) {
                 setSetting('site_favicon', $faviconUrl);
                 echo json_encode([
                     'success' => true, 
@@ -222,7 +259,7 @@ try {
                     'favicon_url' => $faviconUrl
                 ]);
             } else {
-                echo json_encode(['error' => 'Falha ao salvar o favicon no servidor.']);
+                echo json_encode(['error' => 'Falha ao processar e salvar o favicon no servidor.']);
             }
             break;
 
