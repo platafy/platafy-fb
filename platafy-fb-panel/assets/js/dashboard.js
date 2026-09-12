@@ -25,6 +25,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
 // ========== INIT ==========
 document.addEventListener('DOMContentLoaded', () => {
     loadStats();
+    setupFaviconDropzone();
     
     // Search on Enter
     document.getElementById('search-input')?.addEventListener('keypress', (e) => {
@@ -745,8 +746,9 @@ async function changeAdminPassword() {
 
 async function uploadSystemLogo() {
     const fileInput = document.getElementById('logo-file-input');
+    if (!fileInput) return;
     if (!fileInput.files || fileInput.files.length === 0) {
-        showToast('Por favor, selecione uma imagem de logomarca.', 'error');
+        fileInput.click();
         return;
     }
     
@@ -833,14 +835,33 @@ function togglePasswordVisibility(inputId, btn) {
 // Helper: Handle File Selection Display
 function handleFileSelect(input) {
     const nameDisplay = document.getElementById('logo-file-name');
-    if (!nameDisplay) return;
+    const btn = document.querySelector('.btn-save-custom');
+    if (!input.files || input.files.length === 0) {
+        if (nameDisplay) {
+            nameDisplay.style.display = 'none';
+            nameDisplay.textContent = '';
+        }
+        if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Fazer Upload e Aplicar Nova Logomarca';
+        return;
+    }
     
-    if (input.files && input.files[0]) {
-        nameDisplay.textContent = '📄 Arquivo selecionado: ' + input.files[0].name;
+    const file = input.files[0];
+    if (nameDisplay) {
+        nameDisplay.textContent = '🖼️ Arquivo selecionado: ' + file.name;
         nameDisplay.style.display = 'inline-block';
-    } else {
-        nameDisplay.style.display = 'none';
-        nameDisplay.textContent = '';
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const previewBox = document.getElementById('logo-preview-box');
+        if (previewBox) {
+            previewBox.innerHTML = `<img src="${e.target.result}" style="max-height:55px; max-width:170px; object-fit:contain;" alt="Preview Logo">`;
+        }
+    };
+    reader.readAsDataURL(file);
+
+    if (btn) {
+        btn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Salvar e Aplicar Logomarca (${file.name})`;
     }
 }
 
@@ -952,10 +973,53 @@ function fallbackCopy(key, btn, originalHTML) {
 }
 
 // ========== UPLOAD DE FAVICON DO SISTEMA ==========
+function triggerFaviconUploadOrPicker() {
+    const fileInput = document.getElementById('faviconFileInput');
+    if (!fileInput) return;
+    if (!fileInput.files || fileInput.files.length === 0) {
+        fileInput.click();
+        return;
+    }
+    handleFaviconUpload();
+}
+
+function handleFaviconSelect(input) {
+    const nameDisplay = document.getElementById('favicon-file-name');
+    const btn = document.getElementById('btnUploadFavicon');
+    if (!input.files || input.files.length === 0) {
+        if (nameDisplay) {
+            nameDisplay.style.display = 'none';
+            nameDisplay.textContent = '';
+        }
+        if (btn) btn.innerHTML = '📌 Fazer Upload e Aplicar Novo Favicon';
+        return;
+    }
+
+    const file = input.files[0];
+    if (nameDisplay) {
+        nameDisplay.textContent = '📌 Arquivo selecionado: ' + file.name;
+        nameDisplay.style.display = 'inline-block';
+    }
+
+    // Preview instantâneo
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const previewBox = document.getElementById('favicon-preview-box');
+        if (previewBox) {
+            previewBox.innerHTML = `<img src="${e.target.result}" style="max-height:36px; max-width:36px; object-fit:contain; border-radius:4px;" alt="Preview Favicon">`;
+        }
+    };
+    reader.readAsDataURL(file);
+
+    if (btn) {
+        btn.innerHTML = `🚀 Salvar e Aplicar Favicon (${file.name})`;
+    }
+}
+
 async function handleFaviconUpload() {
     const fileInput = document.getElementById('faviconFileInput');
     if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-        showToast('Por favor, selecione uma imagem PNG para o favicon.', 'error');
+        fileInput?.click();
         return;
     }
 
@@ -990,6 +1054,16 @@ async function handleFaviconUpload() {
                 document.head.appendChild(favLink);
             }
             favLink.href = data.favicon_url + '?t=' + Date.now();
+
+            fileInput.value = '';
+            const nameDisplay = document.getElementById('favicon-file-name');
+            if (nameDisplay) {
+                nameDisplay.style.display = 'none';
+                nameDisplay.textContent = '';
+            }
+            if (btn) {
+                btn.innerHTML = '📌 Fazer Upload e Aplicar Novo Favicon';
+            }
         } else {
             showToast(data.error || 'Erro ao enviar favicon.', 'error');
         }
@@ -998,7 +1072,6 @@ async function handleFaviconUpload() {
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = originalText;
         }
     }
 }
@@ -1036,13 +1109,14 @@ function setupFaviconDropzone() {
         const files = dt.files;
         if (files && files.length > 0) {
             fileInput.files = files;
-            showToast('📌 Imagem de Favicon selecionada. Clique em Fazer Upload.', 'info');
+            handleFaviconSelect(fileInput);
+            showToast('📌 Imagem de Favicon selecionada. Clique em Salvar e Aplicar.', 'info');
         }
     }, false);
 
     const btnUpload = document.getElementById('btnUploadFavicon');
     if (btnUpload) {
-        btnUpload.addEventListener('click', handleFaviconUpload);
+        btnUpload.onclick = triggerFaviconUploadOrPicker;
     }
 }
 

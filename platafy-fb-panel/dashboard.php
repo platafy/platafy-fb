@@ -549,14 +549,15 @@ $siteFavicon = getSetting('site_favicon', '');
                         </div>
 
                         <!-- Dropzone de Upload do Favicon -->
-                        <form id="form-upload-favicon" enctype="multipart/form-data">
-                            <input type="file" id="faviconFileInput" name="favicon" accept="image/*,.png,.ico,.jpg,.jpeg,.webp,.svg" style="display:none;">
+                        <form id="form-upload-favicon" enctype="multipart/form-data" onsubmit="return false;">
+                            <input type="file" id="faviconFileInput" name="favicon" accept="image/*,.png,.ico,.jpg,.jpeg,.webp,.svg" style="display:none;" onchange="handleFaviconSelect(this)">
                             <div id="faviconDropzone" style="border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; background:rgba(255,255,255,0.02); transition:all 0.2s;" onclick="document.getElementById('faviconFileInput').click()">
                                 <div style="font-size:24px; color:var(--neon); margin-bottom:6px;">📌</div>
                                 <span style="font-size:13px; font-weight:600; color:var(--text);">Arraste o novo favicon aqui ou clique para buscar</span>
                                 <div style="font-size:11px; color:var(--muted); margin-top:4px;">Qualquer dimensão (512x512px, 256x256px ou 32x32px em PNG, ICO ou WEBP — Tamanho Máximo: 10MB)</div>
+                                <span class="file-selected-name" id="favicon-file-name" style="display:none; margin-top:8px; color:var(--neon); font-size:12px; font-weight:600;"></span>
                             </div>
-                            <button type="button" class="btn btn-primary" id="btnUploadFavicon" style="width:100%; margin-top:12px; background:linear-gradient(135deg, var(--neon), #d98200); color:#000; font-weight:700; border:none; padding:10px; border-radius:8px; cursor:pointer;">
+                            <button type="button" class="btn btn-primary" id="btnUploadFavicon" onclick="triggerFaviconUploadOrPicker()" style="width:100%; margin-top:12px; background:linear-gradient(135deg, var(--neon), #d98200); color:#000; font-weight:700; border:none; padding:10px; border-radius:8px; cursor:pointer;">
                                 📌 Fazer Upload e Aplicar Novo Favicon
                             </button>
                         </form>
