@@ -218,16 +218,22 @@ function loginAdmin($username, $password) {
             startSecureSession();
             @session_regenerate_id(true); // Neutraliza ataques de Fixação de Sessão!
             $_SESSION['admin_logged'] = true;
-            $_SESSION['admin_user'] = $username;
+            $_SESSION['admin_user'] = $admin['username'];
             $_SESSION['login_time'] = time();
             $_SESSION['last_activity'] = time();
             return true;
+        }
+
+        // Se a tabela admins já existe e possui registros, não permitir fallback com credenciais padrão antigas
+        $countAdmins = (int)$pdo->query("SELECT COUNT(*) FROM admins")->fetchColumn();
+        if ($countAdmins > 0) {
+            return false;
         }
     } catch (Exception $e) {
         // Ignora erro de BD se a tabela ainda não existir e usa fallback
     }
 
-    // 2. Fallback para as constantes definidas no config.php
+    // 2. Fallback para as constantes definidas no config.php apenas se a tabela admins estiver vazia
     if ($username === ADMIN_USERNAME && password_verify($password, ADMIN_PASSWORD_HASH)) {
         startSecureSession();
         @session_regenerate_id(true); // Neutraliza ataques de Fixação de Sessão!

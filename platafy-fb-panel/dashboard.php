@@ -460,26 +460,36 @@ $siteFavicon = getSetting('site_favicon', '');
                 </button>
             </div>
 
-            <!-- ALTERAÇÃO DE SENHA ADMIN -->
+            <!-- ALTERAÇÃO DE CREDENCIAIS (USUÁRIO E SENHA) ADMIN -->
             <div class="settings-card">
                 <div>
                     <div class="card-header-custom">
                         <div class="card-icon-box blue">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         </div>
                         <div class="card-header-titles">
-                            <h3>Senha de Administrador</h3>
-                            <p>Atualize a chave de segurança para acesso ao painel cPanel</p>
+                            <h3>Credenciais de Administrador</h3>
+                            <p>Altere seu Usuário e Senha de acesso ao Painel Administrativo</p>
                         </div>
                     </div>
 
                     <div class="form-group-custom">
-                        <label>Senha Atual</label>
+                        <label>Usuário do Sistema (Login)</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </span>
+                            <input type="text" id="admin-username" value="<?= htmlspecialchars($_SESSION['admin_user'] ?? 'admin') ?>" placeholder="Seu nome de usuário (ex: admin)">
+                        </div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label>Senha Atual de Confirmação</label>
                         <div class="input-relative">
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                             </span>
-                            <input type="password" id="pass-current" placeholder="Sua senha atual de acesso">
+                            <input type="password" id="pass-current" placeholder="Digite sua senha atual para confirmar">
                             <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('pass-current', this)" title="Alternar Visibilidade">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                             </button>
@@ -487,7 +497,7 @@ $siteFavicon = getSetting('site_favicon', '');
                     </div>
 
                     <div class="form-group-custom">
-                        <label>Nova Senha</label>
+                        <label>Nova Senha <span style="font-size:11px; font-weight:400; color:var(--muted); text-transform:none;">(opcional — deixe em branco para manter a atual)</span></label>
                         <div class="input-relative">
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-2-2l2 2m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -505,7 +515,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                             </span>
-                            <input type="password" id="pass-confirm" placeholder="Repita exatamente a nova senha">
+                            <input type="password" id="pass-confirm" placeholder="Repita a nova senha se for alterar">
                             <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('pass-confirm', this)" title="Alternar Visibilidade">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                             </button>
@@ -513,9 +523,9 @@ $siteFavicon = getSetting('site_favicon', '');
                     </div>
                 </div>
 
-                <button class="btn-primary btn-save-custom" style="background: linear-gradient(135deg, #4d5b9a, #4d9aff);" onclick="changeAdminPassword()">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                    Alterar Senha de Acesso
+                <button class="btn-primary btn-save-custom" style="background: linear-gradient(135deg, #4d5b9a, #4d9aff);" onclick="saveAdminCredentials()">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Salvar Credenciais de Acesso
                 </button>
             </div>
 

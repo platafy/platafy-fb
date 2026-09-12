@@ -26,6 +26,20 @@ try {
             $mpUseTest   = getSetting('mp_use_test', defined('MP_USE_TEST') ? (MP_USE_TEST ? 'true' : 'false') : 'true');
             $siteLogo    = getSetting('site_logo', '');
 
+            // Determinar o usuário atual do admin
+            $currentAdminUser = $_SESSION['admin_user'] ?? (defined('ADMIN_USERNAME') ? ADMIN_USERNAME : 'admin');
+            try {
+                $stmtAdmin = $pdo->prepare("SELECT username FROM admins WHERE username = ?");
+                $stmtAdmin->execute([$currentAdminUser]);
+                $rowAdmin = $stmtAdmin->fetch();
+                if (!$rowAdmin) {
+                    $rowFirst = $pdo->query("SELECT username FROM admins ORDER BY id ASC LIMIT 1")->fetch();
+                    if ($rowFirst && !empty($rowFirst['username'])) {
+                        $currentAdminUser = $rowFirst['username'];
+                    }
+                }
+            } catch (Exception $e) {}
+
             echo json_encode([
                 'success' => true,
                 'settings' => [
@@ -34,7 +48,8 @@ try {
                     'mp_public_key'        => $mpPublicKey,
                     'mp_use_test'          => $mpUseTest === 'true' || $mpUseTest === '1' || $mpUseTest === true,
                     'site_logo'            => $siteLogo,
-                    'site_favicon'         => getSetting('site_favicon', '')
+                    'site_favicon'         => getSetting('site_favicon', ''),
+                    'admin_username'       => $currentAdminUser
                 ]
             ]);
             break;
@@ -59,28 +74,20 @@ try {
             echo json_encode(['success' => true, 'message' => 'Configurações do Mercado Pago salvas com sucesso!']);
             break;
 
-        // ========== ALTERAÇÃO DE SENHA ADMIN ==========
+        // ========== ALTERAÇÃO DE CREDENCIAIS (USUÁRIO E SENHA) ADMIN ==========
+        case 'change_credentials':
         case 'change_password':
             if ($method !== 'POST') { echo json_encode(['error' => 'Método inválido']); exit; }
 
             $rawInput = file_get_contents('php://input');
             $input = json_decode($rawInput, true) ?: $_POST;
             $currentPass = $input['current_password'] ?? '';
+            $newUsername = trim($input['new_username'] ?? '');
             $newPass     = $input['new_password'] ?? '';
             $confirmPass = $input['confirm_password'] ?? '';
 
-            if (empty($currentPass) || empty($newPass)) {
-                echo json_encode(['error' => 'Preencha a senha atual e a nova senha.']);
-                exit;
-            }
-
-            if (strlen($newPass) < 6) {
-                echo json_encode(['error' => 'A nova senha deve conter pelo menos 6 caracteres.']);
-                exit;
-            }
-
-            if ($newPass !== $confirmPass) {
-                echo json_encode(['error' => 'A nova senha e a confirmação não conferem.']);
+            if (empty($currentPass)) {
+                echo json_encode(['error' => 'Por favor, informe sua senha atual para confirmar as alterações.']);
                 exit;
             }
 
@@ -92,34 +99,122 @@ try {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-            $username = $_SESSION['admin_user'] ?? ADMIN_USERNAME;
+            $sessionUsername = $_SESSION['admin_user'] ?? (defined('ADMIN_USERNAME') ? ADMIN_USERNAME : 'admin');
+
+            // Buscar registro do admin no banco
             $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = ?");
-            $stmt->execute([$username]);
+            $stmt->execute([$sessionUsername]);
             $admin = $stmt->fetch();
 
+            // Se não encontrou pelo sessionUsername, tentar buscar o primeiro admin cadastrado
+            if (!$admin) {
+                $stmtFirst = $pdo->query("SELECT * FROM admins ORDER BY id ASC LIMIT 1");
+                $admin = $stmtFirst->fetch();
+            }
+
+            // Validar autenticidade da senha atual
             $authenticated = false;
             if ($admin && password_verify($currentPass, $admin['password_hash'])) {
                 $authenticated = true;
-            } elseif ($username === ADMIN_USERNAME && password_verify($currentPass, ADMIN_PASSWORD_HASH)) {
+            } elseif (defined('ADMIN_PASSWORD_HASH') && password_verify($currentPass, ADMIN_PASSWORD_HASH)) {
                 $authenticated = true;
             }
 
             if (!$authenticated) {
-                echo json_encode(['error' => 'A senha atual está incorreta.']);
+                echo json_encode(['error' => 'A senha atual informada está incorreta.']);
                 exit;
             }
 
-            // Atualizar ou inserir a nova senha
-            $newHash = password_hash($newPass, PASSWORD_BCRYPT);
-            if ($admin) {
-                $updateStmt = $pdo->prepare("UPDATE admins SET password_hash = ? WHERE id = ?");
-                $updateStmt->execute([$newHash, $admin['id']]);
-            } else {
-                $insertStmt = $pdo->prepare("INSERT INTO admins (username, password_hash) VALUES (?, ?)");
-                $insertStmt->execute([$username, $newHash]);
+            // Se não foi enviado novo username, manter o atual
+            if (empty($newUsername)) {
+                $newUsername = $admin ? $admin['username'] : $sessionUsername;
             }
 
-            echo json_encode(['success' => true, 'message' => 'Senha alterada com sucesso!']);
+            // Validação de formato do novo usuário
+            if (strlen($newUsername) < 3 || strlen($newUsername) > 50) {
+                echo json_encode(['error' => 'O nome de usuário deve ter entre 3 e 50 caracteres.']);
+                exit;
+            }
+
+            if (!preg_match('/^[a-zA-Z0-9_.\-@]+$/', $newUsername)) {
+                echo json_encode(['error' => 'O nome de usuário contém caracteres inválidos. Utilize apenas letras, números, sublinhado (_), ponto (.) ou hífen (-).']);
+                exit;
+            }
+
+            // Checar colisão com parceiros White Label
+            try {
+                $stmtPartner = $pdo->prepare("SELECT COUNT(*) FROM partners WHERE username = ?");
+                $stmtPartner->execute([$newUsername]);
+                if ((int)$stmtPartner->fetchColumn() > 0) {
+                    echo json_encode(['error' => 'Este nome de usuário já está sendo utilizado por um parceiro.']);
+                    exit;
+                }
+            } catch (Exception $e) {}
+
+            // Se o username mudou, verificar se já está em uso por outro admin
+            if ($admin && $newUsername !== $admin['username']) {
+                $checkStmt = $pdo->prepare("SELECT id FROM admins WHERE username = ? AND id != ?");
+                $checkStmt->execute([$newUsername, $admin['id']]);
+                if ($checkStmt->fetch()) {
+                    echo json_encode(['error' => 'Este nome de usuário já está sendo utilizado por outro administrador.']);
+                    exit;
+                }
+            } elseif (!$admin && $newUsername !== $sessionUsername) {
+                $checkStmt = $pdo->prepare("SELECT id FROM admins WHERE username = ?");
+                $checkStmt->execute([$newUsername]);
+                if ($checkStmt->fetch()) {
+                    echo json_encode(['error' => 'Este nome de usuário já está sendo utilizado por outro administrador.']);
+                    exit;
+                }
+            }
+
+            // Validar nova senha caso tenha sido fornecida
+            $finalHash = null;
+            $passwordChanged = false;
+            if (!empty($newPass)) {
+                if (strlen($newPass) < 6) {
+                    echo json_encode(['error' => 'A nova senha deve conter pelo menos 6 caracteres.']);
+                    exit;
+                }
+                if ($newPass !== $confirmPass) {
+                    echo json_encode(['error' => 'A nova senha e a confirmação não conferem.']);
+                    exit;
+                }
+                $finalHash = password_hash($newPass, PASSWORD_BCRYPT);
+                $passwordChanged = true;
+            } else {
+                // Manter hash existente
+                $finalHash = $admin ? $admin['password_hash'] : password_hash($currentPass, PASSWORD_BCRYPT);
+            }
+
+            // Atualizar ou inserir na tabela admins
+            if ($admin) {
+                $updateStmt = $pdo->prepare("UPDATE admins SET username = ?, password_hash = ? WHERE id = ?");
+                $updateStmt->execute([$newUsername, $finalHash, $admin['id']]);
+            } else {
+                $insertStmt = $pdo->prepare("INSERT INTO admins (username, password_hash) VALUES (?, ?)");
+                $insertStmt->execute([$newUsername, $finalHash]);
+            }
+
+            // Atualizar sessão ativa com o novo nome de usuário
+            $_SESSION['admin_user'] = $newUsername;
+
+            $usernameChanged = ($admin && $newUsername !== $admin['username']) || (!$admin && $newUsername !== $sessionUsername);
+            if ($usernameChanged && $passwordChanged) {
+                $msg = "Usuário e senha alterados com sucesso! Novo usuário: '{$newUsername}'.";
+            } elseif ($usernameChanged) {
+                $msg = "Usuário do sistema alterado com sucesso para '{$newUsername}'!";
+            } elseif ($passwordChanged) {
+                $msg = "Senha de acesso alterada com sucesso!";
+            } else {
+                $msg = "Credenciais validadas (nenhuma alteração necessária).";
+            }
+
+            echo json_encode([
+                'success' => true,
+                'message' => $msg,
+                'username' => $newUsername
+            ]);
             break;
 
         // ========== UPLOAD DE LOGO DO SISTEMA ==========

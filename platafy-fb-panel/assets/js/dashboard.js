@@ -647,6 +647,12 @@ async function loadSettingsInfo() {
         document.getElementById('setting-mp-public-key').value = s.mp_public_key || '';
         document.getElementById('setting-mp-use-test').checked = !!s.mp_use_test;
         
+        // Nome de Usuário do Admin
+        if (s.admin_username) {
+            const userInput = document.getElementById('admin-username');
+            if (userInput) userInput.value = s.admin_username;
+        }
+
         // Preview da Logo
         const previewBox = document.getElementById('logo-preview-box');
         if (previewBox) {
@@ -708,31 +714,46 @@ async function saveMercadoPagoSettings() {
     }
 }
 
-async function changeAdminPassword() {
-    const currentPass = document.getElementById('pass-current').value;
-    const newPass     = document.getElementById('pass-new').value;
-    const confirmPass = document.getElementById('pass-confirm').value;
+async function saveAdminCredentials() {
+    const usernameInput = document.getElementById('admin-username');
+    const newUsername   = usernameInput ? usernameInput.value.trim() : '';
+    const currentPass   = document.getElementById('pass-current').value;
+    const newPass       = document.getElementById('pass-new').value;
+    const confirmPass   = document.getElementById('pass-confirm').value;
     
-    if (!currentPass || !newPass) {
-        showToast('Preencha a senha atual e a nova senha.', 'error');
+    if (!newUsername) {
+        showToast('Informe o nome de usuário desejado.', 'error');
+        return;
+    }
+
+    if (newUsername.length < 3) {
+        showToast('O usuário deve ter pelo menos 3 caracteres.', 'error');
         return;
     }
     
-    if (newPass.length < 6) {
-        showToast('A nova senha deve ter no mínimo 6 caracteres.', 'error');
+    if (!currentPass) {
+        showToast('Informe sua senha atual para confirmar a alteração.', 'error');
         return;
     }
     
-    if (newPass !== confirmPass) {
-        showToast('A nova senha e a confirmação não conferem.', 'error');
-        return;
+    if (newPass) {
+        if (newPass.length < 6) {
+            showToast('A nova senha deve ter no mínimo 6 caracteres.', 'error');
+            return;
+        }
+        
+        if (newPass !== confirmPass) {
+            showToast('A nova senha e a confirmação não conferem.', 'error');
+            return;
+        }
     }
     
     try {
-        const data = await apiFetch('api/admin/settings.php?action=change_password', {
+        const data = await apiFetch('api/admin/settings.php?action=change_credentials', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                new_username: newUsername,
                 current_password: currentPass,
                 new_password: newPass,
                 confirm_password: confirmPass
@@ -740,19 +761,25 @@ async function changeAdminPassword() {
         });
         
         if (data.success) {
-            showToast('🔒 Senha alterada com sucesso!');
+            showToast('🔒 ' + (data.message || 'Credenciais atualizadas com sucesso!'));
             document.getElementById('pass-current').value = '';
             document.getElementById('pass-new').value = '';
             document.getElementById('pass-confirm').value = '';
+            if (data.username && usernameInput) {
+                usernameInput.value = data.username;
+            }
         } else {
-            showToast('Erro: ' + (data.error || 'Falha ao alterar senha'), 'error');
+            showToast('Erro: ' + (data.error || 'Falha ao atualizar credenciais'), 'error');
         }
     } catch (err) {
         if (err.message !== 'Não autorizado') {
-            showToast('Erro de conexão ao alterar senha.', 'error');
+            showToast('Erro de conexão ao alterar credenciais.', 'error');
         }
     }
 }
+
+// Alias para retrocompatibilidade caso algum botão chame changeAdminPassword
+const changeAdminPassword = saveAdminCredentials;
 
 async function uploadSystemLogo() {
     const fileInput = document.getElementById('logo-file-input');
