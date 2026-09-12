@@ -557,7 +557,7 @@ $siteFavicon = getSetting('site_favicon', '');
                                 <div style="font-size:11px; color:var(--muted); margin-top:4px;">Qualquer dimensão (512x512px, 256x256px ou 32x32px em PNG, ICO ou WEBP — Tamanho Máximo: 10MB)</div>
                                 <span class="file-selected-name" id="favicon-file-name" style="display:none; margin-top:8px; color:var(--neon); font-size:12px; font-weight:600;"></span>
                             </div>
-                            <button type="button" class="btn btn-primary" id="btnUploadFavicon" onclick="triggerFaviconUploadOrPicker()" style="width:100%; margin-top:12px; background:linear-gradient(135deg, var(--neon), #d98200); color:#000; font-weight:700; border:none; padding:10px; border-radius:8px; cursor:pointer;">
+                            <button type="button" class="btn-primary btn-save-custom" id="btnUploadFavicon" onclick="triggerFaviconUploadOrPicker()" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; margin-top:14px; background:linear-gradient(135deg, var(--neon), #d98200); color:#000; font-weight:700; border:none; padding:12px 20px; border-radius:10px; cursor:pointer; gap:8px;">
                                 📌 Fazer Upload e Aplicar Novo Favicon
                             </button>
                         </form>
@@ -600,7 +600,7 @@ $siteFavicon = getSetting('site_favicon', '');
                                 <span class="file-selected-name" id="logo-file-name"></span>
                             </div>
 
-                            <button class="btn-primary btn-save-custom" style="margin-top:16px;" onclick="uploadSystemLogo()">
+                            <button class="btn-primary btn-save-custom" style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; margin-top:16px;" onclick="uploadSystemLogo()">
                                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                                 Fazer Upload e Aplicar Nova Logomarca
                             </button>

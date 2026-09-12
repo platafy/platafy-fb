@@ -127,6 +127,8 @@ body {
 .btn-primary {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     gap: 8px;
     padding: 10px 20px;
     background: linear-gradient(135deg, #4d5b9a, #ffaa00);
@@ -145,6 +147,8 @@ body {
 .btn-outline {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     gap: 8px;
     padding: 10px 20px;
     background: transparent;
@@ -1168,7 +1172,10 @@ input[type="number"]::-webkit-outer-spin-button {
     width: 100%;
     padding: 12px 20px;
     margin-top: 10px;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    text-align: center;
     font-size: 14px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(255, 170, 0, 0.2);
