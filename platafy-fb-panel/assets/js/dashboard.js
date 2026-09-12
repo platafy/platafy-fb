@@ -649,16 +649,26 @@ async function loadSettingsInfo() {
         
         // Preview da Logo
         const previewBox = document.getElementById('logo-preview-box');
-        if (s.site_logo) {
-            previewBox.innerHTML = `<img src="${s.site_logo}" id="settings-logo-preview" style="max-height:60px; max-width:200px;" alt="Logo">`;
+        if (previewBox) {
+            if (s.site_logo) {
+                const sep = s.site_logo.startsWith('data:') ? '' : `?t=${Date.now()}`;
+                previewBox.innerHTML = `<img src="${s.site_logo}${sep}" id="settings-logo-preview" style="max-height:52px; max-width:100%; object-fit:contain;" alt="Logo">`;
+            } else {
+                previewBox.innerHTML = `<span id="settings-logo-preview-text" style="font-family:'Orbitron',sans-serif; color:var(--neon); font-size:16px; font-weight:700; letter-spacing:1px;">PLATAFY</span>`;
+            }
         }
+
+        // Preview do Favicon
         const favPreviewBox = document.getElementById('favicon-preview-box');
-        if (favPreviewBox && s.site_favicon) {
-            favPreviewBox.innerHTML = `<img src="${s.site_favicon}?t=${Date.now()}" id="settings-favicon-preview" style="max-height:36px; max-width:36px; object-fit:contain;" alt="Favicon">`;
-            let favLink = document.querySelector('link[rel="icon"]');
-            if (favLink) favLink.href = s.site_favicon;
-        } else {
-            previewBox.innerHTML = `<span id="settings-logo-preview-text" style="font-family:'Orbitron',sans-serif; color:var(--neon); font-size:20px;">PLATAFY</span>`;
+        if (favPreviewBox) {
+            if (s.site_favicon) {
+                const sep = s.site_favicon.startsWith('data:') ? '' : `?t=${Date.now()}`;
+                favPreviewBox.innerHTML = `<img src="${s.site_favicon}${sep}" id="settings-favicon-preview" style="max-height:42px; max-width:42px; object-fit:contain; border-radius:6px;" alt="Favicon">`;
+                let favLink = document.querySelector('link[rel="icon"]');
+                if (favLink) favLink.href = s.site_favicon + sep;
+            } else {
+                favPreviewBox.innerHTML = `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--neon)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><circle cx="6" cy="6" r="1"></circle></svg>`;
+            }
         }
         
     } catch (err) {
@@ -775,7 +785,7 @@ async function uploadSystemLogo() {
             const previewBox = document.getElementById('logo-preview-box');
             if (previewBox) {
                 const sep = data.logo_url.startsWith('data:') ? '' : `?t=${Date.now()}`;
-                previewBox.innerHTML = `<img src="${data.logo_url}${sep}" id="settings-logo-preview" style="max-height:48px; max-width:115px; object-fit:contain;" alt="Logo">`;
+                previewBox.innerHTML = `<img src="${data.logo_url}${sep}" id="settings-logo-preview" style="max-height:52px; max-width:100%; object-fit:contain;" alt="Logo">`;
             }
             
             // Atualizar logo na Navbar
@@ -877,7 +887,7 @@ function handleFileSelect(input) {
     reader.onload = function(e) {
         const previewBox = document.getElementById('logo-preview-box');
         if (previewBox) {
-            previewBox.innerHTML = `<img src="${e.target.result}" style="max-height:48px; max-width:115px; object-fit:contain;" alt="Preview Logo">`;
+            previewBox.innerHTML = `<img src="${e.target.result}" style="max-height:52px; max-width:100%; object-fit:contain;" alt="Preview Logo">`;
         }
     };
     reader.readAsDataURL(file);

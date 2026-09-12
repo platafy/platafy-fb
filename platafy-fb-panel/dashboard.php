@@ -535,9 +535,9 @@ $siteFavicon = getSetting('site_favicon', '');
                     <div class="media-upload-layout">
                         <div class="logo-current-box">
                             <span class="logo-current-label">Logo Atual</span>
-                            <div id="logo-preview-box" style="display:flex; align-items:center; justify-content:center; width:100%; flex:1;">
+                            <div id="logo-preview-box" class="preview-inner-box">
                                 <?php if (!empty($siteLogo)): ?>
-                                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" id="settings-logo-preview" style="max-height:48px; max-width:115px; object-fit:contain;" alt="Logo">
+                                    <img src="<?php echo htmlspecialchars($siteLogo); ?>" id="settings-logo-preview" style="max-height:52px; max-width:100%; object-fit:contain;" alt="Logo">
                                 <?php else: ?>
                                     <span id="settings-logo-preview-text" style="font-family:'Orbitron',sans-serif; color:var(--neon); font-size:16px; font-weight:700; letter-spacing:1px;">PLATAFY</span>
                                 <?php endif; ?>
@@ -580,7 +580,7 @@ $siteFavicon = getSetting('site_favicon', '');
                     <div class="media-upload-layout">
                         <div class="logo-current-box">
                             <span class="logo-current-label">Favicon Atual</span>
-                            <div id="favicon-preview-box" style="display:flex; align-items:center; justify-content:center; width:100%; flex:1;">
+                            <div id="favicon-preview-box" class="preview-inner-box">
                                 <?php if (!empty($siteFavicon)): ?>
                                     <img src="<?= htmlspecialchars($siteFavicon) ?>" id="settings-favicon-preview" style="max-height:42px; max-width:42px; object-fit:contain; border-radius:6px;" alt="Favicon">
                                 <?php else: ?>
