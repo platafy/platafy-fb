@@ -551,14 +551,34 @@ body {
 }
 
 .modal-card {
-    background: rgba(15,18,35,0.95);
+    background: rgba(15,18,35,0.96);
     border: 1px solid var(--border);
     border-radius: 16px;
     width: 460px;
-    max-width: 90%;
-    max-height: 85vh;
+    max-width: 92%;
+    max-height: 88vh;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.85);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-card::-webkit-scrollbar,
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-card::-webkit-scrollbar-track,
+.modal-body::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+.modal-card::-webkit-scrollbar-thumb,
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 170, 0, 0.25);
+    border-radius: 4px;
+}
+.modal-card::-webkit-scrollbar-thumb:hover,
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--neon);
 }
 
 .modal-header {
@@ -785,7 +805,7 @@ body {
 
 /* FORM ENHANCEMENTS */
 .form-group-custom {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 .form-group-custom label {
     display: flex;
@@ -807,15 +827,13 @@ body {
     gap: 5px;
 }
 
-.input-relative {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-.input-relative input {
+/* Universal styling for any input/select/textarea inside form-group-custom */
+.form-group-custom input:not([type="checkbox"]):not([type="radio"]),
+.form-group-custom select,
+.form-group-custom textarea {
     width: 100%;
-    padding: 12px 42px 12px 40px;
-    background: rgba(0, 0, 0, 0.4);
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.45);
     border: 1px solid rgba(255, 170, 0, 0.2);
     border-radius: 10px;
     color: var(--text);
@@ -823,28 +841,132 @@ body {
     font-size: 13px;
     outline: none;
     transition: all 0.25s ease;
+    box-sizing: border-box;
 }
-.input-relative input:focus {
+
+.form-group-custom input:not([type="checkbox"]):not([type="radio"]):focus,
+.form-group-custom select:focus,
+.form-group-custom textarea:focus {
     border-color: var(--neon);
-    background: rgba(0, 0, 0, 0.6);
-    box-shadow: 0 0 15px rgba(255, 170, 0, 0.15);
+    background: rgba(0, 0, 0, 0.65);
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.18);
 }
-.input-relative input::placeholder {
+
+.form-group-custom input::placeholder,
+.form-group-custom textarea::placeholder {
     color: rgba(176, 184, 204, 0.4);
+}
+
+/* Relative container with icon */
+.input-relative {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-relative input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 170, 0, 0.2);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+}
+
+.input-relative input[type="password"] {
+    padding-right: 42px;
+}
+
+.input-relative textarea {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 170, 0, 0.2);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.input-relative select {
+    width: 100%;
+    height: 44px;
+    padding: 0 36px 0 42px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 170, 0, 0.2);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ffaa00' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.input-relative select option {
+    background: #12162b;
+    color: var(--text);
+}
+
+.input-relative input:focus,
+.input-relative select:focus,
+.input-relative textarea:focus {
+    border-color: var(--neon);
+    background: rgba(0, 0, 0, 0.65);
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.18);
 }
 
 .field-icon-left {
     position: absolute;
     left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
     color: var(--muted);
     display: flex;
     align-items: center;
+    justify-content: center;
     pointer-events: none;
     transition: color 0.2s;
+    z-index: 2;
 }
-.input-relative input:focus ~ .field-icon-left,
-.input-relative input:focus + .field-icon-left {
+
+.input-relative:focus-within .field-icon-left {
     color: var(--neon);
+}
+
+/* Date picker calendar icon theme */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8) sepia(100%) saturate(300%) hue-rotate(5deg);
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+/* Number input spin button styling */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    opacity: 0.5;
+    filter: invert(1);
+    cursor: pointer;
 }
 
 .btn-toggle-eye {

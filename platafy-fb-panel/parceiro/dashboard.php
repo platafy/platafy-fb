@@ -247,7 +247,7 @@ $partnerSession = getPartnerSession();
 
     <!-- MODAL GERAR LICENÇA PARCEIRO -->
     <div class="modal-overlay" id="modal-create-partner-lic" style="display:none;">
-        <div class="modal-card">
+        <div class="modal-card" style="max-width:480px;">
             <div class="modal-header">
                 <h3 style="display:flex; align-items:center; gap:8px;">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--neon);"><path d="M12 5v14M5 12h14"></path></svg>
@@ -258,28 +258,48 @@ $partnerSession = getPartnerSession();
             <div class="modal-body">
                 <div class="form-group-custom">
                     <label>Nome do Cliente *</label>
-                    <input type="text" id="partner-client-name" placeholder="Nome completo do assinante" required>
+                    <div class="input-relative">
+                        <span class="field-icon-left">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </span>
+                        <input type="text" id="partner-client-name" placeholder="Nome completo do assinante" required>
+                    </div>
                 </div>
 
                 <div class="form-group-custom">
                     <label>E-mail do Cliente</label>
-                    <input type="email" id="partner-client-email" placeholder="cliente@email.com">
+                    <div class="input-relative">
+                        <span class="field-icon-left">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        </span>
+                        <input type="email" id="partner-client-email" placeholder="cliente@email.com">
+                    </div>
                 </div>
 
                 <div class="form-group-custom">
                     <label>WhatsApp / Celular do Cliente</label>
-                    <input type="text" id="partner-client-phone" placeholder="(11) 99999-9999" oninput="formatPhoneInput(this)">
+                    <div class="input-relative">
+                        <span class="field-icon-left">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        </span>
+                        <input type="text" id="partner-client-phone" placeholder="(11) 99999-9999" oninput="formatPhoneInput(this)">
+                    </div>
                 </div>
 
                 <div class="form-group-custom">
                     <label>Validade da Licença *</label>
-                    <select id="partner-client-plan" class="filter-select" style="width:100%; padding:12px 16px;">
-                        <option value="mensal">Mensal (30 dias)</option>
-                        <option value="trimestral">Trimestral (90 dias)</option>
-                        <option value="semestral">Semestral (180 dias)</option>
-                        <option value="anual">Anual (365 dias)</option>
-                        <option value="vitalicio">Vitalício</option>
-                    </select>
+                    <div class="input-relative">
+                        <span class="field-icon-left">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                        </span>
+                        <select id="partner-client-plan" class="filter-select" style="width:100%; padding-left:42px;">
+                            <option value="mensal">Mensal (30 dias)</option>
+                            <option value="trimestral">Trimestral (90 dias)</option>
+                            <option value="semestral">Semestral (180 dias)</option>
+                            <option value="anual">Anual (365 dias)</option>
+                            <option value="vitalicio">Vitalício</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
