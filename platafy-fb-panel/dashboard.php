@@ -739,7 +739,7 @@ $siteFavicon = getSetting('site_favicon', '');
                         <span class="field-icon-left">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         </span>
-                        <input type="text" id="create-name" placeholder="Nome completo do assinante">
+                        <input type="text" id="create-name" style="padding-left:46px;" placeholder="Nome completo do assinante">
                     </div>
                 </div>
 
@@ -749,7 +749,7 @@ $siteFavicon = getSetting('site_favicon', '');
                         <span class="field-icon-left">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                         </span>
-                        <input type="email" id="create-email" placeholder="cliente@email.com">
+                        <input type="email" id="create-email" style="padding-left:46px;" placeholder="cliente@email.com">
                     </div>
                 </div>
 
@@ -759,7 +759,7 @@ $siteFavicon = getSetting('site_favicon', '');
                         <span class="field-icon-left">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                         </span>
-                        <input type="text" id="create-phone" placeholder="(11) 99999-9999" oninput="formatPhoneInput(this)">
+                        <input type="text" id="create-phone" style="padding-left:46px;" placeholder="(11) 99999-9999" oninput="formatPhoneInput(this)">
                     </div>
                 </div>
 
@@ -836,7 +836,7 @@ $siteFavicon = getSetting('site_favicon', '');
                         <span class="field-icon-left">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         </span>
-                        <input type="text" id="partner-name" placeholder="Ex: Platafy Teste">
+                        <input type="text" id="partner-name" style="padding-left:46px;" placeholder="Ex: Platafy Teste">
                     </div>
                 </div>
 
@@ -847,7 +847,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path></svg>
                             </span>
-                            <input type="text" id="partner-username" placeholder="ex: agenciaalfa">
+                            <input type="text" id="partner-username" style="padding-left:46px;" placeholder="ex: agenciaalfa">
                         </div>
                     </div>
                     <div class="form-group-custom" id="group-partner-password">
@@ -856,7 +856,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                             </span>
-                            <input type="password" id="partner-password" placeholder="Senha do painel">
+                            <input type="password" id="partner-password" style="padding-left:46px; padding-right:44px;" placeholder="Senha do painel">
                         </div>
                     </div>
                 </div>
@@ -868,7 +868,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                             </span>
-                            <input type="text" id="partner-brand-name" placeholder="Ex: Alfa FB Pro">
+                            <input type="text" id="partner-brand-name" style="padding-left:46px;" placeholder="Ex: Alfa FB Pro">
                         </div>
                     </div>
                     <div class="form-group-custom">
@@ -877,7 +877,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                             </span>
-                            <input type="number" id="partner-max-licenses" value="50" min="1" max="10000">
+                            <input type="number" id="partner-max-licenses" style="padding-left:46px;" value="50" min="1" max="10000">
                         </div>
                     </div>
                 </div>
@@ -888,7 +888,7 @@ $siteFavicon = getSetting('site_favicon', '');
                         <span class="field-icon-left">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                         </span>
-                        <input type="url" id="partner-logo-url" placeholder="https://seusite.com/logo.png">
+                        <input type="url" id="partner-logo-url" style="padding-left:46px;" placeholder="https://seusite.com/logo.png">
                     </div>
                     <small style="color:var(--muted); font-size:11px; margin-top:5px; display:block;">Será exibida no cabeçalho da extensão e no painel do parceiro.</small>
                 </div>
@@ -900,7 +900,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                             </span>
-                            <input type="text" id="partner-whatsapp" placeholder="Ex: 5511999999999" oninput="formatPhoneInput(this)">
+                            <input type="text" id="partner-whatsapp" style="padding-left:46px;" placeholder="Ex: 5511999999999" oninput="formatPhoneInput(this)">
                         </div>
                     </div>
                     <div class="form-group-custom">
@@ -909,7 +909,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                             </span>
-                            <input type="url" id="partner-url" placeholder="https://wa.me/5511999999999">
+                            <input type="url" id="partner-url" style="padding-left:46px;" placeholder="https://wa.me/5511999999999">
                         </div>
                     </div>
                 </div>
@@ -921,7 +921,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4.5v6c0 5.25-3.5 10-8 11.5-4.5-1.5-8-6.25-8-11.5v-6z"></path></svg>
                             </span>
-                            <input type="text" id="partner-plan-name" value="White Label Pro">
+                            <input type="text" id="partner-plan-name" style="padding-left:46px;" value="White Label Pro">
                         </div>
                     </div>
                     <div class="form-group-custom">
@@ -930,7 +930,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                             </span>
-                            <input type="date" id="partner-expires-at">
+                            <input type="date" id="partner-expires-at" style="padding-left:46px;">
                         </div>
                     </div>
                     <div class="form-group-custom">
@@ -939,7 +939,7 @@ $siteFavicon = getSetting('site_favicon', '');
                             <span class="field-icon-left">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
                             </span>
-                            <select id="partner-status" class="filter-select" style="width:100%; padding-left:42px;">
+                            <select id="partner-status" class="filter-select" style="width:100%; padding-left:46px;">
                                 <option value="active">Ativo</option>
                                 <option value="suspended">Suspenso</option>
                                 <option value="inactive">Inativo</option>
@@ -954,7 +954,7 @@ $siteFavicon = getSetting('site_favicon', '');
                         <span class="field-icon-left" style="top:16px; transform:none;">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
                         </span>
-                        <textarea id="partner-notes" rows="2" style="width:100%; padding-left:42px; min-height:64px;" placeholder="Anotações internas sobre o contrato do parceiro..."></textarea>
+                        <textarea id="partner-notes" rows="2" style="width:100%; padding-left:46px; min-height:64px;" placeholder="Anotações internas sobre o contrato do parceiro..."></textarea>
                     </div>
                 </div>
             </div>
@@ -987,7 +987,7 @@ $siteFavicon = getSetting('site_favicon', '');
                         <span class="field-icon-left">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         </span>
-                        <input type="password" id="partner-pass-new" placeholder="Digite a nova senha para o parceiro">
+                        <input type="password" id="partner-pass-new" style="padding-left:46px;" placeholder="Digite a nova senha para o parceiro">
                     </div>
                 </div>
             </div>
