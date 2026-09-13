@@ -26,6 +26,12 @@ try {
             $mpUseTest   = getSetting('mp_use_test', defined('MP_USE_TEST') ? (MP_USE_TEST ? 'true' : 'false') : 'true');
             $siteLogo    = getSetting('site_logo', '');
 
+            // Checkout Platafy
+            $platafyUrl    = getSetting('checkout_platafy_url', defined('CHECKOUT_PLATAFY_URL') ? CHECKOUT_PLATAFY_URL : 'https://checkout.platafy.com');
+            $platafyApiKey = getSetting('checkout_platafy_api_key', defined('CHECKOUT_PLATAFY_API_KEY') ? CHECKOUT_PLATAFY_API_KEY : '');
+            $platafySecret = getSetting('checkout_platafy_webhook_secret', defined('CHECKOUT_PLATAFY_WEBHOOK_SECRET') ? CHECKOUT_PLATAFY_WEBHOOK_SECRET : '');
+            $activeGateway = getSetting('default_payment_gateway', 'platafy');
+
             // Determinar o usuário atual do admin
             $currentAdminUser = $_SESSION['admin_user'] ?? (defined('ADMIN_USERNAME') ? ADMIN_USERNAME : 'admin');
             try {
@@ -49,7 +55,11 @@ try {
                     'mp_use_test'          => $mpUseTest === 'true' || $mpUseTest === '1' || $mpUseTest === true,
                     'site_logo'            => $siteLogo,
                     'site_favicon'         => getSetting('site_favicon', ''),
-                    'admin_username'       => $currentAdminUser
+                    'admin_username'       => $currentAdminUser,
+                    'checkout_platafy_url'            => $platafyUrl,
+                    'checkout_platafy_api_key'        => $platafyApiKey,
+                    'checkout_platafy_webhook_secret' => $platafySecret,
+                    'default_payment_gateway'         => $activeGateway
                 ]
             ]);
             break;
@@ -72,6 +82,32 @@ try {
             setSetting('mp_use_test', $useTest);
 
             echo json_encode(['success' => true, 'message' => 'Configurações do Mercado Pago salvas com sucesso!']);
+            break;
+
+        // ========== SALVAR CREDENCIAIS CHECKOUT PLATAFY ==========
+        case 'save_checkout_platafy':
+            if ($method !== 'POST') { echo json_encode(['error' => 'Método inválido']); exit; }
+
+            $rawInput = file_get_contents('php://input');
+            $input = json_decode($rawInput, true) ?: $_POST;
+
+            $url           = trim($input['checkout_platafy_url'] ?? '');
+            $apiKey        = trim($input['checkout_platafy_api_key'] ?? '');
+            $webhookSecret = trim($input['checkout_platafy_webhook_secret'] ?? '');
+            $gateway       = trim($input['default_payment_gateway'] ?? 'platafy');
+
+            // Normalizar URL (remover barras finais)
+            $url = rtrim($url, '/');
+            if (empty($url)) {
+                $url = 'https://checkout.platafy.com';
+            }
+
+            setSetting('checkout_platafy_url', $url);
+            setSetting('checkout_platafy_api_key', $apiKey);
+            setSetting('checkout_platafy_webhook_secret', $webhookSecret);
+            setSetting('default_payment_gateway', in_array($gateway, ['platafy', 'mercadopago']) ? $gateway : 'platafy');
+
+            echo json_encode(['success' => true, 'message' => 'Configurações do Checkout Platafy salvas com sucesso!']);
             break;
 
         // ========== ALTERAÇÃO DE CREDENCIAIS (USUÁRIO E SENHA) ADMIN ==========
@@ -358,8 +394,61 @@ try {
             }
             break;
 
+        // ========== OBTER PLANOS DE ASSINATURA ==========
+        case 'get_plans':
+            $plans = getSystemPlans();
+            $defaults = getDefaultPlans();
+            echo json_encode([
+                'success'  => true,
+                'plans'    => $plans,
+                'defaults' => $defaults
+            ]);
+            break;
+
+        // ========== SALVAR PLANOS DE ASSINATURA ==========
+        case 'save_plans':
+            if ($method !== 'POST') { echo json_encode(['error' => 'Método inválido']); exit; }
+
+            $rawInput = file_get_contents('php://input');
+            $input = json_decode($rawInput, true) ?: $_POST;
+
+            if (!isset($input['plans']) || !is_array($input['plans'])) {
+                echo json_encode(['error' => 'Dados de planos inválidos ou ausentes.']);
+                exit;
+            }
+
+            $saved = saveSystemPlans($input['plans']);
+            if ($saved) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Planos de assinatura atualizados com sucesso!',
+                    'plans'   => getSystemPlans()
+                ]);
+            } else {
+                echo json_encode(['error' => 'Falha ao salvar as configurações dos planos.']);
+            }
+            break;
+
+        // ========== RESTAURAR PLANOS PADRÃO ==========
+        case 'reset_plans':
+            if ($method !== 'POST') { echo json_encode(['error' => 'Método inválido']); exit; }
+
+            $defaults = getDefaultPlans();
+            $saved = saveSystemPlans($defaults);
+            if ($saved) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Planos restaurados com sucesso para o padrão original!',
+                    'plans'   => $defaults
+                ]);
+            } else {
+                echo json_encode(['error' => 'Falha ao restaurar planos padrão.']);
+            }
+            break;
+
         default:
             echo json_encode(['error' => 'Ação não reconhecida']);
+
     }
 
 } catch (Exception $e) {

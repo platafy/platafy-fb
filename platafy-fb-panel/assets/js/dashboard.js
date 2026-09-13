@@ -18,6 +18,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
         if (view === 'licenses') loadLicenses();
         if (view === 'partners') loadPartners();
         if (view === 'updates') loadUpdatesInfo();
+        if (view === 'plans') loadPlansInfo();
         if (view === 'settings') loadSettingsInfo();
     });
 });
@@ -647,6 +648,16 @@ async function loadSettingsInfo() {
         document.getElementById('setting-mp-public-key').value = s.mp_public_key || '';
         document.getElementById('setting-mp-use-test').checked = !!s.mp_use_test;
         
+        // Checkout Platafy
+        const platafyUrlInput = document.getElementById('setting-checkout-platafy-url');
+        if (platafyUrlInput) platafyUrlInput.value = s.checkout_platafy_url || 'https://checkout.platafy.com';
+        const platafyApiKeyInput = document.getElementById('setting-checkout-platafy-api-key');
+        if (platafyApiKeyInput) platafyApiKeyInput.value = s.checkout_platafy_api_key || '';
+        const platafySecretInput = document.getElementById('setting-checkout-platafy-webhook-secret');
+        if (platafySecretInput) platafySecretInput.value = s.checkout_platafy_webhook_secret || '';
+        const gatewaySelect = document.getElementById('setting-default-payment-gateway');
+        if (gatewaySelect) gatewaySelect.value = s.default_payment_gateway || 'platafy';
+
         // Nome de Usuário do Admin
         if (s.admin_username) {
             const userInput = document.getElementById('admin-username');
@@ -712,6 +723,365 @@ async function saveMercadoPagoSettings() {
             showToast('Erro de conexão ao salvar credenciais.', 'error');
         }
     }
+}
+
+async function saveCheckoutPlatafySettings() {
+    const urlInput     = document.getElementById('setting-checkout-platafy-url');
+    const apiKeyInput  = document.getElementById('setting-checkout-platafy-api-key');
+    const secretInput  = document.getElementById('setting-checkout-platafy-webhook-secret');
+    const gatewayInput = document.getElementById('setting-default-payment-gateway');
+
+    const url           = urlInput ? urlInput.value.trim() : '';
+    const apiKey        = apiKeyInput ? apiKeyInput.value.trim() : '';
+    const webhookSecret = secretInput ? secretInput.value.trim() : '';
+    const gateway       = gatewayInput ? gatewayInput.value : 'platafy';
+
+    try {
+        const data = await apiFetch('api/admin/settings.php?action=save_checkout_platafy', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                checkout_platafy_url: url,
+                checkout_platafy_api_key: apiKey,
+                checkout_platafy_webhook_secret: webhookSecret,
+                default_payment_gateway: gateway
+            })
+        });
+
+        if (data.success) {
+            showToast('✅ Configurações do Checkout Platafy salvas com sucesso!');
+        } else {
+            showToast('Erro: ' + (data.error || 'Falha ao salvar'), 'error');
+        }
+    } catch (err) {
+        if (err.message !== 'Não autorizado') {
+            showToast('Erro de conexão ao salvar configurações.', 'error');
+        }
+    }
+}
+
+// ========== GERENCIAMENTO DE PLANOS & PREÇOS (CHECKOUT) ==========
+let currentPlansData = {};
+
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+async function loadPlansInfo() {
+    const grid = document.getElementById('plans-editor-grid');
+    if (!grid) return;
+
+    try {
+        const res = await apiFetch('api/admin/settings.php?action=get_plans');
+        if (res.success && res.plans) {
+            currentPlansData = res.plans;
+            renderPlansEditor(currentPlansData);
+        } else {
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--danger);">Falha ao carregar planos: ${res.error || 'Erro'}</div>`;
+        }
+    } catch (err) {
+        console.error('Erro ao carregar planos:', err);
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--danger);">Erro de conexão ao obter os planos.</div>`;
+    }
+}
+
+function renderPlansEditor(plans) {
+    const grid = document.getElementById('plans-editor-grid');
+    if (!grid) return;
+
+    const keys = Object.keys(plans);
+    if (keys.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align:center; padding: 40px; color: var(--muted); background:var(--bg-card); border-radius:16px; border:1px dashed var(--border);">
+                <p style="font-size:14px; margin-bottom:12px;">Nenhum plano configurado no momento.</p>
+                <button type="button" class="btn-primary" onclick="resetPlansDefault()">Restaurar Planos Padrão</button>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    keys.forEach(key => {
+        const plan = plans[key] || {};
+        const isSelectedBadge = (plan.badge_style || 'orange');
+        const featsText = Array.isArray(plan.features) ? plan.features.join('\n') : (plan.features || '');
+
+        html += `
+            <div class="settings-card" style="display:flex; flex-direction:column; justify-content:space-between; position:relative; background:rgba(18, 24, 52, 0.7); border:1px solid rgba(255, 170, 0, 0.25); border-radius:16px; padding:22px; transition:all 0.3s;" id="card_plan_${key}">
+                <div>
+                    <!-- CABEÇALHO DO CARD -->
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.07);">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="admin-badge" style="font-size:11px; letter-spacing:1px; background:rgba(255,170,0,0.1); color:var(--neon); padding:4px 9px;">
+                                ${escapeHtml(key.toUpperCase())}
+                            </span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label style="display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--muted); cursor:pointer;" title="Ativar ou ocultar este plano na página de checkout">
+                                <span class="custom-switch" style="transform:scale(0.8);">
+                                    <input type="checkbox" id="plan_active_${key}" ${plan.active !== false ? 'checked' : ''}>
+                                    <span class="switch-slider"></span>
+                                </span>
+                                <span>Ativo</span>
+                            </label>
+                            ${keys.length > 1 ? `
+                                <button type="button" onclick="removePlan('${key}')" title="Excluir este plano" style="background:rgba(255,85,85,0.12); border:1px solid rgba(255,85,85,0.3); color:#ff5555; padding:3px 8px; border-radius:6px; font-size:11px; cursor:pointer; transition:all 0.2s;">
+                                    ✕ Excluir
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- NOME DO PLANO -->
+                    <div class="form-group-custom" style="margin-bottom:12px;">
+                        <label style="font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:700;">Nome do Plano *</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left" style="color:var(--neon);">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4.5v6c0 5.25-3.5 10-8 11.5-4.5-1.5-8-6.25-8-11.5v-6z"></path></svg>
+                            </span>
+                            <input type="text" id="plan_name_${key}" value="${escapeHtml(plan.name || '')}" placeholder="Ex: Plano Mensal" style="padding-left:42px;">
+                        </div>
+                    </div>
+
+                    <!-- SUBTÍTULO -->
+                    <div class="form-group-custom" style="margin-bottom:12px;">
+                        <label style="font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:700;">Subtítulo Exibido no Card</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                            </span>
+                            <input type="text" id="plan_sub_${key}" value="${escapeHtml(plan.subtitle || '')}" placeholder="Ex: Acesso completo por 30 dias" style="padding-left:42px;">
+                        </div>
+                    </div>
+
+                    <!-- VALOR & DIAS -->
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom:12px;">
+                        <div class="form-group-custom" style="margin-bottom:0;">
+                            <label style="font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:700;">Preço (R$) *</label>
+                            <div class="input-relative">
+                                <span class="field-icon-left" style="color:var(--neon); font-weight:800; font-size:11px;">R$</span>
+                                <input type="number" step="0.01" min="0" id="plan_price_${key}" value="${parseFloat(plan.price || 0).toFixed(2)}" placeholder="39.90" style="padding-left:42px; font-weight:700; font-family:'Orbitron',sans-serif; color:var(--neon);">
+                            </div>
+                        </div>
+                        <div class="form-group-custom" style="margin-bottom:0;">
+                            <label style="font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:700;">Duração (Dias) *</label>
+                            <div class="input-relative">
+                                <span class="field-icon-left">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                </span>
+                                <input type="number" min="1" id="plan_days_${key}" value="${parseInt(plan.days || 30)}" placeholder="30" style="padding-left:42px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NOTA DE COBRANÇA -->
+                    <div class="form-group-custom" style="margin-bottom:12px;">
+                        <label style="font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:700;">Nota de Cobrança / Destaque</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            </span>
+                            <input type="text" id="plan_note_${key}" value="${escapeHtml(plan.billing_note || '')}" placeholder="Ex: Cobrança mensal • Cancele quando quiser" style="padding-left:42px;">
+                        </div>
+                    </div>
+
+                    <!-- BADGE & ESTILO -->
+                    <div style="display:grid; grid-template-columns: 1.3fr 1fr; gap: 12px; margin-bottom:12px;">
+                        <div class="form-group-custom" style="margin-bottom:0;">
+                            <label style="font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:700;">Texto do Selo (Badge)</label>
+                            <div class="input-relative">
+                                <span class="field-icon-left">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                                </span>
+                                <input type="text" id="plan_badge_${key}" value="${escapeHtml(plan.badge || '')}" placeholder="Ex: MAIS POPULAR" style="padding-left:42px;">
+                            </div>
+                        </div>
+                        <div class="form-group-custom" style="margin-bottom:0;">
+                            <label style="font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:700;">Cor do Selo</label>
+                            <select id="plan_badge_style_${key}" class="filter-select" style="width:100%; padding:12px 14px; background:rgba(20,25,50,0.6); border:1px solid var(--border); border-radius:10px; color:#fff; font-size:12px;">
+                                <option value="orange" ${isSelectedBadge === 'orange' ? 'selected' : ''}>Ouro / Laranja</option>
+                                <option value="green" ${isSelectedBadge === 'green' ? 'selected' : ''}>Verde / Ciano</option>
+                                <option value="blue" ${isSelectedBadge === 'blue' ? 'selected' : ''}>Azul / Roxo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- BENEFÍCIOS -->
+                    <div class="form-group-custom" style="margin-bottom:0;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                            <label style="font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:700;">Benefícios (1 por linha)</label>
+                            <span style="font-size:10px; color:var(--neon); font-weight:600;">✓ Checkmark automático</span>
+                        </div>
+                        <textarea id="plan_features_${key}" rows="5" placeholder="PLATAFY FB 2026 completo&#10;1 ativação em 1 computador&#10;Atualizações durante o acesso" style="width:100%; padding:12px 14px; background:rgba(20,25,50,0.6); border:1px solid var(--border); border-radius:10px; color:#fff; font-size:12px; font-family:'Inter',sans-serif; line-height:1.6; resize:vertical;">${escapeHtml(featsText)}</textarea>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    grid.innerHTML = html;
+}
+
+function addNewPlan() {
+    const planName = prompt('Digite o nome do novo plano (ex: Plano Anual, Plano Trimestral):');
+    if (!planName || !planName.trim()) return;
+
+    let key = planName.trim().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, '_')
+        .replace(/^plano_/, '')
+        .replace(/^_+|_+$/g, '');
+
+    if (!key) key = 'plano_' + Date.now();
+    if (currentPlansData[key]) {
+        key = key + '_' + Math.floor(Math.random() * 100);
+    }
+
+    currentPlansData[key] = {
+        name: planName.trim(),
+        subtitle: 'Acesso completo pelo período contratado',
+        price: 99.90,
+        billing_note: 'Cobrança periódica • Cancele quando quiser',
+        badge: '',
+        badge_style: 'orange',
+        frequency: 1,
+        frequency_type: 'months',
+        days: 365,
+        features: [
+            'PLATAFY FB 2026 completo',
+            '1 ativação em 1 computador',
+            'Atualizações durante o acesso'
+        ],
+        active: true
+    };
+
+    renderPlansEditor(currentPlansData);
+    showToast(`✨ Novo plano "${planName.trim()}" adicionado! Não se esqueça de clicar em "Salvar Alterações".`);
+}
+
+function removePlan(key) {
+    if (!currentPlansData[key]) return;
+    const planName = currentPlansData[key].name || key;
+    if (!confirm(`Tem certeza que deseja remover o plano "${planName}"?`)) return;
+
+    delete currentPlansData[key];
+    renderPlansEditor(currentPlansData);
+    showToast(`🗑 Plano "${planName}" removido. Clique em "Salvar Alterações" para aplicar.`);
+}
+
+async function savePlansSettings() {
+    const grid = document.getElementById('plans-editor-grid');
+    if (!grid) return;
+
+    const payload = {};
+    const keys = Object.keys(currentPlansData);
+
+    if (keys.length === 0) {
+        showToast('Nenhum plano para salvar.', 'error');
+        return;
+    }
+
+    for (const key of keys) {
+        const nameEl   = document.getElementById(`plan_name_${key}`);
+        const subEl    = document.getElementById(`plan_sub_${key}`);
+        const priceEl  = document.getElementById(`plan_price_${key}`);
+        const daysEl   = document.getElementById(`plan_days_${key}`);
+        const noteEl   = document.getElementById(`plan_note_${key}`);
+        const badgeEl  = document.getElementById(`plan_badge_${key}`);
+        const styleEl  = document.getElementById(`plan_badge_style_${key}`);
+        const featsEl  = document.getElementById(`plan_features_${key}`);
+        const activeEl = document.getElementById(`plan_active_${key}`);
+
+        if (!nameEl) continue;
+
+        const name = nameEl.value.trim();
+        if (!name) {
+            showToast(`Por favor, informe o nome para o plano ${key.toUpperCase()}.`, 'error');
+            nameEl.focus();
+            return;
+        }
+
+        const price = parseFloat(priceEl ? priceEl.value : 0) || 0;
+        const days = parseInt(daysEl ? daysEl.value : 30) || 30;
+        const feats = featsEl ? featsEl.value.split('\n').map(l => l.trim()).filter(l => l.length > 0) : [];
+
+        payload[key] = {
+            name: name,
+            subtitle: subEl ? subEl.value.trim() : '',
+            price: price,
+            days: Math.max(1, days),
+            billing_note: noteEl ? noteEl.value.trim() : '',
+            badge: badgeEl ? badgeEl.value.trim() : '',
+            badge_style: styleEl ? styleEl.value : 'orange',
+            features: feats,
+            active: activeEl ? activeEl.checked : true,
+            frequency: (currentPlansData[key] && currentPlansData[key].frequency) ? currentPlansData[key].frequency : 1,
+            frequency_type: (currentPlansData[key] && currentPlansData[key].frequency_type) ? currentPlansData[key].frequency_type : 'months'
+        };
+    }
+
+    try {
+        const res = await apiFetch('api/admin/settings.php?action=save_plans', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plans: payload })
+        });
+
+        if (res.success) {
+            currentPlansData = res.plans || payload;
+            renderPlansEditor(currentPlansData);
+            showToast('✅ Planos e preços salvos com sucesso! O checkout já foi atualizado.');
+        } else {
+            showToast('Erro ao salvar planos: ' + (res.error || 'Falha desconhecida'), 'error');
+        }
+    } catch (err) {
+        console.error('Erro ao salvar planos:', err);
+        showToast('Erro de conexão ao salvar os planos.', 'error');
+    }
+}
+
+async function resetPlansDefault() {
+    if (!confirm('Deseja realmente restaurar todos os planos para os valores padrão originais (Mensal R$ 39,90, Semestral R$ 69,90 e Vitalício R$ 149,90)?')) {
+        return;
+    }
+
+    try {
+        const res = await apiFetch('api/admin/settings.php?action=reset_plans', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (res.success) {
+            currentPlansData = res.plans;
+            renderPlansEditor(currentPlansData);
+            showToast('🔄 Planos restaurados para o padrão com sucesso!');
+        } else {
+            showToast('Erro ao restaurar: ' + (res.error || 'Falha'), 'error');
+        }
+    } catch (err) {
+        showToast('Erro ao comunicar com o servidor.', 'error');
+    }
+}
+
+
+function copyWebhookUrl(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const text = el.value || el.innerText || el.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('📋 URL do Webhook copiada para a área de transferência!');
+    }).catch(err => {
+        // Fallback
+        el.select();
+        document.execCommand('copy');
+        showToast('📋 URL copiada!');
+    });
 }
 
 async function saveAdminCredentials() {

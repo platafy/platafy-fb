@@ -28,31 +28,13 @@ define('MP_ACCESS_TOKEN_TEST', 'SEU_TEST_TOKEN_AQUI');     // Token de Teste
 define('MP_USE_TEST', true);                                // true = modo teste, false = produção
 
 // ============================================================
-// PLANOS DE ASSINATURA
+// PLANOS DE ASSINATURA (Carregados dinamicamente do banco de dados)
 // ============================================================
-define('PLANS', json_encode([
-    'mensal' => [
-        'name' => 'Plano Mensal',
-        'price' => 39.90,
-        'frequency' => 1,
-        'frequency_type' => 'months',
-        'days' => 30
-    ],
-    'semestral' => [
-        'name' => 'Plano Semestral',
-        'price' => 69.90,
-        'frequency' => 6,
-        'frequency_type' => 'months',
-        'days' => 180
-    ],
-    'vitalicio' => [
-        'name' => 'Plano Vitalício',
-        'price' => 149.90,
-        'frequency' => 1200,
-        'frequency_type' => 'months',
-        'days' => 36500
-    ]
-]));
+require_once __DIR__ . '/includes/settings_utils.php';
+if (!defined('PLANS')) {
+    define('PLANS', json_encode(getSystemPlans()));
+}
+
 
 // ============================================================
 // URLs

@@ -795,6 +795,11 @@ body {
     border-color: rgba(147, 51, 234, 0.25);
     color: #c084fc;
 }
+.card-icon-box.green {
+    background: rgba(0, 230, 118, 0.1);
+    border-color: rgba(0, 230, 118, 0.25);
+    color: var(--success);
+}
 
 .card-header-titles h3 {
     font-size: 16px;

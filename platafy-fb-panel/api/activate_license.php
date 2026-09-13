@@ -68,6 +68,12 @@ try {
         echo json_encode(['status' => false, 'message' => 'Esta licença foi revogada. Entre em contato com o suporte.']);
         exit;
     }
+
+    // Verificar se pagamento pendente
+    if ($license['status'] === 'pending') {
+        echo json_encode(['status' => false, 'message' => 'O pagamento desta licença ainda está sendo processado. A liberação ocorrerá automaticamente assim que o pagamento for aprovado.']);
+        exit;
+    }
     
     // Verificar se expirada
     if ($license['status'] === 'expired' || ($license['expires_at'] && strtotime($license['expires_at']) < time())) {

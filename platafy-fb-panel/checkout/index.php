@@ -6,9 +6,19 @@ require_once __DIR__ . '/../includes/settings_utils.php';
 $siteLogo = getSetting('site_logo', '');
 $siteFavicon = getSetting('site_favicon', '');
 require_once __DIR__ . '/../includes/mercadopago.php';
+require_once __DIR__ . '/../includes/platafy_checkout.php';
 
 $error = null;
-$selectedPlan = $_GET['plan'] ?? 'mensal';
+$plans = getSystemPlans();
+$activePlans = array_filter($plans, fn($p) => !isset($p['active']) || $p['active']);
+if (empty($activePlans)) {
+    $activePlans = $plans;
+}
+$defaultPlanKey = array_key_first($activePlans) ?: 'mensal';
+$selectedPlan = $_GET['plan'] ?? $defaultPlanKey;
+if (!isset($plans[$selectedPlan]) || (isset($plans[$selectedPlan]['active']) && !$plans[$selectedPlan]['active'])) {
+    $selectedPlan = $defaultPlanKey;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
@@ -20,8 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (strlen($cleanPhone) >= 10 && !str_starts_with($cleanPhone, '55')) {
         $cleanPhone = '55' . $cleanPhone;
     }
-    
-    $plans = json_decode(PLANS, true);
+
     
     if (empty($name) || empty($email) || empty($phone)) {
         $error = 'Por favor, preencha todos os campos: Nome, E-mail e WhatsApp.';
@@ -33,43 +42,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $license = createLicense($name, $email, $planKey, null, $phone);
             $plan = $plans[$planKey];
-            
-            $mpPreferenceData = [
-                'items' => [
-                    [
-                        'title' => 'PLATAFY FB - ' . $plan['name'],
-                        'quantity' => 1,
-                        'currency_id' => 'BRL',
-                        'unit_price' => (float)$plan['price']
-                    ]
-                ],
-                'payer' => [
-                    'name' => $name,
+            $licenseKey = $license['key'] ?? ($license['license_key'] ?? '');
+
+            // Definir licença como pendente de aprovação do pagamento
+            $pdo = db();
+            $pdo->prepare("UPDATE licenses SET status = 'pending' WHERE id = ?")->execute([$license['id']]);
+
+            $activeGateway = getActivePaymentGateway();
+
+            if ($activeGateway === 'platafy') {
+                $customerData = [
+                    'name'  => $name,
                     'email' => $email,
-                    'phone' => [
-                        'area_code' => substr($cleanPhone, 2, 2),
-                        'number' => substr($cleanPhone, 4)
-                    ]
-                ],
-                'external_reference' => (string)$license['id'],
-                'back_urls' => [
-                    'success' => CHECKOUT_BACK_URL,
-                    'pending' => CHECKOUT_BACK_URL,
-                    'failure' => SITE_URL . '/checkout/'
-                ],
-                'auto_return' => 'approved'
-            ];
-            
-            $mpRes = mpRequest('/checkout/preferences', 'POST', $mpPreferenceData);
-            
-            if (isset($mpRes['init_point'])) {
-                header('Location: ' . $mpRes['init_point']);
-                exit;
-            } elseif (isset($mpRes['sandbox_init_point']) && MP_USE_TEST) {
-                header('Location: ' . $mpRes['sandbox_init_point']);
-                exit;
+                    'phone' => $cleanPhone
+                ];
+                $returnUrl = SITE_URL . '/checkout/obrigado.php?license_key=' . urlencode($licenseKey);
+                $session = createPlatafyCheckoutSession($customerData, (float)$plan['price'], $planKey, $license, $returnUrl);
+
+                if (!empty($session['checkout_url'])) {
+                    header('Location: ' . $session['checkout_url']);
+                    exit;
+                } else {
+                    $error = 'Erro ao conectar ao Checkout Platafy: ' . ($session['error'] ?? 'Não foi possível gerar a sessão.');
+                }
             } else {
-                $error = 'Erro ao conectar ao Mercado Pago: ' . ($mpRes['message'] ?? 'Verifique as chaves de API.');
+                $successReturnUrl = CHECKOUT_BACK_URL . (str_contains(CHECKOUT_BACK_URL, '?') ? '&' : '?') . 'license_key=' . urlencode($licenseKey);
+                $mpPreferenceData = [
+                    'items' => [
+                        [
+                            'title' => 'PLATAFY FB - ' . $plan['name'],
+                            'quantity' => 1,
+                            'currency_id' => 'BRL',
+                            'unit_price' => (float)$plan['price']
+                        ]
+                    ],
+                    'payer' => [
+                        'name' => $name,
+                        'email' => $email,
+                        'phone' => [
+                            'area_code' => substr($cleanPhone, 2, 2),
+                            'number' => substr($cleanPhone, 4)
+                        ]
+                    ],
+                    'external_reference' => (string)$license['id'],
+                    'back_urls' => [
+                        'success' => $successReturnUrl,
+                        'pending' => $successReturnUrl,
+                        'failure' => SITE_URL . '/checkout/'
+                    ],
+                    'auto_return' => 'approved'
+                ];
+                
+                $mpRes = mpRequest('/checkout/preferences', 'POST', $mpPreferenceData);
+                
+                if (isset($mpRes['init_point'])) {
+                    header('Location: ' . $mpRes['init_point']);
+                    exit;
+                } elseif (isset($mpRes['sandbox_init_point']) && MP_USE_TEST) {
+                    header('Location: ' . $mpRes['sandbox_init_point']);
+                    exit;
+                } else {
+                    $error = 'Erro ao conectar ao Mercado Pago: ' . ($mpRes['message'] ?? 'Verifique as chaves de API.');
+                }
             }
         } catch (Exception $e) {
             $error = 'Erro no servidor: ' . $e->getMessage();
@@ -217,6 +251,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: linear-gradient(135deg, #00e676, #00b0ff);
             color: #000;
         }
+        
+        .badge-blue {
+            background: linear-gradient(135deg, #00b0ff, #7000ff);
+            color: #fff;
+        }
+
         
         .plan-header {
             margin-bottom: 6px;
@@ -405,60 +445,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="checkout-container">
         <!-- COLUNA DA ESQUERDA: PLANOS CENTRALIZADOS -->
         <div class="plans-column">
-            <!-- PLANO 1: MENSAL -->
-            <div class="plan-card <?= $selectedPlan === 'mensal' ? 'selected' : '' ?>" onclick="selectPlan('mensal', this)">
+            <?php foreach ($activePlans as $planKey => $plan): 
+                $isSel = ($selectedPlan === $planKey);
+                $badgeText = trim($plan['badge'] ?? '');
+                $badgeStyle = trim($plan['badge_style'] ?? 'orange');
+                $badgeClass = ($badgeStyle === 'green') ? 'badge badge-green' : (($badgeStyle === 'blue') ? 'badge badge-blue' : 'badge');
+                $priceFormatted = number_format((float)($plan['price'] ?? 0), 2, ',', '.');
+                $features = is_array($plan['features'] ?? null) ? $plan['features'] : [];
+            ?>
+            <div class="plan-card <?= $isSel ? 'selected' : '' ?>" data-plan-key="<?= htmlspecialchars($planKey) ?>" onclick="selectPlan('<?= htmlspecialchars($planKey) ?>', this)">
+                <?php if (!empty($badgeText)): ?>
+                    <span class="<?= $badgeClass ?>"><?= htmlspecialchars($badgeText) ?></span>
+                <?php endif; ?>
                 <div class="plan-header">
-                    <div class="plan-title">Plano Mensal</div>
-                    <div class="plan-subtitle">Acesso completo por 30 dias</div>
+                    <div class="plan-title"><?= htmlspecialchars($plan['name'] ?? ucfirst($planKey)) ?></div>
+                    <?php if (!empty($plan['subtitle'])): ?>
+                        <div class="plan-subtitle"><?= htmlspecialchars($plan['subtitle']) ?></div>
+                    <?php endif; ?>
                 </div>
                 <div class="plan-price-box">
-                    <div class="plan-price-val">R$ 39,90</div>
-                    <div class="plan-billing-note">Cobrança mensal • Cancele quando quiser</div>
+                    <div class="plan-price-val">R$ <?= $priceFormatted ?></div>
+                    <?php if (!empty($plan['billing_note'])): ?>
+                        <div class="plan-billing-note"><?= htmlspecialchars($plan['billing_note']) ?></div>
+                    <?php endif; ?>
                 </div>
+                <?php if (!empty($features)): ?>
                 <ul class="plan-features-list">
-                    <li><span>✓</span> PLATAFY FB 2026 completo</li>
-                    <li><span>✓</span> 1 ativação em 1 computador</li>
-                    <li><span>✓</span> Atualizações durante o acesso</li>
-                    <li><span>✓</span> Ideal para começar investindo menos</li>
+                    <?php foreach ($features as $feat): 
+                        $feat = trim($feat);
+                        if (empty($feat)) continue;
+                        $feat = preg_replace('/^[✓✔•\-\*\s]+/u', '', $feat);
+                    ?>
+                        <li><span>✓</span> <?= htmlspecialchars($feat) ?></li>
+                    <?php endforeach; ?>
                 </ul>
+                <?php endif; ?>
             </div>
-            
-            <!-- PLANO 2: SEMESTRAL -->
-            <div class="plan-card <?= $selectedPlan === 'semestral' ? 'selected' : '' ?>" onclick="selectPlan('semestral', this)">
-                <span class="badge">MAIS POPULAR</span>
-                <div class="plan-header">
-                    <div class="plan-title">Plano Semestral</div>
-                    <div class="plan-subtitle">Acesso completo por 6 meses</div>
-                </div>
-                <div class="plan-price-box">
-                    <div class="plan-price-val">R$ 69,90</div>
-                    <div class="plan-billing-note">Apenas R$ 11,65 por mês no período</div>
-                </div>
-                <ul class="plan-features-list">
-                    <li><span>✓</span> PLATAFY FB 2026 completo</li>
-                    <li><span>✓</span> 1 ativação em 1 computador</li>
-                    <li><span>✓</span> Atualizações durante os 6 meses</li>
-                    <li><span>✓</span> Mais economia que o plano mensal</li>
-                </ul>
-            </div>
-            
-            <!-- PLANO 3: VITALÍCIO -->
-            <div class="plan-card <?= $selectedPlan === 'vitalicio' ? 'selected' : '' ?>" onclick="selectPlan('vitalicio', this)">
-                <span class="badge badge-green">MELHOR CUSTO-BENEFÍCIO</span>
-                <div class="plan-header">
-                    <div class="plan-title">Plano Vitalício</div>
-                    <div class="plan-subtitle">Acesso completo sem data de expiração</div>
-                </div>
-                <div class="plan-price-box">
-                    <div class="plan-price-val">R$ 149,90</div>
-                    <div class="plan-billing-note">Pagamento único • Sem mensalidade</div>
-                </div>
-                <ul class="plan-features-list">
-                    <li><span>✓</span> PLATAFY FB 2026 completo</li>
-                    <li><span>✓</span> 2 ativações em computadores diferentes</li>
-                    <li><span>✓</span> Atualizações futuras incluídas</li>
-                </ul>
-            </div>
+            <?php endforeach; ?>
         </div>
         
         <!-- COLUNA DA DIREITA: FORMULÁRIO COMPLETO -->
@@ -487,10 +510,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <div class="form-group">
                     <label>Plano Selecionado</label>
-                    <select name="plan" id="plan-select" required>
-                        <option value="mensal" <?= $selectedPlan === 'mensal' ? 'selected' : '' ?>>Mensal - R$ 39,90/mês</option>
-                        <option value="semestral" <?= $selectedPlan === 'semestral' ? 'selected' : '' ?>>Semestral - R$ 69,90/6 meses</option>
-                        <option value="vitalicio" <?= $selectedPlan === 'vitalicio' ? 'selected' : '' ?>>Vitalício - R$ 149,90 (Pagamento Único)</option>
+                    <select name="plan" id="plan-select" required onchange="onSelectPlanChange(this.value)">
+                        <?php foreach ($activePlans as $planKey => $plan): 
+                            $priceFormatted = number_format((float)($plan['price'] ?? 0), 2, ',', '.');
+                            $optLabel = htmlspecialchars($plan['name'] ?? ucfirst($planKey)) . ' - R$ ' . $priceFormatted;
+                            if (!empty($plan['subtitle'])) {
+                                $optLabel .= ' (' . htmlspecialchars($plan['subtitle']) . ')';
+                            }
+                        ?>
+                            <option value="<?= htmlspecialchars($planKey) ?>" <?= $selectedPlan === $planKey ? 'selected' : '' ?>>
+                                <?= $optLabel ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 
@@ -498,7 +529,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
             
             <div class="secure-badge">
-                🔒 Pagamento seguro via <span>Mercado Pago</span>
+                🔒 Pagamento seguro via <span><?= (function_exists('getActivePaymentGateway') && getActivePaymentGateway() === 'platafy') ? 'Checkout Platafy' : 'Mercado Pago' ?></span>
             </div>
         </div>
     </div>
@@ -510,6 +541,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (element) {
                 element.classList.add('selected');
             }
+        }
+        
+        function onSelectPlanChange(plan) {
+            document.querySelectorAll('.plan-card').forEach(c => {
+                c.classList.remove('selected');
+                if (c.getAttribute('data-plan-key') === plan) {
+                    c.classList.add('selected');
+                }
+            });
         }
         
         // Mascara automatica de WhatsApp

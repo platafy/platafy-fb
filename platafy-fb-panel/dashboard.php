@@ -11,6 +11,7 @@ if (isset($_GET['logout'])) {
 
 $siteLogo = getSetting('site_logo', '');
 $siteFavicon = getSetting('site_favicon', '');
+$webhookUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'fb.platafy.com') . '/api/webhook_platafy.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -51,6 +52,7 @@ $siteFavicon = getSetting('site_favicon', '');
             <a href="#" class="nav-link" data-view="licenses">Licenças</a>
             <a href="#" class="nav-link" data-view="partners">Parceiros White Label</a>
             <a href="#" class="nav-link" data-view="updates">Atualizações & Backups</a>
+            <a href="#" class="nav-link" data-view="plans">Planos & Preços</a>
             <a href="#" class="nav-link" data-view="settings">Configurações</a>
         </div>
         <div class="navbar-actions">
@@ -375,6 +377,46 @@ $siteFavicon = getSetting('site_favicon', '');
     </main>
 
 
+    <!-- PLANS VIEW -->
+    <main class="main-content" id="view-plans" style="display:none;">
+        <div class="settings-header">
+            <div class="settings-title-area">
+                <h1>
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--neon);"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                    Planos & Preços do Checkout
+                </h1>
+                <p>Personalize os valores em R$, durações, selos de destaque e benefícios exibidos na página de assinatura (<code>/checkout/</code>).</p>
+            </div>
+            <div class="header-actions" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <a href="/checkout/" target="_blank" class="btn-outline" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:13px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    Ver Checkout ↗
+                </a>
+                <button type="button" class="btn-secondary" onclick="resetPlansDefault()" style="display:inline-flex; align-items:center; gap:6px; font-size:13px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+                    Restaurar Padrões
+                </button>
+                <button type="button" class="btn-primary" onclick="addNewPlan()" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; background:linear-gradient(135deg, #4d5b9a, #4d9aff);">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    + Novo Plano
+                </button>
+                <button type="button" class="btn-primary" onclick="savePlansSettings()" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; box-shadow:0 0 15px rgba(255,170,0,0.3);">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Salvar Alterações
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTAINER DOS CARDS DE PLANOS -->
+        <div id="plans-editor-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-top: 25px;">
+            <div style="grid-column: 1 / -1; text-align:center; padding: 40px; color: var(--muted);">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--neon)" stroke-width="2" class="spin" style="animation: spin 1s linear infinite;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
+                <div style="margin-top:12px; font-size:14px;">Carregando planos de assinatura...</div>
+            </div>
+        </div>
+    </main>
+
+
     <!-- SETTINGS VIEW -->
     <main class="main-content" id="view-settings" style="display:none;">
         <div class="settings-header">
@@ -392,6 +434,96 @@ $siteFavicon = getSetting('site_favicon', '');
         </div>
 
         <div class="settings-grid">
+            <!-- CHECKOUT PLATAFY (API PAGAMENTOS & WEBHOOK) -->
+            <div class="settings-card">
+                <div>
+                    <div class="card-header-custom">
+                        <div class="card-icon-box green">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                <line x1="2" y1="10" x2="22" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="card-header-titles">
+                            <h3>Checkout Platafy (API Pagamentos)</h3>
+                            <p>Gateway nativo integrado com liberação automática de licença via Webhook</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label>Gateway Ativo de Pagamento</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                            </span>
+                            <select id="setting-default-payment-gateway" style="width:100%; padding:12px 14px 12px 42px; background:rgba(20,25,50,0.6); border:1px solid var(--border); border-radius:10px; color:#fff; font-size:13px; font-family:'Inter',sans-serif; outline:none; transition:all 0.3s; cursor:pointer;">
+                                <option value="platafy">Checkout Platafy (Recomendado)</option>
+                                <option value="mercadopago">Mercado Pago</option>
+                            </select>
+                        </div>
+                        <div class="field-hint">Define qual checkout os clientes acessarão para pagar suas licenças.</div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label>URL do Checkout Platafy</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            </span>
+                            <input type="text" id="setting-checkout-platafy-url" placeholder="https://checkout.platafy.com">
+                        </div>
+                        <div class="field-hint">URL base do seu sistema Checkout Platafy (ex: https://checkout.platafy.com).</div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label>API Key (Bearer Token)</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-2-2l2 2m7 0a9 9 0 11-18 0 9 9 0 0118 0z"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </span>
+                            <input type="password" id="setting-checkout-platafy-api-key" placeholder="Cole sua API Key do Checkout Platafy">
+                            <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('setting-checkout-platafy-api-key', this)" title="Alternar Visibilidade">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </div>
+                        <div class="field-hint">Gerada no Checkout Platafy em Aplicações > API Pagamentos.</div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label>Webhook Secret (Segredo de Assinatura)</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            </span>
+                            <input type="password" id="setting-checkout-platafy-webhook-secret" placeholder="whsec_... (opcional, para validação da assinatura)">
+                            <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('setting-checkout-platafy-webhook-secret', this)" title="Alternar Visibilidade">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </div>
+                        <div class="field-hint">Utilizado para validação de segurança HMAC SHA256 do webhook.</div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label>URL do Webhook para Cadastrar no Checkout Platafy</label>
+                        <div class="input-relative">
+                            <span class="field-icon-left">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                            </span>
+                            <input type="text" id="setting-platafy-webhook-url" readonly value="<?= htmlspecialchars($webhookUrl) ?>" style="font-family:monospace; font-size:12px; cursor:pointer;" onclick="copyWebhookUrl('setting-platafy-webhook-url')">
+                            <button type="button" class="btn-toggle-eye" onclick="copyWebhookUrl('setting-platafy-webhook-url')" title="Copiar URL">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
+                        <div class="field-hint" style="color:var(--success);">Cadastre esta URL na sua aplicação do Checkout Platafy para receber os eventos <code>order.completed</code>.</div>
+                    </div>
+                </div>
+
+                <button class="btn-primary btn-save-custom" style="background: linear-gradient(135deg, #00c853, #ffaa00);" onclick="saveCheckoutPlatafySettings()">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Salvar Configurações Checkout Platafy
+                </button>
+            </div>
+
             <!-- MERCADO PAGO -->
             <div class="settings-card">
                 <div>
