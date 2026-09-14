@@ -15,7 +15,7 @@ $partnerSession = getPartnerSession();
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel do Parceiro - <?= htmlspecialchars($partnerSession['brand'] ?: 'White Label') ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css?v=<?= filemtime(dirname(__DIR__) . '/assets/css/style.css') ?>">
     <style>
         .partner-top-logo {
             max-height: 38px;

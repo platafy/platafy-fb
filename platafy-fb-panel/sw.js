@@ -1,4 +1,4 @@
-const CACHE_NAME = 'platafy-admin-v1';
+const CACHE_NAME = 'platafy-admin-v2';
 const STATIC_ASSETS = [
   '/',
   '/dashboard.php',
@@ -65,11 +65,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Handle Static Assets & Pages (Cache First, Network Fallback)
+  // Handle Static Assets & Pages (Network First, Cache Fallback)
+  if (url.pathname.endsWith('.php') || url.pathname === '/' || url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clonedResponse = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clonedResponse));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Handle Images and other media (Cache First, Network Fallback)
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Fetch background update
         fetch(event.request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
