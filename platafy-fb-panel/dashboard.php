@@ -387,21 +387,21 @@ $webhookUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' 
                 </h1>
                 <p>Personalize os valores em R$, durações, selos de destaque e benefícios exibidos na página de assinatura (<code>/checkout/</code>).</p>
             </div>
-            <div class="header-actions" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <a href="/checkout/" target="_blank" class="btn-outline" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:13px;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            <div class="header-actions plans-header-actions" style="display:flex; gap:8px; flex-wrap:nowrap; align-items:center;">
+                <a href="/checkout/" target="_blank" class="btn-outline" style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; font-size:12px; height:34px; padding:0 11px; white-space:nowrap; border-radius:8px; flex-shrink:0;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                     Ver Checkout ↗
                 </a>
-                <button type="button" class="btn-secondary" onclick="resetPlansDefault()" style="display:inline-flex; align-items:center; gap:6px; font-size:13px;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+                <button type="button" class="btn-secondary" onclick="resetPlansDefault()" style="display:inline-flex; align-items:center; gap:5px; font-size:12px; height:34px; padding:0 11px; white-space:nowrap; border-radius:8px; flex-shrink:0; cursor:pointer; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.16); color:#cbd5e1;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
                     Restaurar Padrões
                 </button>
-                <button type="button" class="btn-primary" onclick="addNewPlan()" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; background:linear-gradient(135deg, #4d5b9a, #4d9aff);">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <button type="button" class="btn-primary" onclick="addNewPlan()" style="display:inline-flex; align-items:center; gap:5px; font-size:12px; height:34px; padding:0 11px; white-space:nowrap; background:linear-gradient(135deg, #4d5b9a, #4d9aff); border:none; color:#ffffff; font-weight:600; border-radius:8px; flex-shrink:0; cursor:pointer;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     + Novo Plano
                 </button>
-                <button type="button" class="btn-primary" onclick="savePlansSettings()" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; box-shadow:0 0 15px rgba(255,170,0,0.3);">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                <button type="button" class="btn-primary" onclick="savePlansSettings()" style="display:inline-flex; align-items:center; gap:5px; font-size:12px; height:34px; padding:0 13px; white-space:nowrap; background:linear-gradient(135deg, #ffaa00, #ff8800); border:none; color:#0a0d1a; font-weight:700; border-radius:8px; flex-shrink:0; cursor:pointer; box-shadow:0 0 15px rgba(255,170,0,0.3);">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
                     Salvar Alterações
                 </button>
             </div>

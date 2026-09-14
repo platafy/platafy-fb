@@ -163,6 +163,55 @@ body {
 }
 .btn-outline:hover { border-color: var(--neon); background: rgba(255,170,0,0.05); }
 
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #cbd5e1;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-secondary:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.plans-header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+.plans-header-actions .btn-outline,
+.plans-header-actions .btn-secondary,
+.plans-header-actions .btn-primary {
+    height: 34px !important;
+    padding: 0 11px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+    border-radius: 8px !important;
+    gap: 5px !important;
+    flex-shrink: 0 !important;
+}
+@media (max-width: 991px) {
+    .plans-header-actions {
+        flex-wrap: wrap;
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
 .btn-sm {
     padding: 5px 10px;
     font-size: 11px;
