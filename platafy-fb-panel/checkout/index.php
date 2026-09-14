@@ -169,30 +169,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             line-height: 1.5;
         }
         
-        /* CONTAINER DE 2 COLUNAS IGUAIS EM ALTURA */
+        /* CONTAINER PRINCIPAL EQUILIBRADO */
         .checkout-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            max-width: 1080px;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 22px;
+            max-width: 1140px;
             width: 100%;
             align-items: stretch;
         }
         
-        @media (max-width: 900px) {
+        @media (max-width: 980px) {
             .checkout-container {
                 grid-template-columns: 1fr;
-                gap: 25px;
+                gap: 22px;
+                max-width: 620px;
             }
         }
         
-        /* COLUNA DA ESQUERDA - CARDS DE PLANOS */
+        /* COLUNA DA ESQUERDA - GRADE DE 2 PLANOS POR LINHA */
         .plans-column {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 16px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
             height: 100%;
+        }
+
+        .plans-column .plan-card:last-child:nth-child(odd) {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 540px) {
+            .plans-column {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .plans-column .plan-card:last-child:nth-child(odd) {
+                grid-column: span 1;
+            }
         }
         
         .plan-card {
@@ -200,16 +214,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             backdrop-filter: blur(15px);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 20px 24px;
+            padding: 16px 14px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            flex: 1;
             justify-content: center;
         }
         
@@ -235,16 +248,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .badge {
             position: absolute;
-            top: 8px;
-            right: 15px;
+            top: 7px;
+            right: 8px;
             background: linear-gradient(135deg, #ffaa00, #ff7700);
             color: #000;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 800;
-            padding: 3px 9px;
+            padding: 2.5px 7px;
             border-radius: 20px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
         
         .badge-green {
@@ -259,41 +273,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         
         .plan-header {
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-align: center;
+            width: 100%;
+            padding-top: 2px;
         }
         
         .plan-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
+            font-size: 14.5px;
             font-weight: 700;
             color: var(--neon);
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             margin-bottom: 2px;
         }
         
         .plan-subtitle {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--muted);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
         .plan-price-box {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-align: center;
         }
         
         .plan-price-val {
             font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
+            font-size: 21px;
             font-weight: 800;
             color: var(--text);
         }
         
         .plan-billing-note {
-            font-size: 11px;
+            font-size: 10.5px;
             color: var(--muted);
-            margin-top: 2px;
+            margin-top: 1px;
         }
         
         .plan-features-list {
@@ -301,13 +317,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 3px;
-            margin-top: 6px;
+            gap: 2.5px;
+            margin-top: 5px;
         }
         
         .plan-features-list li {
-            font-size: 11.5px;
+            font-size: 11px;
             color: #d0d8e8;
+            line-height: 1.35;
         }
         
         .plan-features-list li span {
@@ -322,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 32px 28px;
+            padding: 26px 22px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
@@ -332,38 +349,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .form-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 800;
             color: var(--neon);
             text-align: center;
-            margin-bottom: 22px;
+            margin-bottom: 16px;
             letter-spacing: 1.5px;
             text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
         }
         
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
         
         .form-group label {
             display: block;
             color: var(--muted);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
         
         .form-group input, .form-group select {
             width: 100%;
-            padding: 13px 15px;
+            padding: 11px 14px;
             background: rgba(5, 7, 18, 0.75);
             border: 1px solid rgba(255, 170, 0, 0.2);
             border-radius: 12px;
             color: var(--text);
             font-family: 'Inter', sans-serif;
-            font-size: 14px;
+            font-size: 13.5px;
             outline: none;
             transition: all 0.3s;
         }
